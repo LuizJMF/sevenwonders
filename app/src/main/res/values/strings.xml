@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">7 Wonders</string>
+    <string name="criar_partida_button">Criar partida</string>
+    <string name="lista_de_jogadores_button">Lista de Jogadores</string>
+    <string name="estatisticas_button">Estatísticas</string>
+    <string name="historico_de_partidas_button">Histórico de Partidas</string>
 </resources>
