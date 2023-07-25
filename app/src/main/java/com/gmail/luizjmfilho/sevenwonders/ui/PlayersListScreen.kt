@@ -31,6 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -104,11 +105,11 @@ fun PlayersListScreen(
                 Card(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(top = 10.dp),
+                        .padding(top = 10.dp)
+                        .alpha(0.9f),
                     colors = CardDefaults.cardColors(Color.White),
-                    border = BorderStroke(1.dp, Color.Black)
-                    /*elevation = CardDefaults.cardElevation(2.dp)*/
-                    /*shape = CardDefaults.shape*/
+                    border = BorderStroke(1.dp, Color.Black),
+
                 ){
                     if (personList.isEmpty()) {
                         Box(

@@ -20,6 +20,7 @@ import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
 @Composable
 fun HomeScreen(
+    onListaDeJogadoresClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Box(
@@ -60,7 +61,7 @@ fun HomeScreen(
                         textinho = stringResource(R.string.criar_partida_button)
                     )
                     HomeScreenButton(
-                        onClick = { /*TODO*/ },
+                        onClick = onListaDeJogadoresClick,
                         textinho = stringResource(R.string.lista_de_jogadores_button)
                     )
                     HomeScreenButton(
@@ -100,7 +101,9 @@ fun HomeScreenButton(
 @Composable
 fun HomeScreenPreview() {
     SevenWondersTheme {
-        HomeScreen()
+        HomeScreen(
+            onListaDeJogadoresClick = {}
+        )
     }
 }
 
