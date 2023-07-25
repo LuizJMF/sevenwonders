@@ -18,5 +18,9 @@ val Typography = Typography(
         fontFamily = Kings,
         fontSize = 50.sp,
     ),
+    titleMedium = TextStyle(
+        fontFamily = Kings,
+        fontSize = 25.sp,
+    ),
 )
 

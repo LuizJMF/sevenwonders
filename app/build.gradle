@@ -63,5 +63,7 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-test-manifest' // aqui é a parte específica de Compose pra testes
     implementation 'androidx.activity:activity-compose:1.6.1' // aqui é genérico, mas sei que inclui o setContent
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1' // aqui tem a ver com o viewModel
+    implementation 'androidx.compose.material:material-icons-extended' // aqui é uma biblioteca de ícones
+    implementation 'androidx.compose.material:material-icons-core' // aqui é outra biblioteca de ícones
 
 }
