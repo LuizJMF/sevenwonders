@@ -8,4 +8,5 @@
     <string name="adicionar_jogador_button">Add jogador</string>
     <string name="apagar_jogador_button">Apagar jogador</string>
     <string name="lista_jogadores_vazia">Ainda não há nenhum jogador adicionado. Clique em \'+ Add jogador\' para adicionar pessoas.</string>
+    <string name="add_jogador_window_title">Adicionar jogador</string>
 </resources>
