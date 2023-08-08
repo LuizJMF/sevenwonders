@@ -20,6 +20,7 @@ import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
 @Composable
 fun HomeScreen(
+    onCriarPartidaClick: () -> Unit,
     onListaDeJogadoresClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
@@ -57,7 +58,7 @@ fun HomeScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     HomeScreenButton(
-                        onClick = { /*TODO*/ },
+                        onClick = onCriarPartidaClick,
                         textinho = stringResource(R.string.criar_partida_button)
                     )
                     HomeScreenButton(
@@ -102,6 +103,7 @@ fun HomeScreenButton(
 fun HomeScreenPreview() {
     SevenWondersTheme {
         HomeScreen(
+            onCriarPartidaClick = {},
             onListaDeJogadoresClick = {}
         )
     }

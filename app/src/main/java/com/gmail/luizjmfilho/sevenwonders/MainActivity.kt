@@ -9,12 +9,15 @@ import androidx.navigation.compose.composable
 import com.gmail.luizjmfilho.sevenwonders.ui.HomeScreen
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 import androidx.navigation.compose.rememberNavController
+import com.gmail.luizjmfilho.sevenwonders.ui.NewGameScreenSecundaria
+import com.gmail.luizjmfilho.sevenwonders.ui.NewGameViewModel
 import com.gmail.luizjmfilho.sevenwonders.ui.PlayersListScreenPrimaria
 
 
 enum class ScreenNames {
-    TelaInicial,
-    TelaListaDeJogadores,
+    HomeScreen,
+    PlayersListScreen,
+    NewGameScreen,
 }
 
 class MainActivity : ComponentActivity() {
@@ -27,21 +30,33 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = ScreenNames.TelaInicial.name,
+                    startDestination = ScreenNames.HomeScreen.name,
                 ) {
-                    composable(route = ScreenNames.TelaInicial.name) {
+                    composable(route = ScreenNames.HomeScreen.name) {
                         HomeScreen(
+                            onCriarPartidaClick = {
+                                navController.navigate(ScreenNames.NewGameScreen.name)
+                            },
                             onListaDeJogadoresClick = {
-                                navController.navigate(ScreenNames.TelaListaDeJogadores.name)
+                                navController.navigate(ScreenNames.PlayersListScreen.name)
                             }
                         )
                     }
 
-                    composable(route = ScreenNames.TelaListaDeJogadores.name) {
+                    composable(route = ScreenNames.PlayersListScreen.name) {
                         PlayersListScreenPrimaria(
                             onBackClick = {
                                 navController.navigateUp()
                             }
+                        )
+                    }
+
+                    composable(route = ScreenNames.NewGameScreen.name) {
+                        NewGameScreenSecundaria(
+                            onBackClick = {
+                                navController.navigateUp()
+                            },
+                            onNextClick = {}
                         )
                     }
                 }

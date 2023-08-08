@@ -1,5 +1,6 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
@@ -102,8 +103,9 @@ fun PlayersListScreenSecundaria(
 
     Scaffold (
         topBar = {
-            PlayersListAppBar(
-                onBackClick = onBackClick
+            SevenWondersAppBar(
+                onBackClick = onBackClick,
+                title = stringResource(id = R.string.lista_de_jogadores_topbar)
             )
         },
         modifier = modifier,
@@ -362,8 +364,9 @@ fun AddPlayerWindow(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlayersListAppBar(
+fun SevenWondersAppBar(
     onBackClick: () -> Unit,
+    title: String,
     modifier: Modifier = Modifier
 ) {
     Column (
@@ -372,7 +375,7 @@ fun PlayersListAppBar(
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(R.string.lista_de_jogadores_topbar),
+                    text = title,
                     style = MaterialTheme.typography.titleMedium
                 )
             },

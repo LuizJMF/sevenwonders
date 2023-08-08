@@ -5,8 +5,10 @@
     <string name="estatisticas_button">Estatísticas</string>
     <string name="historico_de_partidas_button">Histórico de Partidas</string>
     <string name="lista_de_jogadores_topbar">Lista de Jogadores</string>
+    <string name="new_game_topbar">Nova partida</string>
     <string name="adicionar_jogador_button">Add jogador</string>
     <string name="apagar_jogador_button">Apagar jogador</string>
     <string name="lista_jogadores_vazia">Ainda não há nenhum jogador adicionado. Clique em \'+ Add jogador\' para adicionar pessoas.</string>
     <string name="add_jogador_window_title">Adicionar jogador</string>
+    <string name="new_game_top_bar">Nova partida</string>
 </resources>
