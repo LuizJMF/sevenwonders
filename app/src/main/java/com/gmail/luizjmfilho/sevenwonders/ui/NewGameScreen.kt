@@ -16,22 +16,19 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.PersonRemove
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -113,7 +110,8 @@ fun NewGameScreenSecundaria(
                             visible = newGameUiState.activePlayersNumber < ActivePlayersNumber.Seven
                         ) {
                             TextButton(
-                                onClick = { newGameViewModel.newGameAddPlayer() }
+                                onClick = { newGameViewModel.newGameAddPlayer() },
+                                enabled = newGameUiState.isAdvanceAndAddPlayerButtonsEnable
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -152,7 +150,8 @@ fun NewGameScreenSecundaria(
                     Row(){
                         Spacer(Modifier.weight(1f))
                         TextButton(
-                            onClick = onNextClick
+                            onClick = onNextClick,
+                            enabled = newGameUiState.isAdvanceAndAddPlayerButtonsEnable
                         ) {
                             Row (
                                 verticalAlignment = Alignment.CenterVertically,
@@ -241,6 +240,13 @@ fun NewGameTextField(
 
         ),
         leadingIcon = { Icon(imageVector = Icons.Outlined.Person, contentDescription = null) },
+        trailingIcon = {
+            IconButton(
+                onClick = { /*TODO*/ }
+            ) {
+                Icon(imageVector = Icons.Outlined.ArrowDropDown, contentDescription = null)
+            }
+        },
         modifier = modifier
             .fillMaxWidth(),
         singleLine = true,

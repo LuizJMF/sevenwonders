@@ -3,18 +3,30 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
@@ -23,37 +35,36 @@ fun HomeScreen(
     onCriarPartidaClick: () -> Unit,
     onListaDeJogadoresClick: () -> Unit,
     modifier: Modifier = Modifier
-){
-    Box(
-        modifier = modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ){
-        Image(
-            painter = painterResource(id = R.drawable.fundob),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
+) {
+    Scaffold(
+
+    ) { scaffoldPadding ->
+        Box(
+            modifier = modifier
                 .fillMaxSize()
-        )
-        Column (
-            horizontalAlignment = Alignment.CenterHorizontally,
-                ){
-            Box (
-                contentAlignment = Alignment.BottomCenter,
+                .padding(scaffoldPadding),
+            contentAlignment = Alignment.Center,
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.fundob),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .weight(2f)
-            ){
+                    .fillMaxSize()
+            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState())
+            ) {
                 Text(
                     text = stringResource(R.string.app_name),
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier
+                        .padding(top = 30.dp)
                 )
-            }
-            Box (
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .weight(8f)
-            ){
+                Spacer(Modifier.weight(1f))
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -73,13 +84,28 @@ fun HomeScreen(
                         onClick = { /*TODO*/ },
                         textinho = stringResource(R.string.historico_de_partidas_button)
                     )
-
+                }
+                Spacer(Modifier.weight(1f))
+                Row(
+                    modifier = Modifier
+                        .padding(bottom = 15.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Spacer(Modifier.weight(1f))
+                    TextButton(
+                        onClick = { /*TODO*/ }
+                    ) {
+                        Text(text = "Sobre", color = Color.White)
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
                 }
             }
-            Spacer(Modifier.weight(2f))
         }
     }
-
 }
 
 @Composable

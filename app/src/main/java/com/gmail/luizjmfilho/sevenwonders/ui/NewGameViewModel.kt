@@ -15,10 +15,14 @@ class NewGameViewModel : ViewModel() {
 
     fun updatePlayer (playerPosition: Int, playerName: String){
         _uiState.update { currentState ->
-            val listaMutavel = currentState.activePlayersList.toMutableList()
-            listaMutavel[playerPosition] = playerName
+            val newActivePlayersList = currentState.activePlayersList.toMutableList()
+            newActivePlayersList[playerPosition] = playerName
+            val isAdvanceAndAddPlayerButtonsEnable = newActivePlayersList.take(currentState.activePlayersNumber.numValue).all {
+                it != ""
+            }
             currentState.copy(
-                activePlayersList = listaMutavel
+                activePlayersList = newActivePlayersList,
+                isAdvanceAndAddPlayerButtonsEnable = isAdvanceAndAddPlayerButtonsEnable,
             )
         }
     }
@@ -27,7 +31,8 @@ class NewGameViewModel : ViewModel() {
         _uiState.update { currentState ->
             val newPlayersQuantity = ActivePlayersNumber.values()[currentState.activePlayersNumber.ordinal + 1]
             currentState.copy(
-                activePlayersNumber = newPlayersQuantity
+                activePlayersNumber = newPlayersQuantity,
+                isAdvanceAndAddPlayerButtonsEnable = false,
             )
         }
     }
@@ -35,11 +40,12 @@ class NewGameViewModel : ViewModel() {
     fun newGameRemovePlayer () {
         _uiState.update { currentState ->
             val newPlayersQuantity = ActivePlayersNumber.values()[currentState.activePlayersNumber.ordinal - 1]
-            val listaMutavel = currentState.activePlayersList.toMutableList()
-            listaMutavel[currentState.activePlayersNumber.numValue - 1] = ""
+            val newActivePlayersList = currentState.activePlayersList.toMutableList()
+            newActivePlayersList[currentState.activePlayersNumber.numValue - 1] = ""
             currentState.copy(
-                activePlayersList = listaMutavel,
-                activePlayersNumber = newPlayersQuantity
+                activePlayersList = newActivePlayersList,
+                activePlayersNumber = newPlayersQuantity,
+                isAdvanceAndAddPlayerButtonsEnable = true,
             )
         }
     }
