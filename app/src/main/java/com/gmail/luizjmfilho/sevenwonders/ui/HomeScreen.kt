@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
+val homeScreenTestTag: String = "Home Screen"
 @Composable
 fun HomeScreen(
     onCriarPartidaClick: () -> Unit,
@@ -37,7 +39,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     Scaffold(
-
+        modifier = Modifier
+            .testTag(homeScreenTestTag)
     ) { scaffoldPadding ->
         Box(
             modifier = modifier
@@ -74,7 +77,7 @@ fun HomeScreen(
                     )
                     HomeScreenButton(
                         onClick = onListaDeJogadoresClick,
-                        textinho = stringResource(R.string.lista_de_jogadores_button)
+                        textinho = stringResource(R.string.players_list_button)
                     )
                     HomeScreenButton(
                         onClick = { /*TODO*/ },

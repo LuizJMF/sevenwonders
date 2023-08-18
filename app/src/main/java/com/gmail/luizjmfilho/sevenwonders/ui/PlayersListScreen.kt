@@ -1,6 +1,5 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
@@ -19,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -51,9 +51,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,11 +63,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gmail.luizjmfilho.sevenwonders.R
-import com.gmail.luizjmfilho.sevenwonders.data.NameError
-import com.gmail.luizjmfilho.sevenwonders.data.NicknameError
+import com.gmail.luizjmfilho.sevenwonders.data.NameOrNicknameError
 import com.gmail.luizjmfilho.sevenwonders.data.PlayersListUiState
+import com.gmail.luizjmfilho.sevenwonders.model.Pessoa
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
+val deleteIconTestTag: String = "ícone X de deletar"
+val nameTextFieldTestTag: String = "Name TextField"
+val nicknameTextFieldTestTag: String = "Nickname TextField"
+val eachPersonNameInTheListTestTag: String = "Person Name"
+val eachPersonNicknameInTheListTestTag: String = "Person Nickname"
+val playersListScreenTestTag: String = "PlayersList Screen"
 @Composable
 fun PlayersListScreenPrimaria(
     onBackClick: () -> Unit,
@@ -80,9 +88,9 @@ fun PlayersListScreenPrimaria(
         modifier = modifier,
         onNameChange = { playersListViewModel.updateName(it) },
         onNicknameChange = { playersListViewModel.updateNickname(it) },
-        apagarJogador = { nome, apelido -> playersListViewModel.apagarJogador(nome, apelido) },
-        cancelarAddJogador = { playersListViewModel.cancelarAddJogador()},
-        onConfirmarClicked = {playersListViewModel.addJogador()}
+        deletePlayer = { nome, apelido -> playersListViewModel.deletePlayer(nome, apelido) },
+        cancelAddPlayer = { playersListViewModel.cancelAddPlayer()},
+        onConfirmClicked = {playersListViewModel.onConfirmAddPlayerClick()}
     )
 }
 
@@ -92,14 +100,14 @@ fun PlayersListScreenSecundaria(
     playersListUiState: PlayersListUiState,
     onNameChange: (String) -> Unit,
     onNicknameChange: (String) -> Unit,
-    apagarJogador: (String, String) -> Unit,
-    cancelarAddJogador: () -> Unit,
-    onConfirmarClicked: () -> Unit,
+    deletePlayer: (String, String) -> Unit,
+    cancelAddPlayer: () -> Unit,
+    onConfirmClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ){
 
     var addJogadorExpanded by rememberSaveable() { mutableStateOf(false) }
-    var apagarJogadorExpanded by rememberSaveable() { mutableStateOf(false) }
+    var deletePlayerExpanded by rememberSaveable() { mutableStateOf(false) }
 
     Scaffold (
         topBar = {
@@ -108,7 +116,8 @@ fun PlayersListScreenSecundaria(
                 title = stringResource(id = R.string.lista_de_jogadores_topbar)
             )
         },
-        modifier = modifier,
+        modifier = modifier
+            .testTag(playersListScreenTestTag),
     ) { scaffoldPadding ->
 
         Box(
@@ -136,42 +145,42 @@ fun PlayersListScreenSecundaria(
                     PlayersListButton(
                         onClick = {
                             addJogadorExpanded = !addJogadorExpanded
-                            cancelarAddJogador()
+                            cancelAddPlayer()
                                   },
                         icone = Icons.Filled.Add,
-                        textinho = stringResource(R.string.adicionar_jogador_button),
+                        textinho = stringResource(R.string.add_player_button),
                         modifier = Modifier
                             .weight(1f),
                         enabled = !addJogadorExpanded,
                     )
                     PlayersListButton(
                         onClick = {
-                            if (playersListUiState.listaDeJogadores.isEmpty()) {
-                                apagarJogadorExpanded = false
+                            if (playersListUiState.playersList.isEmpty()) {
+                                deletePlayerExpanded = false
                             } else {
-                                apagarJogadorExpanded = !apagarJogadorExpanded
+                                deletePlayerExpanded = !deletePlayerExpanded
                             }
                         },
                         icone = Icons.Filled.Delete,
-                        textinho = stringResource(R.string.apagar_jogador_button),
+                        textinho = stringResource(R.string.delete_player_button),
                         modifier = Modifier
                             .weight(1f),
-                        enabled = !apagarJogadorExpanded,
+                        enabled = !deletePlayerExpanded,
                     )
                 }
                 AnimatedVisibility(
                     visible = addJogadorExpanded
                 ) {
                     AddPlayerWindow(
-                        name = playersListUiState.nome,
+                        name = playersListUiState.name,
                         onNameChange = onNameChange,
-                        nickname = playersListUiState.apelido,
+                        nickname = playersListUiState.nickname,
                         onNicknameChange = onNicknameChange ,
-                        onCancelarClick = {
-                            cancelarAddJogador()
+                        onCancelClick = {
+                            cancelAddPlayer()
                             addJogadorExpanded = false
                         },
-                        onConfirmarClick = onConfirmarClicked,
+                        onConfirmClick = onConfirmClicked,
                         nameError = playersListUiState.nameError,
                         nicknameError = playersListUiState.nicknameError,
                     )
@@ -186,7 +195,7 @@ fun PlayersListScreenSecundaria(
                     border = BorderStroke(1.dp, Color.Black),
 
                 ){
-                    if (playersListUiState.listaDeJogadores.isEmpty()) {
+                    if (playersListUiState.playersList.isEmpty()) {
                         Box(
                             modifier = Modifier
                                 .padding(10.dp)
@@ -194,7 +203,7 @@ fun PlayersListScreenSecundaria(
                             contentAlignment = Alignment.Center,
                         ){
                             Text(
-                                text = stringResource(R.string.lista_jogadores_vazia),
+                                text = stringResource(R.string.empty_players_list),
                                 textAlign = TextAlign.Center,
                                 color = Color.Gray,
                                 fontStyle = FontStyle.Italic,
@@ -207,7 +216,7 @@ fun PlayersListScreenSecundaria(
                                 .padding(10.dp),
                             verticalArrangement = Arrangement.spacedBy(5.dp)
                         ) {
-                            itemsIndexed(playersListUiState.listaDeJogadores) { index, person ->
+                            itemsIndexed(playersListUiState.playersList) { index, person ->
                                 Row(
                                     horizontalArrangement = Arrangement.spacedBy(2.dp) ,
                                     modifier = Modifier
@@ -228,15 +237,21 @@ fun PlayersListScreenSecundaria(
                                             overflow = TextOverflow.Ellipsis,
                                             modifier = Modifier
                                                 .animateContentSize()
+                                                .testTag(eachPersonNameInTheListTestTag)
                                         )
                                         Text(
                                             text = person.apelido,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
                                             color = Color.Gray,
-                                            fontStyle = FontStyle.Italic
+                                            fontStyle = FontStyle.Italic,
+                                            modifier = Modifier
+                                                .animateContentSize()
+                                                .testTag(eachPersonNicknameInTheListTestTag)
                                         )
                                     }
                                     AnimatedVisibility(
-                                        visible = apagarJogadorExpanded
+                                        visible = deletePlayerExpanded
                                     ) {
                                         Divider(
                                             modifier = Modifier
@@ -245,11 +260,12 @@ fun PlayersListScreenSecundaria(
                                         )
                                         IconButton(
                                             onClick = {
-                                                apagarJogador(person.nome, person.apelido)
+                                                deletePlayer(person.nome, person.apelido)
                                             },
                                             modifier = Modifier
                                                 .size(40.dp)
                                                 .animateContentSize()
+                                                .testTag(deleteIconTestTag)
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Filled.Close,
@@ -282,11 +298,11 @@ fun AddPlayerWindow(
     onNameChange: (String) -> Unit,
     nickname: String,
     onNicknameChange: (String) -> Unit,
-    onCancelarClick: () -> Unit,
-    onConfirmarClick: () -> Unit,
+    onCancelClick: () -> Unit,
+    onConfirmClick: () -> Unit,
     modifier: Modifier = Modifier,
-    nameError: NameError?,
-    nicknameError: NicknameError?,
+    nameError: NameOrNicknameError?,
+    nicknameError: NameOrNicknameError?,
 ) {
 
     Card (
@@ -310,31 +326,35 @@ fun AddPlayerWindow(
             TextField(
                 value = name,
                 onValueChange = onNameChange ,
-                label = {Text(text = "Nome completo")},
+                label = {Text(text = stringResource(R.string.add_player_label_name_text_field))},
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .testTag(nameTextFieldTestTag),
                 supportingText = {
                     when (nameError) {
-                        NameError.Empty -> Text(text = "Este campo é obrigatório")
-                        NameError.Exists -> Text(text = "Este nome já está cadastrado na lista")
+                        NameOrNicknameError.Empty -> Text(text = stringResource(R.string.empty_error_message))
+                        NameOrNicknameError.Exists -> Text(text = stringResource(R.string.name_exists_erros_message))
                         else -> {}
                     }
                 },
+                keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words),
                 isError = nameError != null,
             )
             TextField(
                 value = nickname,
                 onValueChange = onNicknameChange,
-                label = {Text(text = "Apelido")},
+                label = {Text(text = stringResource(R.string.add_player_label_nickname_text_field))},
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .testTag(nicknameTextFieldTestTag),
                 supportingText = {
                     when (nicknameError) {
-                        NicknameError.Empty -> Text(text = "Este campo é obrigatório")
-                        NicknameError.Exists -> Text(text = "Este apelido já está cadastrado na lista")
+                        NameOrNicknameError.Empty -> Text(text = stringResource(R.string.empty_error_message))
+                        NameOrNicknameError.Exists -> Text(text = stringResource(R.string.nickname_exists_erros_message))
                         else -> {}
                     }
                 },
+                keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words),
                 isError = nicknameError != null,
             )
             Row(
@@ -343,16 +363,16 @@ fun AddPlayerWindow(
                     .width(IntrinsicSize.Max)
             ){
                 PlayersListButton(
-                    onClick = onCancelarClick,
+                    onClick = onCancelClick,
                     icone = Icons.Filled.Close,
-                    textinho = "Cancelar",
+                    textinho = stringResource(R.string.add_player_window_cancel_button),
                     modifier = Modifier
                         .weight(1f)
                 )
                 PlayersListButton(
-                    onClick = onConfirmarClick,
+                    onClick = onConfirmClick,
                     icone = Icons.Filled.Done,
-                    textinho = "Confirmar",
+                    textinho = stringResource(R.string.add_player_window_confirm_button),
                     modifier = Modifier
                         .weight(1f)
                 )
@@ -385,7 +405,7 @@ fun SevenWondersAppBar(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.navigation_back_content_description)
                     )
                 }
             }
@@ -468,8 +488,22 @@ fun JanelinhaJogadorAdicionado(
 @Composable
 fun PlayersListPreview() {
     SevenWondersTheme {
-        PlayersListScreenPrimaria(
+        PlayersListScreenSecundaria(
             onBackClick = {},
+            playersListUiState = PlayersListUiState(
+                "",
+                "",
+                listOf(
+                    Pessoa("Luiz José de Medeiros Filho", "Zinho "),
+                    Pessoa("Crístian Deives dos Santos Viana", "Deivinho"),
+                    Pessoa("Anna Luisa Espínola de Sena Costa", "Anninha"),
+                )
+            ),
+            onNameChange = {},
+            onNicknameChange = {},
+            deletePlayer = { _, _ ->},
+            cancelAddPlayer = {},
+            onConfirmClicked = {},
         )
     }
 }
@@ -478,8 +512,14 @@ fun PlayersListPreview() {
 @Composable
 fun PlayersListEmptyPreview() {
     SevenWondersTheme {
-        PlayersListScreenPrimaria(
+        PlayersListScreenSecundaria(
             onBackClick = {},
+            playersListUiState = PlayersListUiState(),
+            onNameChange = {},
+            onNicknameChange = {},
+            deletePlayer = { _, _ ->},
+            cancelAddPlayer = {},
+            onConfirmClicked = {},
         )
     }
 }

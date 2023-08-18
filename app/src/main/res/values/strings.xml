@@ -1,14 +1,22 @@
 <resources>
     <string name="app_name">7 Wonders</string>
     <string name="criar_partida_button">Criar partida</string>
-    <string name="lista_de_jogadores_button">Lista de Jogadores</string>
+    <string name="players_list_button">Lista de Jogadores</string>
     <string name="estatisticas_button">Estatísticas</string>
     <string name="historico_de_partidas_button">Histórico de Partidas</string>
     <string name="lista_de_jogadores_topbar">Lista de Jogadores</string>
     <string name="new_game_topbar">Nova partida</string>
-    <string name="adicionar_jogador_button">Add jogador</string>
-    <string name="apagar_jogador_button">Apagar jogador</string>
-    <string name="lista_jogadores_vazia">Ainda não há nenhum jogador adicionado. Clique em \'+ Add jogador\' para adicionar pessoas.</string>
+    <string name="add_player_button">Add jogador</string>
+    <string name="delete_player_button">Apagar jogador</string>
+    <string name="empty_players_list">Ainda não há nenhum jogador adicionado. Clique em \'+ Add jogador\' para adicionar pessoas.</string>
     <string name="add_jogador_window_title">Adicionar jogador</string>
     <string name="new_game_top_bar">Nova partida</string>
+    <string name="add_player_window_cancel_button">Cancelar</string>
+    <string name="add_player_window_confirm_button">Confirmar</string>
+    <string name="navigation_back_content_description">Voltar tela</string>
+    <string name="add_player_label_name_text_field">Nome completo</string>
+    <string name="add_player_label_nickname_text_field">Apelido</string>
+    <string name="empty_error_message">Este campo é obrigatório</string>
+    <string name="name_exists_erros_message">Este nome já está cadastrado na lista</string>
+    <string name="nickname_exists_erros_message">Este apelido já está cadastrado na lista</string>
 </resources>

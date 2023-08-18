@@ -1,8 +1,7 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.lifecycle.ViewModel
-import com.gmail.luizjmfilho.sevenwonders.data.NameError
-import com.gmail.luizjmfilho.sevenwonders.data.NicknameError
+import com.gmail.luizjmfilho.sevenwonders.data.NameOrNicknameError
 import com.gmail.luizjmfilho.sevenwonders.data.PlayersListUiState
 import com.gmail.luizjmfilho.sevenwonders.model.Pessoa
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +17,7 @@ class PlayersListViewModel : ViewModel() {
     fun updateName(novoNome: String){
         _uiState.update { currentState ->
             currentState.copy(
-                nome = novoNome,
+                name = novoNome,
                 nameError = null,
             )
         }
@@ -27,52 +26,52 @@ class PlayersListViewModel : ViewModel() {
     fun updateNickname(novoApelido: String){
         _uiState.update { currentState ->
             currentState.copy(
-                apelido = novoApelido,
+                nickname = novoApelido,
             )
         }
     }
 
-    fun cancelarAddJogador(){
+    fun cancelAddPlayer(){
         _uiState.update { currentState ->
             currentState.copy(
-                nome = "",
-                apelido = "",
+                name = "",
+                nickname = "",
                 nameError = null,
                 nicknameError = null,
             )
         }
     }
 
-    fun addJogador () {
+    fun onConfirmAddPlayerClick () {
         _uiState.update { currentState ->
-            val nomeSemEspaço = currentState.nome.trim()
-            val nameError: NameError? = if (nomeSemEspaço == "") {
-                NameError.Empty
-            } else if (currentState.listaDeJogadores.any{ cadaPessoa ->
-                    cadaPessoa.nome.equals(nomeSemEspaço, true)
+            val nomeSemEspaco = currentState.name.trim()
+            val nameError: NameOrNicknameError? = if (nomeSemEspaco == "") {
+                NameOrNicknameError.Empty
+            } else if (currentState.playersList.any{ cadaPessoa ->
+                    cadaPessoa.nome.equals(nomeSemEspaco, true)
                 }) {
-                NameError.Exists
+                NameOrNicknameError.Exists
             } else {
                 null
             }
 
-            val apelidoSemEspaço = currentState.apelido.trim()
-            val nicknameError: NicknameError? = if (apelidoSemEspaço == "") {
-                NicknameError.Empty
-            } else if (currentState.listaDeJogadores.any{ cadaPessoa ->
-                    cadaPessoa.apelido.equals(apelidoSemEspaço, true)
+            val apelidoSemEspaco = currentState.nickname.trim()
+            val nicknameError: NameOrNicknameError? = if (apelidoSemEspaco == "") {
+                NameOrNicknameError.Empty
+            } else if (currentState.playersList.any{ cadaPessoa ->
+                    cadaPessoa.apelido.equals(apelidoSemEspaco, true)
                 }) {
-                NicknameError.Exists
+                NameOrNicknameError.Exists
             } else {
                 null
             }
 
             if (nameError == null && nicknameError == null) {
-                val lista = currentState.listaDeJogadores + Pessoa(nomeSemEspaço, apelidoSemEspaço)
+                val lista = currentState.playersList + Pessoa(nomeSemEspaco, apelidoSemEspaco)
                 currentState.copy(
-                    nome = "",
-                    apelido = "",
-                    listaDeJogadores = lista.sortedBy {
+                    name = "",
+                    nickname = "",
+                    playersList = lista.sortedBy {
                         it.nome
                     },
                     nameError = nameError,
@@ -87,10 +86,10 @@ class PlayersListViewModel : ViewModel() {
         }
     }
 
-    fun apagarJogador (nome: String, apelido: String) {
+    fun deletePlayer (nome: String, apelido: String) {
         _uiState.update { currentState ->
             currentState.copy(
-                listaDeJogadores = currentState.listaDeJogadores - Pessoa(nome, apelido)
+                playersList = currentState.playersList - Pessoa(nome, apelido)
             )
         }
     }

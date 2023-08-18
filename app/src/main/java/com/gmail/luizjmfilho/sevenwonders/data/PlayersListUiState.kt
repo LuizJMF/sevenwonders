@@ -3,19 +3,14 @@ package com.gmail.luizjmfilho.sevenwonders.data
 import com.gmail.luizjmfilho.sevenwonders.model.Pessoa
 
 data class PlayersListUiState(
-    val nome: String = "",
-    val apelido: String = "",
-    val listaDeJogadores: List<Pessoa> = listOf(),
-    val nameError: NameError? = null,
-    val nicknameError: NicknameError? = null
+    val name: String = "",
+    val nickname: String = "",
+    val playersList: List<Pessoa> = listOf(),
+    val nameError: NameOrNicknameError? = null,
+    val nicknameError: NameOrNicknameError? = null
 )
 
-enum class NameError {
-    Empty,
-    Exists,
-}
-
-enum class NicknameError {
+enum class NameOrNicknameError {
     Empty,
     Exists,
 }
