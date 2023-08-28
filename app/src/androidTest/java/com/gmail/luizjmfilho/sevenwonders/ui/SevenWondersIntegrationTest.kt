@@ -1,6 +1,7 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.activity.ComponentActivity
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.gmail.luizjmfilho.sevenwonders.SevenWondersNavHost
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
@@ -19,7 +20,9 @@ class SevenWondersIntegrationTest {
     private fun launchScreen() {
         rule.setContent {
             SevenWondersTheme {
-                SevenWondersNavHost()
+                SevenWondersNavHost(
+                    windowWidthSizeClass = WindowWidthSizeClass.Compact
+                )
             }
         }
     }

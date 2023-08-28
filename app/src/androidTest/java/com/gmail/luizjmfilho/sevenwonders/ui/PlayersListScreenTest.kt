@@ -1,6 +1,7 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.activity.ComponentActivity
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.gmail.luizjmfilho.sevenwonders.data.NameOrNicknameError
 import com.gmail.luizjmfilho.sevenwonders.data.PlayersListUiState
@@ -33,7 +34,8 @@ class PlayersListScreenTest {
                 onNicknameChange = onNicknameChange,
                 deletePlayer = deletePlayer,
                 cancelAddPlayer = cancelAddPlayer,
-                onConfirmClicked = onConfirmClicked
+                onConfirmClicked = onConfirmClicked,
+                windowWidthSizeClass = WindowWidthSizeClass.Compact
             )
         }
     }

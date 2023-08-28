@@ -1,6 +1,7 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.activity.ComponentActivity
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import org.junit.Rule
 import org.junit.Test
@@ -14,7 +15,8 @@ class PlayerListScreenIntegrationTest {
     private fun launchScreen() {
         rule.setContent {
             PlayersListScreenPrimaria(
-                onBackClick = { /*TODO*/ }
+                onBackClick = { /*TODO*/ },
+                windowWidthSizeClass = WindowWidthSizeClass.Compact
             )
         }
     }

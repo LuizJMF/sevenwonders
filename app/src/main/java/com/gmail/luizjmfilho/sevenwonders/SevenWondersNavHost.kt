@@ -1,5 +1,6 @@
 package com.gmail.luizjmfilho.sevenwonders
 
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -9,7 +10,9 @@ import com.gmail.luizjmfilho.sevenwonders.ui.NewGameScreenSecundaria
 import com.gmail.luizjmfilho.sevenwonders.ui.PlayersListScreenPrimaria
 
 @Composable
-fun SevenWondersNavHost() {
+fun SevenWondersNavHost(
+    windowWidthSizeClass: WindowWidthSizeClass,
+) {
     val navController = rememberNavController()
 
     NavHost(
@@ -29,6 +32,7 @@ fun SevenWondersNavHost() {
 
         composable(route = ScreenNames.PlayersListScreen.name) {
             PlayersListScreenPrimaria(
+                windowWidthSizeClass = windowWidthSizeClass,
                 onBackClick = {
                     navController.navigateUp()
                 }

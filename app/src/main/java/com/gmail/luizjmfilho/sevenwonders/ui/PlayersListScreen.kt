@@ -4,11 +4,13 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +20,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -36,9 +40,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -74,8 +81,10 @@ val nicknameTextFieldTestTag: String = "Nickname TextField"
 val eachPersonNameInTheListTestTag: String = "Person Name"
 val eachPersonNicknameInTheListTestTag: String = "Person Nickname"
 val playersListScreenTestTag: String = "PlayersList Screen"
+
 @Composable
 fun PlayersListScreenPrimaria(
+    windowWidthSizeClass: WindowWidthSizeClass,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     playersListViewModel: PlayersListViewModel = viewModel(),
@@ -83,6 +92,7 @@ fun PlayersListScreenPrimaria(
     ) {
     val playersListUiState by playersListViewModel.uiState.collectAsState()
     PlayersListScreenSecundaria(
+        windowWidthSizeClass = windowWidthSizeClass,
         onBackClick = onBackClick,
         playersListUiState = playersListUiState,
         modifier = modifier,
@@ -96,6 +106,7 @@ fun PlayersListScreenPrimaria(
 
 @Composable
 fun PlayersListScreenSecundaria(
+    windowWidthSizeClass: WindowWidthSizeClass,
     onBackClick: () -> Unit,
     playersListUiState: PlayersListUiState,
     onNameChange: (String) -> Unit,
@@ -104,12 +115,11 @@ fun PlayersListScreenSecundaria(
     cancelAddPlayer: () -> Unit,
     onConfirmClicked: () -> Unit,
     modifier: Modifier = Modifier,
-){
-
+) {
     var addJogadorExpanded by rememberSaveable() { mutableStateOf(false) }
     var deletePlayerExpanded by rememberSaveable() { mutableStateOf(false) }
 
-    Scaffold (
+    Scaffold(
         topBar = {
             SevenWondersAppBar(
                 onBackClick = onBackClick,
@@ -119,178 +129,384 @@ fun PlayersListScreenSecundaria(
         modifier = modifier
             .testTag(playersListScreenTestTag),
     ) { scaffoldPadding ->
-
-        Box(
-            modifier = Modifier
-                .padding(scaffoldPadding),
-            contentAlignment = Alignment.TopCenter
-        ){
-            Image(
-                painter = painterResource(id = R.drawable.fundoa),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+        if (windowWidthSizeClass == WindowWidthSizeClass.Compact) {
+            PlayersListCompactContent(
                 modifier = Modifier
-                    .fillMaxSize()
-            )
-            Column (
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(15.dp)
-                    ){
-                Row (
-                    horizontalArrangement = Arrangement.spacedBy(5.dp),
-                    modifier = Modifier
-                        .width(IntrinsicSize.Max)
-                        ){
-                    PlayersListButton(
-                        onClick = {
-                            addJogadorExpanded = !addJogadorExpanded
-                            cancelAddPlayer()
-                                  },
-                        icone = Icons.Filled.Add,
-                        textinho = stringResource(R.string.add_player_button),
-                        modifier = Modifier
-                            .weight(1f),
-                        enabled = !addJogadorExpanded,
-                    )
-                    PlayersListButton(
-                        onClick = {
-                            if (playersListUiState.playersList.isEmpty()) {
-                                deletePlayerExpanded = false
-                            } else {
-                                deletePlayerExpanded = !deletePlayerExpanded
-                            }
-                        },
-                        icone = Icons.Filled.Delete,
-                        textinho = stringResource(R.string.delete_player_button),
-                        modifier = Modifier
-                            .weight(1f),
-                        enabled = !deletePlayerExpanded,
-                    )
-                }
-                AnimatedVisibility(
-                    visible = addJogadorExpanded
-                ) {
-                    AddPlayerWindow(
-                        name = playersListUiState.name,
-                        onNameChange = onNameChange,
-                        nickname = playersListUiState.nickname,
-                        onNicknameChange = onNicknameChange ,
-                        onCancelClick = {
-                            cancelAddPlayer()
-                            addJogadorExpanded = false
-                        },
-                        onConfirmClick = onConfirmClicked,
-                        nameError = playersListUiState.nameError,
-                        nicknameError = playersListUiState.nicknameError,
-                    )
-                }
-                Card(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 10.dp)
-                        .alpha(0.9f)
-                        .animateContentSize(),
-                    colors = CardDefaults.cardColors(Color.White),
-                    border = BorderStroke(1.dp, Color.Black),
-
-                ){
+                    .padding(scaffoldPadding),
+                onAddJogadorButton = {
+                    addJogadorExpanded = !addJogadorExpanded
+                    cancelAddPlayer()
+                },
+                onDeletePlayerButton = {
                     if (playersListUiState.playersList.isEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .fillMaxSize(),
-                            contentAlignment = Alignment.Center,
-                        ){
-                            Text(
-                                text = stringResource(R.string.empty_players_list),
-                                textAlign = TextAlign.Center,
-                                color = Color.Gray,
-                                fontStyle = FontStyle.Italic,
-                                fontSize = 18.sp
-                            )
-                        }
+                        deletePlayerExpanded = false
                     } else {
-                        LazyColumn(
-                            modifier = Modifier
-                                .padding(10.dp),
-                            verticalArrangement = Arrangement.spacedBy(5.dp)
-                        ) {
-                            itemsIndexed(playersListUiState.playersList) { index, person ->
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(2.dp) ,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(IntrinsicSize.Min),
-                                ) {
-                                    Text(
-                                        text = "${index + 1}."
-                                    )
-                                    Column(
-                                        modifier = Modifier
-                                            .weight(1f),
-                                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                                    ) {
-                                        Text(
-                                            text = person.nome,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                            modifier = Modifier
-                                                .animateContentSize()
-                                                .testTag(eachPersonNameInTheListTestTag)
-                                        )
-                                        Text(
-                                            text = person.apelido,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                            color = Color.Gray,
-                                            fontStyle = FontStyle.Italic,
-                                            modifier = Modifier
-                                                .animateContentSize()
-                                                .testTag(eachPersonNicknameInTheListTestTag)
-                                        )
-                                    }
-                                    AnimatedVisibility(
-                                        visible = deletePlayerExpanded
-                                    ) {
-                                        Divider(
-                                            modifier = Modifier
-                                                .fillMaxHeight()
-                                                .width(1.dp)
-                                        )
-                                        IconButton(
-                                            onClick = {
-                                                deletePlayer(person.nome, person.apelido)
-                                            },
-                                            modifier = Modifier
-                                                .size(40.dp)
-                                                .animateContentSize()
-                                                .testTag(deleteIconTestTag)
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Filled.Close,
-                                                contentDescription = null,
-                                                tint = Color.Red,
-                                            )
-                                        }
-                                    }
-                                }
-                                Divider(
-                                    thickness = 1.dp,
-                                    color = Color.DarkGray,
-                                    modifier = Modifier
-                                        .padding(3.dp)
-                                )
-                            }
-                        }
+                        deletePlayerExpanded = !deletePlayerExpanded
                     }
-                }
-                
-            }
+                },
+                onAddJogadorButtonEnabled = !addJogadorExpanded,
+                onDeletePlayerButtonEnabled = !deletePlayerExpanded,
+                addJogadorExpanded = addJogadorExpanded,
+                deletePlayerExpanded = deletePlayerExpanded,
+                onAddJogadorExpanded = { addJogadorExpanded = it },
+                cancelAddPlayer = cancelAddPlayer,
+                deletePlayer = deletePlayer,
+                onNameChange = onNameChange,
+                onNicknameChange = onNicknameChange,
+                onConfirmClicked = onConfirmClicked,
+                playersListUiState = playersListUiState,
+            )
+        } else {
+            PlayersListMediumAndExpandedContent(
+                modifier = Modifier
+                    .padding(scaffoldPadding),
+                onAddJogadorButton = {
+                    addJogadorExpanded = !addJogadorExpanded
+                    cancelAddPlayer()
+                },
+                onDeletePlayerButton = {
+                    if (playersListUiState.playersList.isEmpty()) {
+                        deletePlayerExpanded = false
+                    } else {
+                        deletePlayerExpanded = !deletePlayerExpanded
+                    }
+                },
+                onAddJogadorButtonEnabled = !addJogadorExpanded,
+                onDeletePlayerButtonEnabled = !deletePlayerExpanded,
+                addJogadorExpanded = addJogadorExpanded,
+                deletePlayerExpanded = deletePlayerExpanded,
+                onAddJogadorExpanded = { addJogadorExpanded = it },
+                cancelAddPlayer = cancelAddPlayer,
+                deletePlayer = deletePlayer,
+                onNameChange = onNameChange,
+                onNicknameChange = onNicknameChange,
+                onConfirmClicked = onConfirmClicked,
+                playersListUiState = playersListUiState,
+            )
         }
     }
 }
 
+@Composable
+fun PlayersListMediumAndExpandedContent(
+    playersListUiState: PlayersListUiState,
+    onNameChange: (String) -> Unit,
+    onNicknameChange: (String) -> Unit,
+    deletePlayer: (String, String) -> Unit,
+    cancelAddPlayer: () -> Unit,
+    onConfirmClicked: () -> Unit,
+    onAddJogadorButton: () -> Unit,
+    onDeletePlayerButton: () -> Unit,
+    onAddJogadorButtonEnabled: Boolean,
+    onDeletePlayerButtonEnabled: Boolean,
+    addJogadorExpanded: Boolean,
+    deletePlayerExpanded: Boolean,
+    onAddJogadorExpanded: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row (
+        modifier = modifier,
+    ){
+        BackgroundImage(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()
+        )
+
+        Divider(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(1.dp),
+            color = Color.Black
+        )
+
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(top = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            AddJogadorButton(
+                onClick = onAddJogadorButton,
+                enabled = onAddJogadorButtonEnabled,
+            )
+
+            DeletePlayerButton(
+                onClick = onDeletePlayerButton,
+                enabled = onDeletePlayerButtonEnabled,
+            )
+
+            AnimatedVisibility(
+                visible = addJogadorExpanded,
+            ) {
+                AddPlayerWindow(
+                    name = playersListUiState.name,
+                    onNameChange = onNameChange,
+                    nickname = playersListUiState.nickname,
+                    onNicknameChange = onNicknameChange,
+                    onCancelClick = {
+                        cancelAddPlayer()
+                        onAddJogadorExpanded(false)
+                    },
+                    onConfirmClick = onConfirmClicked,
+                    nameError = playersListUiState.nameError,
+                    nicknameError = playersListUiState.nicknameError,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .alpha(0.9f)
+                        .verticalScroll(rememberScrollState()),
+                )
+            }
+        }
+
+        PlayersList(
+            playersListUiState = playersListUiState,
+            deletePlayer = deletePlayer,
+            deletePlayerExpanded = deletePlayerExpanded,
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.9f)
+                .animateContentSize()
+                .padding(10.dp)
+                .weight(1f),
+        )
+    }
+}
+@Composable
+fun PlayersListCompactContent(
+    playersListUiState: PlayersListUiState,
+    onNameChange: (String) -> Unit,
+    onNicknameChange: (String) -> Unit,
+    deletePlayer: (String, String) -> Unit,
+    cancelAddPlayer: () -> Unit,
+    onConfirmClicked: () -> Unit,
+    onAddJogadorButton: () -> Unit,
+    onDeletePlayerButton: () -> Unit,
+    onAddJogadorButtonEnabled: Boolean,
+    onDeletePlayerButtonEnabled: Boolean,
+    addJogadorExpanded: Boolean,
+    deletePlayerExpanded: Boolean,
+    onAddJogadorExpanded: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.TopCenter
+    ){
+        BackgroundImage(
+            modifier = Modifier
+                .fillMaxSize()
+        )
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(15.dp)
+        ){
+            Row (
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+                modifier = Modifier
+                    .width(IntrinsicSize.Max)
+            ){
+                AddJogadorButton(
+                    onClick = onAddJogadorButton,
+                    enabled = onAddJogadorButtonEnabled,
+                    modifier = Modifier
+                        .weight(1f)
+                )
+                DeletePlayerButton(
+                    onClick = onDeletePlayerButton,
+                    enabled = onDeletePlayerButtonEnabled,
+                    modifier = Modifier
+                        .weight(1f),
+                )
+            }
+
+            AnimatedVisibility(
+                visible = addJogadorExpanded
+            ) {
+                AddPlayerWindow(
+                    name = playersListUiState.name,
+                    onNameChange = onNameChange,
+                    nickname = playersListUiState.nickname,
+                    onNicknameChange = onNicknameChange,
+                    onCancelClick = {
+                        cancelAddPlayer()
+                        onAddJogadorExpanded(false)
+                    },
+                    onConfirmClick = onConfirmClicked,
+                    nameError = playersListUiState.nameError,
+                    nicknameError = playersListUiState.nicknameError,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp)
+                        .alpha(0.9f)
+                        .verticalScroll(rememberScrollState()),
+                )
+            }
+
+            PlayersList(
+                playersListUiState = playersListUiState,
+                deletePlayer = deletePlayer,
+                deletePlayerExpanded = deletePlayerExpanded,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 10.dp)
+                    .alpha(0.9f)
+                    .animateContentSize(),
+            )
+        }
+    }
+}
+
+@Composable
+fun BackgroundImage(
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = painterResource(id = R.drawable.fundoa),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun AddJogadorButton(
+    enabled: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    PlayersListButton(
+        onClick = onClick,
+        icone = Icons.Filled.Add,
+        textinho = stringResource(R.string.add_player_button),
+        modifier = modifier,
+        enabled = enabled,
+    )
+}
+
+@Composable
+fun DeletePlayerButton(
+    onClick: () -> Unit,
+    enabled: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    PlayersListButton(
+        onClick = onClick,
+        icone = Icons.Filled.Delete,
+        textinho = stringResource(R.string.delete_player_button),
+        modifier = modifier,
+        enabled = enabled,
+    )
+}
+
+@Composable
+fun PlayersList(
+    playersListUiState: PlayersListUiState,
+    deletePlayer: (String, String) -> Unit,
+    deletePlayerExpanded: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(Color.White),
+        border = BorderStroke(1.dp, Color.Black),
+
+        ) {
+        if (playersListUiState.playersList.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = stringResource(R.string.empty_players_list),
+                    textAlign = TextAlign.Center,
+                    color = Color.Gray,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 18.sp
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(10.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                itemsIndexed(playersListUiState.playersList) { index, person ->
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(IntrinsicSize.Min),
+                    ) {
+                        Text(
+                            text = "${index + 1}."
+                        )
+                        Column(
+                            modifier = Modifier
+                                .weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            Text(
+                                text = person.nome,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier
+                                    .animateContentSize()
+                                    .testTag(eachPersonNameInTheListTestTag)
+                            )
+                            Text(
+                                text = person.apelido,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                color = Color.Gray,
+                                fontStyle = FontStyle.Italic,
+                                modifier = Modifier
+                                    .animateContentSize()
+                                    .testTag(eachPersonNicknameInTheListTestTag)
+                            )
+                        }
+                        AnimatedVisibility(
+                            visible = deletePlayerExpanded
+                        ) {
+                            Divider(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(1.dp)
+                            )
+                            IconButton(
+                                onClick = {
+                                    deletePlayer(person.nome, person.apelido)
+                                },
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .animateContentSize()
+                                    .testTag(deleteIconTestTag)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = null,
+                                    tint = Color.Red,
+                                )
+                            }
+                        }
+                    }
+                    Divider(
+                        thickness = 1.dp,
+                        color = Color.DarkGray,
+                        modifier = Modifier
+                            .padding(3.dp)
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun AddPlayerWindow(
@@ -306,10 +522,7 @@ fun AddPlayerWindow(
 ) {
 
     Card (
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp)
-            .alpha(0.9f),
+        modifier = modifier,
         colors = CardDefaults.cardColors(Color.White),
         border = BorderStroke(1.dp, Color.Black),
     ) {
@@ -486,7 +699,7 @@ fun JanelinhaJogadorAdicionado(
 
 @Preview
 @Composable
-fun PlayersListPreview() {
+fun PlayersListCompactPreview() {
     SevenWondersTheme {
         PlayersListScreenSecundaria(
             onBackClick = {},
@@ -504,13 +717,39 @@ fun PlayersListPreview() {
             deletePlayer = { _, _ ->},
             cancelAddPlayer = {},
             onConfirmClicked = {},
+            windowWidthSizeClass = WindowWidthSizeClass.Compact,
+        )
+    }
+}
+
+@Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
+@Composable
+fun PlayersListMediunAndExpandedPreview() {
+    SevenWondersTheme {
+        PlayersListScreenSecundaria(
+            onBackClick = {},
+            playersListUiState = PlayersListUiState(
+                "",
+                "",
+                listOf(
+                    Pessoa("Luiz José de Medeiros Filho", "Zinho "),
+                    Pessoa("Crístian Deives dos Santos Viana", "Deivinho"),
+                    Pessoa("Anna Luisa Espínola de Sena Costa", "Anninha"),
+                )
+            ),
+            onNameChange = {},
+            onNicknameChange = {},
+            deletePlayer = { _, _ ->},
+            cancelAddPlayer = {},
+            onConfirmClicked = {},
+            windowWidthSizeClass = WindowWidthSizeClass.Medium,
         )
     }
 }
 
 @Preview
 @Composable
-fun PlayersListEmptyPreview() {
+fun PlayersListEmptyCompactPreview() {
     SevenWondersTheme {
         PlayersListScreenSecundaria(
             onBackClick = {},
@@ -520,6 +759,25 @@ fun PlayersListEmptyPreview() {
             deletePlayer = { _, _ ->},
             cancelAddPlayer = {},
             onConfirmClicked = {},
+            windowWidthSizeClass = WindowWidthSizeClass.Compact
         )
     }
 }
+
+@Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
+@Composable
+fun PlayersListEmptyMediumAndExpandedPreview() {
+    SevenWondersTheme {
+        PlayersListScreenSecundaria(
+            onBackClick = {},
+            playersListUiState = PlayersListUiState(),
+            onNameChange = {},
+            onNicknameChange = {},
+            deletePlayer = { _, _ ->},
+            cancelAddPlayer = {},
+            onConfirmClicked = {},
+            windowWidthSizeClass = WindowWidthSizeClass.Medium
+        )
+    }
+}
+
