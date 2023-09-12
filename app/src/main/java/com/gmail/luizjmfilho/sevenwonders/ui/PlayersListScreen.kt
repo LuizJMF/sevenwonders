@@ -4,13 +4,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,13 +38,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -70,8 +67,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gmail.luizjmfilho.sevenwonders.R
-import com.gmail.luizjmfilho.sevenwonders.data.NameOrNicknameError
-import com.gmail.luizjmfilho.sevenwonders.data.PlayersListUiState
 import com.gmail.luizjmfilho.sevenwonders.model.Pessoa
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
@@ -453,7 +448,7 @@ fun PlayersList(
                             verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
                             Text(
-                                text = person.nome,
+                                text = person.name,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier
@@ -461,7 +456,7 @@ fun PlayersList(
                                     .testTag(eachPersonNameInTheListTestTag)
                             )
                             Text(
-                                text = person.apelido,
+                                text = person.nickname,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 color = Color.Gray,
@@ -481,7 +476,7 @@ fun PlayersList(
                             )
                             IconButton(
                                 onClick = {
-                                    deletePlayer(person.nome, person.apelido)
+                                    deletePlayer(person.name, person.nickname)
                                 },
                                 modifier = Modifier
                                     .size(40.dp)
@@ -520,7 +515,6 @@ fun AddPlayerWindow(
     nameError: NameOrNicknameError?,
     nicknameError: NameOrNicknameError?,
 ) {
-
     Card (
         modifier = modifier,
         colors = CardDefaults.cardColors(Color.White),

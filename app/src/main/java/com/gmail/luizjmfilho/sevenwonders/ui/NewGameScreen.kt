@@ -45,8 +45,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gmail.luizjmfilho.sevenwonders.R
-import com.gmail.luizjmfilho.sevenwonders.data.ActivePlayersNumber
-import com.gmail.luizjmfilho.sevenwonders.data.NewGameUiState
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
 

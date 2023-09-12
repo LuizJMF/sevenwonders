@@ -1,4 +1,4 @@
-package com.gmail.luizjmfilho.sevenwonders.data
+package com.gmail.luizjmfilho.sevenwonders.ui
 
 import com.gmail.luizjmfilho.sevenwonders.model.Pessoa
 

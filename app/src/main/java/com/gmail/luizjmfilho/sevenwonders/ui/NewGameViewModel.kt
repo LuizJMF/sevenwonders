@@ -1,8 +1,6 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.lifecycle.ViewModel
-import com.gmail.luizjmfilho.sevenwonders.data.ActivePlayersNumber
-import com.gmail.luizjmfilho.sevenwonders.data.NewGameUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

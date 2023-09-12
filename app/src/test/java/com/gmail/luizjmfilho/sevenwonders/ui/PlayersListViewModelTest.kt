@@ -1,6 +1,5 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import com.gmail.luizjmfilho.sevenwonders.data.NameOrNicknameError
 import com.gmail.luizjmfilho.sevenwonders.model.Pessoa
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull

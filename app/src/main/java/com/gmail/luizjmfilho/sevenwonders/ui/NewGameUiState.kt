@@ -1,4 +1,4 @@
-package com.gmail.luizjmfilho.sevenwonders.data
+package com.gmail.luizjmfilho.sevenwonders.ui
 
 data class NewGameUiState(
     val activePlayersList: List<String> = List(7){

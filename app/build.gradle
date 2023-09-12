@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id "com.google.devtools.ksp" version "1.9.0-1.0.11"
 }
 
 android {
@@ -36,7 +37,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.2"
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
 
 }
@@ -69,4 +70,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1" // aqui é para usar o viewModel
     implementation "androidx.compose.material3:material3-window-size-class:1.1.1" //essa aqui é para eu poder detectar os tamanhos da tela entre compact, medium e expended.
 
+    // essas implementações abaixo é pra mexer com banco de dados
+    def room_version = "2.4.1"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
+
+    implementation "androidx.room:room-ktx:$room_version"
 }
