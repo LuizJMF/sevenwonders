@@ -3,7 +3,7 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import com.gmail.luizjmfilho.sevenwonders.model.Pessoa
+import com.gmail.luizjmfilho.sevenwonders.model.Person
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -15,12 +15,12 @@ class PlayersListScreenTest {
     val rule = createAndroidComposeRule<ComponentActivity>()
     private val robot = PlayersListScreenRobot(rule)
 
-    private fun launchScreen(
+    private fun launchScreen (
         onBackClick: () -> Unit = {},
         playersListUiState: PlayersListUiState = PlayersListUiState(),
         onNameChange: (String) -> Unit = {},
         onNicknameChange: (String) -> Unit = {},
-        deletePlayer: (String, String) -> Unit = { _, _ -> },
+        deletePlayer: (String) -> Unit = {},
         cancelAddPlayer: () -> Unit = {},
         onConfirmClicked: () -> Unit = {},
     ) {
@@ -66,8 +66,8 @@ class PlayersListScreenTest {
         launchScreen(
             playersListUiState = PlayersListUiState(
                 playersList = listOf(
-                    Pessoa("Luiz Medeiros", "Zinho"),
-                    Pessoa("Crístian Deives", "Deivinho")
+                    Person("Luiz Medeiros", "Zinho"),
+                    Person("Crístian Deives", "Deivinho")
                 )
             ),
         )
@@ -108,16 +108,14 @@ class PlayersListScreenTest {
     @Test
     fun whenIDeleteSomeone_thenTheCorrectPersonIsDeleted() {
         var expectedName = ""
-        var expectedNickname = ""
         launchScreen(
-            deletePlayer = { name, nickname ->
+            deletePlayer = { name ->
                 expectedName = name
-                expectedNickname = nickname
             },
             playersListUiState = PlayersListUiState(
                 playersList = listOf(
-                    Pessoa("Luiz", "Zinho"),
-                    Pessoa("Deives", "Deivinho")
+                    Person("Luiz", "Zinho"),
+                    Person("Deives", "Deivinho")
                 )
             )
         )
@@ -128,7 +126,6 @@ class PlayersListScreenTest {
         }
 
         assertEquals("Deives", expectedName)
-        assertEquals("Deivinho", expectedNickname)
     }
 
     @Test
@@ -191,7 +188,7 @@ class PlayersListScreenTest {
         launchScreen(
             playersListUiState = PlayersListUiState(
                 playersList = listOf(
-                    Pessoa("Luiz","Zinho")
+                    Person("Luiz","Zinho")
                 )
             )
         )
@@ -211,7 +208,7 @@ class PlayersListScreenTest {
         launchScreen(
             playersListUiState = PlayersListUiState(
                 playersList = listOf(
-                    Pessoa("Luiz","Zinho")
+                    Person("Luiz","Zinho")
                 )
             )
         )

@@ -19,4 +19,10 @@
     <string name="empty_error_message">Este campo é obrigatório</string>
     <string name="name_exists_erros_message">Este nome já está cadastrado na lista</string>
     <string name="nickname_exists_erros_message">Este apelido já está cadastrado na lista</string>
+    <string name="trailing_icon_new_game_text_field">escolher</string>
+    <string name="alert_dialog_new_game_player_selection_title">Selecionar jogador</string>
+    <string name="generic_cancel_text">Cancelar</string>
+    <string name="generic_confirm_text">Confirmar</string>
+    <string name="new_game_alert_dialog_error">Você precisa selecionar um jogador</string>
+    <string name="alert_dialog_new_game_text_when_list_is_empty">Você não tem nenhum jogador cadastrado na lista de jogadores ou então já usou todos os jogadores disponíveis.</string>
 </resources>

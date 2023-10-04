@@ -43,7 +43,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,6 +54,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -65,26 +65,33 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.gmail.luizjmfilho.sevenwonders.R
-import com.gmail.luizjmfilho.sevenwonders.model.Pessoa
+import com.gmail.luizjmfilho.sevenwonders.data.PlayersListRepository
+import com.gmail.luizjmfilho.sevenwonders.data.getSevenWondersDatabaseInstance
+import com.gmail.luizjmfilho.sevenwonders.model.Person
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
-val deleteIconTestTag: String = "ícone X de deletar"
-val nameTextFieldTestTag: String = "Name TextField"
-val nicknameTextFieldTestTag: String = "Nickname TextField"
-val eachPersonNameInTheListTestTag: String = "Person Name"
-val eachPersonNicknameInTheListTestTag: String = "Person Nickname"
-val playersListScreenTestTag: String = "PlayersList Screen"
+const val deleteIconTestTag: String = "ícone X de deletar"
+const val nameTextFieldTestTag: String = "Name TextField"
+const val nicknameTextFieldTestTag: String = "Nickname TextField"
+const val eachPersonNameInTheListTestTag: String = "Person Name"
+const val eachPersonNicknameInTheListTestTag: String = "Person Nickname"
+const val playersListScreenTestTag: String = "PlayersList Screen"
 
 @Composable
 fun PlayersListScreenPrimaria(
     windowWidthSizeClass: WindowWidthSizeClass,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    playersListViewModel: PlayersListViewModel = viewModel(),
-
-    ) {
+    playersListViewModel: PlayersListViewModel = viewModel(
+        factory = PlayersListViewModel.Factory
+    ),
+) {
     val playersListUiState by playersListViewModel.uiState.collectAsState()
     PlayersListScreenSecundaria(
         windowWidthSizeClass = windowWidthSizeClass,
@@ -93,7 +100,7 @@ fun PlayersListScreenPrimaria(
         modifier = modifier,
         onNameChange = { playersListViewModel.updateName(it) },
         onNicknameChange = { playersListViewModel.updateNickname(it) },
-        deletePlayer = { nome, apelido -> playersListViewModel.deletePlayer(nome, apelido) },
+        deletePlayer = { nome -> playersListViewModel.deletePlayer(nome) },
         cancelAddPlayer = { playersListViewModel.cancelAddPlayer()},
         onConfirmClicked = {playersListViewModel.onConfirmAddPlayerClick()}
     )
@@ -106,7 +113,7 @@ fun PlayersListScreenSecundaria(
     playersListUiState: PlayersListUiState,
     onNameChange: (String) -> Unit,
     onNicknameChange: (String) -> Unit,
-    deletePlayer: (String, String) -> Unit,
+    deletePlayer: (String) -> Unit,
     cancelAddPlayer: () -> Unit,
     onConfirmClicked: () -> Unit,
     modifier: Modifier = Modifier,
@@ -187,7 +194,7 @@ fun PlayersListMediumAndExpandedContent(
     playersListUiState: PlayersListUiState,
     onNameChange: (String) -> Unit,
     onNicknameChange: (String) -> Unit,
-    deletePlayer: (String, String) -> Unit,
+    deletePlayer: (String) -> Unit,
     cancelAddPlayer: () -> Unit,
     onConfirmClicked: () -> Unit,
     onAddJogadorButton: () -> Unit,
@@ -275,7 +282,7 @@ fun PlayersListCompactContent(
     playersListUiState: PlayersListUiState,
     onNameChange: (String) -> Unit,
     onNicknameChange: (String) -> Unit,
-    deletePlayer: (String, String) -> Unit,
+    deletePlayer: (String) -> Unit,
     cancelAddPlayer: () -> Unit,
     onConfirmClicked: () -> Unit,
     onAddJogadorButton: () -> Unit,
@@ -401,7 +408,7 @@ fun DeletePlayerButton(
 @Composable
 fun PlayersList(
     playersListUiState: PlayersListUiState,
-    deletePlayer: (String, String) -> Unit,
+    deletePlayer: (String) -> Unit,
     deletePlayerExpanded: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -442,30 +449,12 @@ fun PlayersList(
                         Text(
                             text = "${index + 1}."
                         )
-                        Column(
+                        PlayersListNameAndNicknameItem(
+                            name = person.name,
+                            nickname = person.nickname,
                             modifier = Modifier
-                                .weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(2.dp)
-                        ) {
-                            Text(
-                                text = person.name,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier
-                                    .animateContentSize()
-                                    .testTag(eachPersonNameInTheListTestTag)
-                            )
-                            Text(
-                                text = person.nickname,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                color = Color.Gray,
-                                fontStyle = FontStyle.Italic,
-                                modifier = Modifier
-                                    .animateContentSize()
-                                    .testTag(eachPersonNicknameInTheListTestTag)
-                            )
-                        }
+                                .weight(1f)
+                        )
                         AnimatedVisibility(
                             visible = deletePlayerExpanded
                         ) {
@@ -476,7 +465,7 @@ fun PlayersList(
                             )
                             IconButton(
                                 onClick = {
-                                    deletePlayer(person.name, person.nickname)
+                                    deletePlayer(person.name)
                                 },
                                 modifier = Modifier
                                     .size(40.dp)
@@ -500,6 +489,37 @@ fun PlayersList(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun PlayersListNameAndNicknameItem(
+    name: String,
+    nickname: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Text(
+            text = name,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .animateContentSize()
+                .testTag(eachPersonNameInTheListTestTag)
+        )
+        Text(
+            text = nickname,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            color = Color.Gray,
+            fontStyle = FontStyle.Italic,
+            modifier = Modifier
+                .animateContentSize()
+                .testTag(eachPersonNicknameInTheListTestTag)
+        )
     }
 }
 
@@ -701,14 +721,14 @@ fun PlayersListCompactPreview() {
                 "",
                 "",
                 listOf(
-                    Pessoa("Luiz José de Medeiros Filho", "Zinho "),
-                    Pessoa("Crístian Deives dos Santos Viana", "Deivinho"),
-                    Pessoa("Anna Luisa Espínola de Sena Costa", "Anninha"),
+                    Person("Luiz José de Medeiros Filho", "Zinho "),
+                    Person("Crístian Deives dos Santos Viana", "Deivinho"),
+                    Person("Anna Luisa Espínola de Sena Costa", "Anninha"),
                 )
             ),
             onNameChange = {},
             onNicknameChange = {},
-            deletePlayer = { _, _ ->},
+            deletePlayer = {},
             cancelAddPlayer = {},
             onConfirmClicked = {},
             windowWidthSizeClass = WindowWidthSizeClass.Compact,
@@ -726,14 +746,14 @@ fun PlayersListMediunAndExpandedPreview() {
                 "",
                 "",
                 listOf(
-                    Pessoa("Luiz José de Medeiros Filho", "Zinho "),
-                    Pessoa("Crístian Deives dos Santos Viana", "Deivinho"),
-                    Pessoa("Anna Luisa Espínola de Sena Costa", "Anninha"),
+                    Person("Luiz José de Medeiros Filho", "Zinho "),
+                    Person("Crístian Deives dos Santos Viana", "Deivinho"),
+                    Person("Anna Luisa Espínola de Sena Costa", "Anninha"),
                 )
             ),
             onNameChange = {},
             onNicknameChange = {},
-            deletePlayer = { _, _ ->},
+            deletePlayer = {},
             cancelAddPlayer = {},
             onConfirmClicked = {},
             windowWidthSizeClass = WindowWidthSizeClass.Medium,
@@ -750,7 +770,7 @@ fun PlayersListEmptyCompactPreview() {
             playersListUiState = PlayersListUiState(),
             onNameChange = {},
             onNicknameChange = {},
-            deletePlayer = { _, _ ->},
+            deletePlayer = {},
             cancelAddPlayer = {},
             onConfirmClicked = {},
             windowWidthSizeClass = WindowWidthSizeClass.Compact
@@ -767,7 +787,7 @@ fun PlayersListEmptyMediumAndExpandedPreview() {
             playersListUiState = PlayersListUiState(),
             onNameChange = {},
             onNicknameChange = {},
-            deletePlayer = { _, _ ->},
+            deletePlayer = {},
             cancelAddPlayer = {},
             onConfirmClicked = {},
             windowWidthSizeClass = WindowWidthSizeClass.Medium

@@ -1,6 +1,6 @@
 package com.gmail.luizjmfilho.sevenwonders.data
 
-import com.gmail.luizjmfilho.sevenwonders.model.Pessoa
+import com.gmail.luizjmfilho.sevenwonders.model.Person
 import com.gmail.luizjmfilho.sevenwonders.ui.NameOrNicknameError
 
 data class AddPlayerResult(
@@ -8,15 +8,13 @@ data class AddPlayerResult(
     val nicknameError: NameOrNicknameError?,
 )
 
-class PlayersListRepository(database: SevenWondersDatabase) {
-
-    private val playersListDao: PlayersListDao = database.playersListDao()
+class PlayersListRepository(private val personDao: PersonDao) {
 
     suspend fun addPlayer(name: String, nickname: String): AddPlayerResult? {
         val nameWithoutSpace = name.trim()
         val nameError: NameOrNicknameError? = if (nameWithoutSpace == "") {
             NameOrNicknameError.Empty
-        } else if (playersListDao.verifyIfNameExists(nameWithoutSpace) > 0) {
+        } else if (personDao.numberOfPlayersWithThisName(nameWithoutSpace) > 0) {
             NameOrNicknameError.Exists
         } else {
             null
@@ -25,14 +23,14 @@ class PlayersListRepository(database: SevenWondersDatabase) {
         val nicknameWithoutSpace = nickname.trim()
         val nicknameError: NameOrNicknameError? = if (nicknameWithoutSpace == "") {
             NameOrNicknameError.Empty
-        } else if (playersListDao.verifyIfNicknameExists(nicknameWithoutSpace) > 0) {
+        } else if (personDao.numberOfPlayersWithThisNickname(nicknameWithoutSpace) > 0) {
             NameOrNicknameError.Exists
         } else {
             null
         }
 
         if (nameError == null && nicknameError == null) {
-            playersListDao.addPlayer(Pessoa(nameWithoutSpace, nicknameWithoutSpace))
+            personDao.addPlayer(Person(nameWithoutSpace, nicknameWithoutSpace))
             return null
         } else {
             return AddPlayerResult(
@@ -42,11 +40,11 @@ class PlayersListRepository(database: SevenWondersDatabase) {
         }
     }
 
-    suspend fun deletePlayer(name: String, nickname: String) {
-        playersListDao.deletePlayer(Pessoa(name, nickname))
+    suspend fun deletePlayer(name: String) {
+        personDao.deletePlayer(name)
     }
 
-    suspend fun readPlayer(): List<Pessoa> {
-        return playersListDao.readPlayer()
+    suspend fun readPlayer(): List<Person> {
+        return personDao.readPlayer()
     }
 }

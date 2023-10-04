@@ -4,15 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.gmail.luizjmfilho.sevenwonders.model.Pessoa
+import com.gmail.luizjmfilho.sevenwonders.model.Person
 
 @Database(
-    entities = [Pessoa::class],
+    entities = [Person::class],
     version = 1,
     exportSchema = true,
 )
 abstract class SevenWondersDatabase : RoomDatabase() {
-    abstract fun playersListDao(): PlayersListDao
+    abstract fun personDao(): PersonDao
 }
 
 private var sevenWondersDatabaseInstance: SevenWondersDatabase? = null

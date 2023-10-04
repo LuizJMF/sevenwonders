@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.gmail.luizjmfilho.sevenwonders.ui.HomeScreen
-import com.gmail.luizjmfilho.sevenwonders.ui.NewGameScreenSecundaria
+import com.gmail.luizjmfilho.sevenwonders.ui.NewGameScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.PlayersListScreenPrimaria
 
 @Composable
@@ -40,7 +40,7 @@ fun SevenWondersNavHost(
         }
 
         composable(route = ScreenNames.NewGameScreen.name) {
-            NewGameScreenSecundaria(
+            NewGameScreenPrimaria(
                 onBackClick = {
                     navController.navigateUp()
                 },
