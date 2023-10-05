@@ -56,6 +56,14 @@ class PersonDaoTest {
     }
 
     @Test
+    fun onNumberOfPlayersWithThisName_WhenNameHaveDifferentCases_ThenItCountsJustOne() = runTest {
+        dao.addPlayer(luiz)
+        val numberOfPlayers = dao.numberOfPlayersWithThisName(luiz.name.uppercase())
+
+        assertEquals(1, numberOfPlayers)
+    }
+
+    @Test
     fun onNumberOfPlayersWithThisName_WhenNoPlayers_ThenReturnZero() = runTest {
         val numberOfPlayers = dao.numberOfPlayersWithThisName(luiz.name)
         assertEquals(0, numberOfPlayers)
@@ -76,6 +84,14 @@ class PersonDaoTest {
         dao.addPlayer(cristian)
         val numberOfPlayers = dao.numberOfPlayersWithThisName(anna.name)
         assertEquals(2, numberOfPlayers)
+    }
+
+    @Test
+    fun onNumberOfPlayersWithThisNickname_WhenNicknameHaveDifferentCases_ThenItCountsJustOne() = runTest {
+        dao.addPlayer(luiz)
+        val numberOfPlayers = dao.numberOfPlayersWithThisNickname(luiz.nickname.uppercase())
+
+        assertEquals(1, numberOfPlayers)
     }
 
     @Test

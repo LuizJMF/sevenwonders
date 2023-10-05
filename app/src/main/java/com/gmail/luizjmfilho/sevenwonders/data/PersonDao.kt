@@ -17,10 +17,10 @@ interface PersonDao {
     @Query("SELECT * FROM Person ORDER BY name")
     suspend fun readPlayer(): List<Person>
 
-    @Query("SELECT COUNT(name) FROM Person WHERE name = :searchedName")
+    @Query("SELECT COUNT(name) FROM Person WHERE UPPER(name) = UPPER(:searchedName)")
     suspend fun numberOfPlayersWithThisName(searchedName: String): Int
 
-    @Query("SELECT COUNT(nickname) FROM Person WHERE nickname = :searchedNickname")
+    @Query("SELECT COUNT(nickname) FROM Person WHERE UPPER(nickname) = UPPER(:searchedNickname)")
     suspend fun numberOfPlayersWithThisNickname(searchedNickname: String): Int
 
     @Query("SELECT * FROM Person WHERE nickname NOT IN (:excludedNicknames) ORDER BY name")
