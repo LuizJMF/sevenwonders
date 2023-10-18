@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.room.Room
+import com.gmail.luizjmfilho.sevenwonders.data.PersonDao
 import com.gmail.luizjmfilho.sevenwonders.data.PlayersListRepository
 import com.gmail.luizjmfilho.sevenwonders.data.SevenWondersDatabase
 import com.gmail.luizjmfilho.sevenwonders.data.getSevenWondersDatabaseInstance

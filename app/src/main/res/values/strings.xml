@@ -2,10 +2,9 @@
     <string name="app_name">7 Wonders</string>
     <string name="criar_partida_button">Criar partida</string>
     <string name="players_list_button">Lista de Jogadores</string>
+    <string name="players_list_top_bar">Lista de Jogadores</string>
     <string name="estatisticas_button">Estatísticas</string>
     <string name="historico_de_partidas_button">Histórico de Partidas</string>
-    <string name="lista_de_jogadores_topbar">Lista de Jogadores</string>
-    <string name="new_game_topbar">Nova partida</string>
     <string name="add_player_button">Add jogador</string>
     <string name="delete_player_button">Apagar jogador</string>
     <string name="empty_players_list">Ainda não há nenhum jogador adicionado. Clique em \'+ Add jogador\' para adicionar pessoas.</string>
@@ -19,10 +18,15 @@
     <string name="empty_error_message">Este campo é obrigatório</string>
     <string name="name_exists_erros_message">Este nome já está cadastrado na lista</string>
     <string name="nickname_exists_erros_message">Este apelido já está cadastrado na lista</string>
-    <string name="trailing_icon_new_game_text_field">escolher</string>
     <string name="alert_dialog_new_game_player_selection_title">Selecionar jogador</string>
     <string name="generic_cancel_text">Cancelar</string>
     <string name="generic_confirm_text">Confirmar</string>
-    <string name="new_game_alert_dialog_error">Você precisa selecionar um jogador</string>
     <string name="alert_dialog_new_game_text_when_list_is_empty">Você não tem nenhum jogador cadastrado na lista de jogadores ou então já usou todos os jogadores disponíveis.</string>
-</resources>
+    <string name="new_game_add_player_button">Adicionar</string>
+    <string name="new_game_remove_player_button">Remover</string>
+    <string name="new_game_advance_button">AVANÇAR</string>
+    <string name="new_game_topbar">Nova partida</string>
+    <string name="new_game_alert_dialog_error">Você precisa selecionar um jogador</string>
+    <string name="new_game_text_field_label">Jogador %d</string>
+    <string name="generic_choose">Escolher</string>
+    </resources>

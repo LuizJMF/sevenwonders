@@ -42,6 +42,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -53,6 +54,9 @@ import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.model.Person
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
+const val choosePlayerTrailingIconTestTag: String = "botão escolher jogador"
+const val newGameTextFieldTestTag: String = "new game textField"
+const val newGameScreenTestTag: String = "NewGame Screen"
 
 @Composable
 fun NewGameScreenPrimaria(
@@ -66,7 +70,7 @@ fun NewGameScreenPrimaria(
     val newGameUiState by newGameViewModel.uiState.collectAsState()
     NewGameScreenSecundaria(
         onBackClick = onBackClick,
-        onNextClick = onNextClick,
+        onAdvanceClick = onNextClick,
         onPlayerChange = newGameViewModel::updatePlayer,
         onChoosePlayerClick = newGameViewModel::updateAvailablePlayersList,
         onAddPlayerTextButtonClick = newGameViewModel::newGameAddPlayer,
@@ -79,7 +83,7 @@ fun NewGameScreenPrimaria(
 @Composable
 fun NewGameScreenSecundaria(
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit,
+    onAdvanceClick: () -> Unit,
     onPlayerChange: (Int, String) -> Unit,
     onChoosePlayerClick: () -> Unit,
     onAddPlayerTextButtonClick: () -> Unit,
@@ -94,13 +98,14 @@ fun NewGameScreenSecundaria(
                 title = stringResource(id = R.string.new_game_top_bar)
             )
         },
-        modifier = modifier,
+        modifier = modifier
+            .testTag(newGameScreenTestTag),
     ) { scaffoldPadding ->
 
         Box(
             modifier = modifier
                 .padding(scaffoldPadding)
-        ){
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.fundoe),
                 contentDescription = null,
@@ -145,7 +150,7 @@ fun NewGameScreenSecundaria(
                                         imageVector = Icons.Outlined.PersonAdd,
                                         contentDescription = null
                                     )
-                                    Text(text = "Adicionar")
+                                    Text(text = stringResource(R.string.new_game_add_player_button))
                                 }
                             }
                         }
@@ -165,7 +170,7 @@ fun NewGameScreenSecundaria(
                                         contentDescription = null,
                                         tint = Color.Red
                                     )
-                                    Text(text = "Remover", color = Color.Red)
+                                    Text(text = stringResource(R.string.new_game_remove_player_button), color = Color.Red)
                                 }
                             }
                         }
@@ -174,14 +179,14 @@ fun NewGameScreenSecundaria(
                     Row {
                         Spacer(Modifier.weight(1f))
                         TextButton(
-                            onClick = onNextClick,
+                            onClick = onAdvanceClick,
                             enabled = newGameUiState.isAdvanceAndAddPlayerButtonsEnable
                         ) {
                             Row (
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(5.dp)
                             ){
-                                Text(text = "AVANÇAR")
+                                Text(text = stringResource(R.string.new_game_advance_button))
                                 Icon(
                                     imageVector = Icons.Filled.ArrowForward,
                                     contentDescription = null
@@ -262,7 +267,7 @@ fun NewGameTextField(
     TextField(
         value = value,
         onValueChange = {},
-        label = { Text(text = "Jogador ${playerNumber + 1}") },
+        label = { Text(text = stringResource(id = R.string.new_game_text_field_label, playerNumber + 1 )) },
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
@@ -280,11 +285,16 @@ fun NewGameTextField(
             TextButton(
                 onClick = onTrailingIconClick
             ) {
-                Text(text = stringResource(R.string.trailing_icon_new_game_text_field))
+                Text(
+                    text = stringResource(R.string.generic_choose).lowercase(),
+                    modifier = Modifier
+                        .testTag(choosePlayerTrailingIconTestTag)
+                )
             }
         },
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .testTag(newGameTextFieldTestTag),
         singleLine = true,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
@@ -368,7 +378,7 @@ fun NewGamePreview() {
     SevenWondersTheme {
         NewGameScreenSecundaria(
             onBackClick = {},
-            onNextClick = {},
+            onAdvanceClick = {},
             onPlayerChange = {_ , _ -> },
             onChoosePlayerClick = {},
             onAddPlayerTextButtonClick = {},

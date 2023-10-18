@@ -3,6 +3,10 @@ package com.gmail.luizjmfilho.sevenwonders.data
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import com.gmail.luizjmfilho.sevenwonders.TestData
+import com.gmail.luizjmfilho.sevenwonders.TestData.anna
+import com.gmail.luizjmfilho.sevenwonders.TestData.cristian
+import com.gmail.luizjmfilho.sevenwonders.TestData.luiz
 import com.gmail.luizjmfilho.sevenwonders.model.Person
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -15,9 +19,6 @@ import org.junit.Test
 class PersonDaoTest {
 
     private lateinit var dao: PersonDao
-    private val luiz = Person("Luiz", "Zinho", 9)
-    private val anna = Person("Anna", "Anninha", 20)
-    private val cristian = Person("Crístian", "Deivinho", 12)
 
     @Before
     fun beforeTests() {

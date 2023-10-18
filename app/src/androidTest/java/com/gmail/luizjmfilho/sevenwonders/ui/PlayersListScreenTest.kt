@@ -52,13 +52,13 @@ class PlayersListScreenTest {
     }
 
     @Test
-    fun onBackClickButton() {
+    fun onBackButtonClick() {
         val sevenWondersRobot = SevenWondersRobot(rule)
-        var clicouNoBotao = false
-        launchScreen(onBackClick = { clicouNoBotao = true },)
+        var backButtonClicked = false
+        launchScreen(onBackClick = { backButtonClicked = true },)
 
         sevenWondersRobot.clickNavigationBackButton()
-        assertTrue(clicouNoBotao)
+        assertTrue(backButtonClicked)
     }
 
     @Test

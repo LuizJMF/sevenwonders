@@ -1,14 +1,11 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.gmail.luizjmfilho.sevenwonders.data.NewGameRepository
-import com.gmail.luizjmfilho.sevenwonders.data.PlayersListRepository
 import com.gmail.luizjmfilho.sevenwonders.data.getSevenWondersDatabaseInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +24,7 @@ class NewGameViewModel(
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
-                    availablePlayersList = newGameRepository.readPlayerWithoutActivePlayers(currentState.activePlayersList)
+                    availablePlayersList = newGameRepository.readPlayerWithoutActivePlayers(currentState.activePlayersList - listOf(""))
                 )
             }
         }
@@ -78,7 +75,8 @@ class NewGameViewModel(
             initializer {
                 val context = get(ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY)!!
                 val database = getSevenWondersDatabaseInstance(context)
-                val repository = NewGameRepository(database)
+                val dao = database.personDao()
+                val repository = NewGameRepository(dao)
                 NewGameViewModel(repository)
             }
         }

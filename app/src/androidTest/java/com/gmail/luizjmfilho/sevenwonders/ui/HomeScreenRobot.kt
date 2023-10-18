@@ -19,4 +19,8 @@ class HomeScreenRobot(
         rule.onNodeWithTag(homeScreenTestTag).assertExists()
     }
 
+    fun clickNewGameButton() {
+        rule.onNodeWithText(rule.activity.getString(R.string.criar_partida_button)).performClick()
+    }
+
 }

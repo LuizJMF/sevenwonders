@@ -54,7 +54,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -65,14 +64,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.gmail.luizjmfilho.sevenwonders.R
-import com.gmail.luizjmfilho.sevenwonders.data.PlayersListRepository
-import com.gmail.luizjmfilho.sevenwonders.data.getSevenWondersDatabaseInstance
 import com.gmail.luizjmfilho.sevenwonders.model.Person
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
@@ -118,14 +111,14 @@ fun PlayersListScreenSecundaria(
     onConfirmClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var addJogadorExpanded by rememberSaveable() { mutableStateOf(false) }
+    var addPlayerExpanded by rememberSaveable() { mutableStateOf(false) }
     var deletePlayerExpanded by rememberSaveable() { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             SevenWondersAppBar(
                 onBackClick = onBackClick,
-                title = stringResource(id = R.string.lista_de_jogadores_topbar)
+                title = stringResource(id = R.string.players_list_top_bar)
             )
         },
         modifier = modifier
@@ -136,7 +129,7 @@ fun PlayersListScreenSecundaria(
                 modifier = Modifier
                     .padding(scaffoldPadding),
                 onAddJogadorButton = {
-                    addJogadorExpanded = !addJogadorExpanded
+                    addPlayerExpanded = !addPlayerExpanded
                     cancelAddPlayer()
                 },
                 onDeletePlayerButton = {
@@ -146,11 +139,11 @@ fun PlayersListScreenSecundaria(
                         deletePlayerExpanded = !deletePlayerExpanded
                     }
                 },
-                onAddJogadorButtonEnabled = !addJogadorExpanded,
+                onAddJogadorButtonEnabled = !addPlayerExpanded,
                 onDeletePlayerButtonEnabled = !deletePlayerExpanded,
-                addJogadorExpanded = addJogadorExpanded,
+                addJogadorExpanded = addPlayerExpanded,
                 deletePlayerExpanded = deletePlayerExpanded,
-                onAddJogadorExpanded = { addJogadorExpanded = it },
+                onAddJogadorExpanded = { addPlayerExpanded = it },
                 cancelAddPlayer = cancelAddPlayer,
                 deletePlayer = deletePlayer,
                 onNameChange = onNameChange,
@@ -163,7 +156,7 @@ fun PlayersListScreenSecundaria(
                 modifier = Modifier
                     .padding(scaffoldPadding),
                 onAddJogadorButton = {
-                    addJogadorExpanded = !addJogadorExpanded
+                    addPlayerExpanded = !addPlayerExpanded
                     cancelAddPlayer()
                 },
                 onDeletePlayerButton = {
@@ -173,11 +166,11 @@ fun PlayersListScreenSecundaria(
                         deletePlayerExpanded = !deletePlayerExpanded
                     }
                 },
-                onAddJogadorButtonEnabled = !addJogadorExpanded,
+                onAddJogadorButtonEnabled = !addPlayerExpanded,
                 onDeletePlayerButtonEnabled = !deletePlayerExpanded,
-                addJogadorExpanded = addJogadorExpanded,
+                addJogadorExpanded = addPlayerExpanded,
                 deletePlayerExpanded = deletePlayerExpanded,
-                onAddJogadorExpanded = { addJogadorExpanded = it },
+                onAddJogadorExpanded = { addPlayerExpanded = it },
                 cancelAddPlayer = cancelAddPlayer,
                 deletePlayer = deletePlayer,
                 onNameChange = onNameChange,
