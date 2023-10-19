@@ -4,8 +4,10 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -100,5 +102,9 @@ class NewGameScreenRobot(
 
     fun assertTextForEmptyAvailablePlayersListIsShown() {
         rule.onNodeWithText(rule.activity.getString(R.string.alert_dialog_new_game_text_when_list_is_empty)).assertExists()
+    }
+
+    fun assertPlayerIsSelected(nickname: String) {
+        rule.onNodeWithText(nickname, substring = true).onChild().assertIsSelected()
     }
 }

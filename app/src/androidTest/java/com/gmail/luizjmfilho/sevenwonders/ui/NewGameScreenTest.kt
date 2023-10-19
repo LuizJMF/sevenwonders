@@ -1,6 +1,8 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.gmail.luizjmfilho.sevenwonders.TestData.anna
 import com.gmail.luizjmfilho.sevenwonders.TestData.cristian
@@ -13,11 +15,13 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
+
 class NewGameScreenTest {
 
     @get:Rule
     val rule = createAndroidComposeRule<ComponentActivity>()
     private val robot = NewGameScreenRobot(rule)
+    private val stateRestorationTester = StateRestorationTester(rule)
 
     private fun launchScreen(
         onBackClick: () -> Unit = {},
@@ -28,7 +32,7 @@ class NewGameScreenTest {
         onRemovePlayerTextButtonClick: () -> Unit = {},
         newGameUiState: NewGameUiState = NewGameUiState(),
     ) {
-        rule.setContent{
+        stateRestorationTester.setContent{
             NewGameScreenSecundaria(
                 onBackClick = onBackClick,
                 onAdvanceClick = onAdvanceClick,
@@ -270,10 +274,23 @@ class NewGameScreenTest {
 
         assertTrue(addPlayerButtonWasClicked)
         assertTrue(advanceButtonWasClicked)
+    }
 
-        // DÚVIDA: ao invés de fazer o teste dessa forma, posso excluir as variáveis e
-        // só dar um UI state e verificar se é clicável? Inclusive com a função no
-        // NewGameRobot que é a única que não está utilizada.
+    @Test
+    fun whenConfigurationChange_ThenPlayerStillSelectedInAvailablePlayersList() {
+        launchScreen(
+            newGameUiState = NewGameUiState(
+                availablePlayersList = listOf(luiz, anna, cristian)
+            )
+        )
+
+        with(robot) {
+            clickChoosePlayerButton(0)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.nickname)
+        }
+        stateRestorationTester.emulateSavedInstanceStateRestore()
+
+        robot.assertPlayerIsSelected(luiz.nickname)
     }
 
 

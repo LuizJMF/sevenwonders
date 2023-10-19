@@ -33,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -308,7 +307,7 @@ fun PlayersListDialog(
     onConfirmClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var selectedPerson: Person? by remember { mutableStateOf(null) }
+    var selectedNickname: String? by rememberSaveable { mutableStateOf(null) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -330,17 +329,17 @@ fun PlayersListDialog(
                                 Modifier
                                     .fillMaxWidth()
                                     .selectable(
-                                        selected = (person == selectedPerson),
+                                        selected = (person.nickname == selectedNickname),
                                         onClick = {
-                                            selectedPerson = person
+                                            selectedNickname = person.nickname
                                         }
                                     )
                                     .padding(horizontal = 16.dp)
                             ) {
                                 RadioButton(
-                                    selected = (person == selectedPerson),
+                                    selected = (person.nickname == selectedNickname),
                                     onClick = {
-                                        selectedPerson = person
+                                        selectedNickname = person.nickname
                                     }
                                 )
                                 PlayersListNameAndNicknameItem(
@@ -362,8 +361,8 @@ fun PlayersListDialog(
         },
         confirmButton = {
             TextButton(
-                onClick = { onConfirmClick(selectedPerson!!.nickname) },
-                enabled = selectedPerson != null
+                onClick = { onConfirmClick(selectedNickname!!) },
+                enabled = selectedNickname != null
             ) {
                 Text(text = stringResource(R.string.generic_confirm_text))
             }
