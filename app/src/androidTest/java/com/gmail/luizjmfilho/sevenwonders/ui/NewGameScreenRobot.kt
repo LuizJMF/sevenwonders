@@ -14,7 +14,7 @@ import androidx.compose.ui.test.performClick
 import com.gmail.luizjmfilho.sevenwonders.R
 
 class NewGameScreenRobot(
-    private val rule: AndroidComposeTestRule<*, ComponentActivity>
+    private val rule: AndroidComposeTestRule<*, out ComponentActivity>
 ) {
     fun assertThereIsNoTextFieldPlayerThatPositionIs(textFieldPosition: Int) {
         rule.onNodeWithText(rule.activity.getString(R.string.new_game_text_field_label, textFieldPosition + 1)).assertDoesNotExist()

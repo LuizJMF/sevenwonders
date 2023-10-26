@@ -64,6 +64,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.model.Person
@@ -81,9 +82,7 @@ fun PlayersListScreenPrimaria(
     windowWidthSizeClass: WindowWidthSizeClass,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    playersListViewModel: PlayersListViewModel = viewModel(
-        factory = PlayersListViewModel.Factory
-    ),
+    playersListViewModel: PlayersListViewModel = hiltViewModel()
 ) {
     val playersListUiState by playersListViewModel.uiState.collectAsState()
     PlayersListScreenSecundaria(

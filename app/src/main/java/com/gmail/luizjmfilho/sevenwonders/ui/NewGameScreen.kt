@@ -48,6 +48,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.model.Person
@@ -62,9 +63,7 @@ fun NewGameScreenPrimaria(
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
     modifier: Modifier = Modifier,
-    newGameViewModel: NewGameViewModel = viewModel(
-        factory = NewGameViewModel.Factory
-    ),
+    newGameViewModel: NewGameViewModel = hiltViewModel()
 ) {
     val newGameUiState by newGameViewModel.uiState.collectAsState()
     NewGameScreenSecundaria(

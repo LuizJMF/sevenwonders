@@ -2,13 +2,14 @@ package com.gmail.luizjmfilho.sevenwonders.data
 
 import com.gmail.luizjmfilho.sevenwonders.model.Person
 import com.gmail.luizjmfilho.sevenwonders.ui.NameOrNicknameError
+import javax.inject.Inject
 
 data class AddPlayerResult(
     val nameError: NameOrNicknameError?,
     val nicknameError: NameOrNicknameError?,
 )
 
-class PlayersListRepository(private val personDao: PersonDao) {
+class PlayersListRepository @Inject constructor (private val personDao: PersonDao) {
 
     suspend fun addPlayer(name: String, nickname: String): AddPlayerResult? {
         val nameWithoutSpace = name.trim()

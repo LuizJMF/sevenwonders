@@ -1,27 +1,31 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import androidx.activity.ComponentActivity
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.gmail.luizjmfilho.sevenwonders.SevenWondersNavHost
+import com.gmail.luizjmfilho.sevenwonders.TestActivity
 import com.gmail.luizjmfilho.sevenwonders.TestData.anna
 import com.gmail.luizjmfilho.sevenwonders.TestData.cristian
 import com.gmail.luizjmfilho.sevenwonders.TestData.luiz
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
-import org.junit.Ignore
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@Ignore("O banco de dados de um teste estava interferindo nos demais")
+@HiltAndroidTest
 class SevenWondersIntegrationTest {
 
-    @get:Rule
-    val rule = createAndroidComposeRule<ComponentActivity>()
+    @get:Rule(order = 1)
+    val rule = createAndroidComposeRule<TestActivity>()
     private val sevenWondersRobot = SevenWondersRobot(rule)
     private val homeScreenRobot = HomeScreenRobot(rule)
     private val playersListScreenRobot = PlayersListScreenRobot(rule)
     private val newGameScreenRobot = NewGameScreenRobot(rule)
 
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
 
     private fun launchScreen() {
         rule.setContent {
@@ -33,6 +37,10 @@ class SevenWondersIntegrationTest {
         }
     }
 
+    @Before
+    fun beforeTests() {
+        hiltRule.inject()
+    }
 
     @Test
     fun sevenWondersNavigation() {

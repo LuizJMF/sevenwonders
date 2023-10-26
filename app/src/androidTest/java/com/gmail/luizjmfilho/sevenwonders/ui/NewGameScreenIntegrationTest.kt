@@ -1,42 +1,42 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import com.gmail.luizjmfilho.sevenwonders.TestData.anna
 import com.gmail.luizjmfilho.sevenwonders.TestData.cristian
 import com.gmail.luizjmfilho.sevenwonders.TestData.gian
 import com.gmail.luizjmfilho.sevenwonders.TestData.luiz
 import com.gmail.luizjmfilho.sevenwonders.data.NewGameRepository
 import com.gmail.luizjmfilho.sevenwonders.data.PersonDao
-import com.gmail.luizjmfilho.sevenwonders.data.SevenWondersDatabase
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import javax.inject.Inject
 
+@HiltAndroidTest
 class NewGameScreenIntegrationTest {
 
-    @get:Rule
+    @get:Rule(order = 1)
     val rule = createAndroidComposeRule<ComponentActivity>()
     private val robot = NewGameScreenRobot(rule)
 
-    private val context = ApplicationProvider.getApplicationContext<Context>()
-    private lateinit var dao: PersonDao
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+    @Inject
+    lateinit var dao: PersonDao
 
     @Before
     fun beforeTests() {
-        val database = Room.inMemoryDatabaseBuilder(context, SevenWondersDatabase::class.java).build()
-        dao = database.personDao()
+        hiltRule.inject()
     }
-
-
 
     private fun launchScreen() {
         rule.setContent {
@@ -54,7 +54,6 @@ class NewGameScreenIntegrationTest {
             )
         }
     }
-
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test

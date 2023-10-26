@@ -8,7 +8,7 @@ import androidx.compose.ui.test.performClick
 import com.gmail.luizjmfilho.sevenwonders.R
 
 class HomeScreenRobot(
-    private val rule: AndroidComposeTestRule<*, ComponentActivity>
+    private val rule: AndroidComposeTestRule<*, out ComponentActivity>
 ) {
 
     fun clickPlayersListButton() {

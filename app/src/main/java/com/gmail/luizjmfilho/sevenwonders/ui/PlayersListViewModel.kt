@@ -1,22 +1,18 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.gmail.luizjmfilho.sevenwonders.data.PersonDao
 import com.gmail.luizjmfilho.sevenwonders.data.PlayersListRepository
-import com.gmail.luizjmfilho.sevenwonders.data.getSevenWondersDatabaseInstance
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PlayersListViewModel(
+@HiltViewModel
+class PlayersListViewModel @Inject constructor(
     private val playersListRepository: PlayersListRepository
 ) : ViewModel() {
 
@@ -102,18 +98,5 @@ class PlayersListViewModel(
             }
         }
     }
-
-    companion object {
-        val Factory = viewModelFactory {
-            initializer {
-                val context = get(ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY)!!
-                val database = getSevenWondersDatabaseInstance(context)
-                val dao: PersonDao = database.personDao()
-                val repository = PlayersListRepository(dao)
-                PlayersListViewModel(repository)
-            }
-        }
-    }
-
 }
 

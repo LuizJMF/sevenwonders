@@ -16,7 +16,7 @@ import androidx.compose.ui.test.performTextInput
 import com.gmail.luizjmfilho.sevenwonders.R
 
 class PlayersListScreenRobot(
-    private val rule: AndroidComposeTestRule<*, ComponentActivity>
+    private val rule: AndroidComposeTestRule<*, out ComponentActivity>
 ) {
     fun clickAddPlayerButton() {
         rule.onNodeWithText(rule.activity.getString(R.string.add_player_button)).performClick()

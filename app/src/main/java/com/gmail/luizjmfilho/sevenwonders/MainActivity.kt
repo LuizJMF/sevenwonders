@@ -7,6 +7,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.core.view.WindowCompat
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 
 enum class ScreenNames {
@@ -15,6 +16,7 @@ enum class ScreenNames {
     NewGameScreen,
 }
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
