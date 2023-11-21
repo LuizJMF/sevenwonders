@@ -49,7 +49,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.model.Person
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
@@ -61,7 +60,7 @@ const val newGameScreenTestTag: String = "NewGame Screen"
 @Composable
 fun NewGameScreenPrimaria(
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit,
+    onNextClick: (List<String>) -> Unit,
     modifier: Modifier = Modifier,
     newGameViewModel: NewGameViewModel = hiltViewModel()
 ) {
@@ -81,7 +80,7 @@ fun NewGameScreenPrimaria(
 @Composable
 fun NewGameScreenSecundaria(
     onBackClick: () -> Unit,
-    onAdvanceClick: () -> Unit,
+    onAdvanceClick: (List<String>) -> Unit,
     onPlayerChange: (Int, String) -> Unit,
     onChoosePlayerClick: () -> Unit,
     onAddPlayerTextButtonClick: () -> Unit,
@@ -177,14 +176,14 @@ fun NewGameScreenSecundaria(
                     Row {
                         Spacer(Modifier.weight(1f))
                         TextButton(
-                            onClick = onAdvanceClick,
+                            onClick = { onAdvanceClick(newGameUiState.activePlayersList) },
                             enabled = newGameUiState.isAdvanceAndAddPlayerButtonsEnable
                         ) {
                             Row (
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(5.dp)
                             ){
-                                Text(text = stringResource(R.string.new_game_advance_button))
+                                Text(text = stringResource(R.string.generic_advance_button).uppercase())
                                 Icon(
                                     imageVector = Icons.Filled.ArrowForward,
                                     contentDescription = null

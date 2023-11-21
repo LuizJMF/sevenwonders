@@ -28,7 +28,7 @@ class PlayerListScreenIntegrationTest {
     private fun launchScreen() {
         composeRule.setContent {
             PlayersListScreenPrimaria(
-                onBackClick = { /*TODO*/ },
+                onBackClick = { /* TODO */ },
                 windowWidthSizeClass = WindowWidthSizeClass.Compact,
             )
         }

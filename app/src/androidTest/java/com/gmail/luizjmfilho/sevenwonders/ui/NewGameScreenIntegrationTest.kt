@@ -41,8 +41,8 @@ class NewGameScreenIntegrationTest {
     private fun launchScreen() {
         rule.setContent {
             NewGameScreenPrimaria(
-                onBackClick = { /*TODO*/ },
-                onNextClick = { /*TODO*/ },
+                onBackClick = { /* TODO */ },
+                onNextClick = { /* TODO */ },
                 newGameViewModel = viewModel(
                     factory = viewModelFactory {
                         initializer {

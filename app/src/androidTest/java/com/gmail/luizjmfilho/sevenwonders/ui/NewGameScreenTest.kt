@@ -1,7 +1,6 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.activity.ComponentActivity
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.gmail.luizjmfilho.sevenwonders.TestData.anna
@@ -15,17 +14,16 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
-
 class NewGameScreenTest {
 
     @get:Rule
     val rule = createAndroidComposeRule<ComponentActivity>()
     private val robot = NewGameScreenRobot(rule)
-    private val stateRestorationTester = StateRestorationTester(rule)
+    private val stateRestorationTester = StateRestorationTester(rule) // essa é uma rule tbm, mas que permite testar as configuration chances.
 
     private fun launchScreen(
         onBackClick: () -> Unit = {},
-        onAdvanceClick: () -> Unit = {},
+        onAdvanceClick: (List<String>) -> Unit = {},
         onPlayerChange: (Int, String) -> Unit = {_, _ ->},
         onChoosePlayerClick: () -> Unit = {},
         onAddPlayerTextButtonClick: () -> Unit = {},
@@ -45,6 +43,7 @@ class NewGameScreenTest {
         }
 
     }
+
 
     @Test
     fun initialState() {
@@ -73,15 +72,21 @@ class NewGameScreenTest {
 
     @Test
     fun onAdvanceButtonClick() {
-        var advanceButtonClicked = false
+        val testList = listOf(luiz.nickname, cristian.nickname, anna.nickname)
+        var activePlayersList: List<String>? = null
         launchScreen(
-            onAdvanceClick = { advanceButtonClicked = true },
-            newGameUiState = NewGameUiState(isAdvanceAndAddPlayerButtonsEnable = true)
+            onAdvanceClick = { listaDeNicknames ->
+                activePlayersList = listaDeNicknames
+            },
+            newGameUiState = NewGameUiState(
+                isAdvanceAndAddPlayerButtonsEnable = true,
+                activePlayersList = testList
+            ),
         )
 
         robot.clickAdvanceButton()
 
-        assertTrue(advanceButtonClicked)
+        assertEquals(testList, activePlayersList)
     }
 
     @Test

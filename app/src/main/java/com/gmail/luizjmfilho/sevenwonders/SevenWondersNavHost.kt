@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.gmail.luizjmfilho.sevenwonders.ui.HomeScreen
+import com.gmail.luizjmfilho.sevenwonders.ui.MatchDetailsScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.NewGameScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.PlayersListScreenPrimaria
 
@@ -21,21 +22,15 @@ fun SevenWondersNavHost(
     ) {
         composable(route = ScreenNames.HomeScreen.name) {
             HomeScreen(
-                onCriarPartidaClick = {
-                    navController.navigate(ScreenNames.NewGameScreen.name)
-                },
-                onListaDeJogadoresClick = {
-                    navController.navigate(ScreenNames.PlayersListScreen.name)
-                }
+                onCriarPartidaClick = { navController.navigate(ScreenNames.NewGameScreen.name) },
+                onListaDeJogadoresClick = { navController.navigate(ScreenNames.PlayersListScreen.name) }
             )
         }
 
         composable(route = ScreenNames.PlayersListScreen.name) {
             PlayersListScreenPrimaria(
                 windowWidthSizeClass = windowWidthSizeClass,
-                onBackClick = {
-                    navController.navigateUp()
-                }
+                onBackClick = { navController.navigateUp() }
             )
         }
 
@@ -44,7 +39,16 @@ fun SevenWondersNavHost(
                 onBackClick = {
                     navController.navigateUp()
                 },
-                onNextClick = {}
+                onNextClick = { playerNicknames ->
+                    navController.navigate("${ScreenNames.MatchDetailsScreen.name}/${playerNicknames.joinToString(",")}")
+                }
+            )
+        }
+
+        composable(route = "${ScreenNames.MatchDetailsScreen.name}/{playerNicknames}") {
+            MatchDetailsScreenPrimaria(
+                onBackClick = { navController.navigateUp() },
+                onNextClick = { }
             )
         }
     }

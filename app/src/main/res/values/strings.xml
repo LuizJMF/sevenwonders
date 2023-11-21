@@ -10,6 +10,8 @@
     <string name="empty_players_list">Ainda não há nenhum jogador adicionado. Clique em \'+ Add jogador\' para adicionar pessoas.</string>
     <string name="add_jogador_window_title">Adicionar jogador</string>
     <string name="new_game_top_bar">Nova partida</string>
+    <string name="match_details_top_bar">Detalhes da partida</string>
+    <string name="match_details_choose_methods">Escolha o método de criação da partida:</string>
     <string name="add_player_window_cancel_button">Cancelar</string>
     <string name="add_player_window_confirm_button">Confirmar</string>
     <string name="navigation_back_content_description">Voltar tela</string>
@@ -24,9 +26,21 @@
     <string name="alert_dialog_new_game_text_when_list_is_empty">Você não tem nenhum jogador cadastrado na lista de jogadores ou então já usou todos os jogadores disponíveis.</string>
     <string name="new_game_add_player_button">Adicionar</string>
     <string name="new_game_remove_player_button">Remover</string>
-    <string name="new_game_advance_button">AVANÇAR</string>
+    <string name="generic_advance_button">Avançar</string>
     <string name="new_game_topbar">Nova partida</string>
     <string name="new_game_alert_dialog_error">Você precisa selecionar um jogador</string>
     <string name="new_game_text_field_label">Jogador %d</string>
+    <string name="generic_positions">Posições:</string>
+    <string name="generic_raffle">Sortear</string>
     <string name="generic_choose">Escolher</string>
-    </resources>
+    <string name="generic_wonders">Maravilhas:</string>
+    <string name="generic_wonder_alexandria">ALEXANDRIA</string>
+    <string name="generic_wonder_babylon">BABYLON</string>
+    <string name="generic_wonder_ephesos">ÉPHESOS</string>
+    <string name="generic_wonder_gizah">GIZAH</string>
+    <string name="generic_wonder_halikarnassos">HALIKARNASSOS</string>
+    <string name="generic_wonder_olympia">OLYMPÍA</string>
+    <string name="generic_wonder_rhodos">RHÓDOS</string>
+    <string name="alert_dialog_match_details_wonder_selection_title">Escolher maravilha</string>
+    <string name="match_details_deselect_wonder_dialog">Desselecionar a maravilha atual</string>
+</resources>

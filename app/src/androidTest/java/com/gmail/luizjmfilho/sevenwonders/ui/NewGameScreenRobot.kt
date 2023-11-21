@@ -37,11 +37,11 @@ class NewGameScreenRobot(
     }
 
     fun assertAdvanceButtonIsDisabled() {
-        rule.onNodeWithText(rule.activity.getString(R.string.new_game_advance_button)).assertIsNotEnabled()
+        rule.onNodeWithText(rule.activity.getString(R.string.generic_advance_button), ignoreCase = true).assertIsNotEnabled()
     }
 
     fun assertAdvanceButtonIsEnabled() {
-        rule.onNodeWithText(rule.activity.getString(R.string.new_game_advance_button)).assertIsEnabled()
+        rule.onNodeWithText(rule.activity.getString(R.string.generic_advance_button), ignoreCase = true).assertIsEnabled()
     }
 
     fun assertAddPlayerButtonIsNotShown() {
@@ -57,7 +57,7 @@ class NewGameScreenRobot(
     }
 
     fun clickAdvanceButton() {
-        rule.onNodeWithText(rule.activity.getString(R.string.new_game_advance_button)).performClick()
+        rule.onNodeWithText(rule.activity.getString(R.string.generic_advance_button), ignoreCase = true).performClick()
     }
 
     fun clickChoosePlayerButton(index: Int) {

@@ -39,7 +39,7 @@ class SevenWondersIntegrationTest {
 
     @Before
     fun beforeTests() {
-        hiltRule.inject()
+        hiltRule.inject() //essa linha ainda é necessária? Já que não tem nenhum @Inject.
     }
 
     @Test
