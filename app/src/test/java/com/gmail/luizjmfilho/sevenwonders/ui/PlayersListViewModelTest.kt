@@ -30,8 +30,8 @@ class PlayersListViewModelTest {
         viewModel = PlayersListViewModel(repository)
     }
 
-    private suspend fun mockAddPlayer(name: String = "", nickname: String = "", result: AddPlayerResult? = null) {
-        whenever(repository.addPlayer(name, nickname))
+    private suspend fun mockAddPlayer(nickname: String = "", result: AddPlayerResult? = null) {
+        whenever(repository.addPlayer(nickname))
             .thenReturn(result)
     }
 
@@ -40,39 +40,28 @@ class PlayersListViewModelTest {
             .thenReturn(list)
     }
 
-    private suspend fun verifyAddPlayer(times: Int = 1, name: String = "", nickname: String = "") {
-        verify(repository, times(times)).addPlayer(name, nickname)
+    private suspend fun verifyAddPlayer(times: Int = 1, nickname: String = "") {
+        verify(repository, times(times)).addPlayer(nickname)
     }
 
     @Test
     fun initialState() = runTest {
         val initialState = viewModel.uiState.value
-        assertEquals("", initialState.name)
         assertEquals("", initialState.nickname)
         assertEquals(listOf<Person>(), initialState.playersList)
-        assertNull(initialState.nameError)
         assertNull(initialState.nicknameError)
     }
 
     @Test
     fun onConfirmAddPlayerClick_whenNameAndNicknameEmpty_thenIsErrorEmpty() = runTest {
-        mockAddPlayer(result = AddPlayerResult(NameOrNicknameError.Empty, NameOrNicknameError.Empty))
+        mockAddPlayer(result = AddPlayerResult(NameOrNicknameError.Empty))
 
         viewModel.onConfirmAddPlayerClick()
 
         verifyAddPlayer()
         val state = viewModel.uiState.value
-        assertEquals(NameOrNicknameError.Empty ,state.nameError)
         assertEquals(NameOrNicknameError.Empty ,state.nicknameError)
         assertEquals(listOf<Person>(), state.playersList)
-    }
-
-    @Test
-    fun updateName_whenITypeSomething() = runTest {
-        viewModel.updateName("Luiz")
-        val state = viewModel.uiState.value
-
-        assertEquals("Luiz", state.name)
     }
 
     @Test
@@ -85,12 +74,10 @@ class PlayersListViewModelTest {
 
     @Test
     fun cancelAddPlayer_whenIClickOnIt() = runTest {
-        viewModel.updateName("Luiz")
         viewModel.updateNickname("Zinho")
         viewModel.cancelAddPlayer()
         val state = viewModel.uiState.value
 
-        assertEquals("", state.name)
         assertEquals("", state.nickname)
     }
 
@@ -98,7 +85,7 @@ class PlayersListViewModelTest {
     fun deletePlayer_whenIClickOnIt() = runTest {
         mockReadPlayer(
             listOf(
-                Person("Oi", "Olá")
+                Person("Oi")
             )
         )
         viewModel.deletePlayer("Luiz")
@@ -107,23 +94,20 @@ class PlayersListViewModelTest {
 
         verify(repository, times(1)).deletePlayer("Luiz")
         verify(repository, times(2)).readPlayer()
-        assertEquals(listOf(Person("Oi", "Olá")), state.playersList)
+        assertEquals(listOf(Person("Oi")), state.playersList)
     }
 
     @Test
     fun onConfirmAddPlayerClick_WhenHappyPath() = runTest {
         whenever(repository.readPlayer())
-            .thenReturn(listOf(Person("Luiz","Zinho")))
+            .thenReturn(listOf(Person("Luiz")))
 
-        viewModel.updateName("Luiz")
         viewModel.updateNickname("Zinho")
         viewModel.onConfirmAddPlayerClick()
         val state = viewModel.uiState.value
 
-        assertEquals("" ,state.name)
         assertEquals("" ,state.nickname)
-        assertEquals(listOf(Person("Luiz", "Zinho")) ,state.playersList)
-        assertNull(state.nameError)
+        assertEquals(listOf(Person("Luiz")) ,state.playersList)
         assertNull(state.nicknameError)
     }
 }

@@ -3,6 +3,8 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 import androidx.activity.ComponentActivity
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import com.gmail.luizjmfilho.sevenwonders.TestData.cristian
+import com.gmail.luizjmfilho.sevenwonders.TestData.luiz
 import com.gmail.luizjmfilho.sevenwonders.model.Person
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -18,7 +20,6 @@ class PlayersListScreenTest {
     private fun launchScreen (
         onBackClick: () -> Unit = {},
         playersListUiState: PlayersListUiState = PlayersListUiState(),
-        onNameChange: (String) -> Unit = {},
         onNicknameChange: (String) -> Unit = {},
         deletePlayer: (String) -> Unit = {},
         cancelAddPlayer: () -> Unit = {},
@@ -28,7 +29,6 @@ class PlayersListScreenTest {
             PlayersListScreenSecundaria(
                 onBackClick = onBackClick,
                 playersListUiState = playersListUiState,
-                onNameChange = onNameChange,
                 onNicknameChange = onNicknameChange,
                 deletePlayer = deletePlayer,
                 cancelAddPlayer = cancelAddPlayer,
@@ -66,32 +66,18 @@ class PlayersListScreenTest {
         launchScreen(
             playersListUiState = PlayersListUiState(
                 playersList = listOf(
-                    Person("Luiz Medeiros", "Zinho"),
-                    Person("Crístian Deives", "Deivinho")
+                    Person(luiz.nickname),
+                    Person(cristian.nickname)
                 )
             ),
         )
 
         with(robot) {
-            assertPlayerNameInTheListIs("Luiz Medeiros", 0)
-            assertPlayerNicknameInTheListIs("Zinho", 0)
-            assertPlayerNameInTheListIs("Crístian Deives", 1)
-            assertPlayerNicknameInTheListIs("Deivinho", 1)
+            assertPlayerNicknameInTheListIs(luiz.nickname, 0)
+            assertPlayerNicknameInTheListIs(cristian.nickname, 1)
         }
     }
 
-    @Test
-    fun whenITypeOnNameTextField_thenOnNameChangeIsCalled() {
-        var expectedName = ""
-        launchScreen(onNameChange = { expectedName = it },)
-
-        with(robot) {
-            clickAddPlayerButton()
-            typeName("Luiz")
-        }
-
-        assertEquals("Luiz", expectedName)
-    }
     @Test
     fun whenITypeOnNicknameTextField_thenOnNicknameChangeIsCalled() {
         var expectedNickname = ""
@@ -99,10 +85,10 @@ class PlayersListScreenTest {
 
         with(robot) {
             clickAddPlayerButton()
-            typeNickname("Zinho")
+            typeNickname(luiz.nickname)
         }
 
-        assertEquals("Zinho", expectedNickname)
+        assertEquals(luiz.nickname, expectedNickname)
     }
 
     @Test
@@ -114,8 +100,8 @@ class PlayersListScreenTest {
             },
             playersListUiState = PlayersListUiState(
                 playersList = listOf(
-                    Person("Luiz", "Zinho"),
-                    Person("Deives", "Deivinho")
+                    Person(luiz.nickname),
+                    Person(cristian.nickname)
                 )
             )
         )
@@ -125,7 +111,7 @@ class PlayersListScreenTest {
             clickIconDelete(1)
         }
 
-        assertEquals("Deives", expectedName)
+        assertEquals(cristian.nickname, expectedName)
     }
 
     @Test
@@ -188,7 +174,7 @@ class PlayersListScreenTest {
         launchScreen(
             playersListUiState = PlayersListUiState(
                 playersList = listOf(
-                    Person("Luiz","Zinho")
+                    Person(luiz.nickname)
                 )
             )
         )
@@ -208,7 +194,7 @@ class PlayersListScreenTest {
         launchScreen(
             playersListUiState = PlayersListUiState(
                 playersList = listOf(
-                    Person("Luiz","Zinho")
+                    Person(luiz.nickname)
                 )
             )
         )
@@ -235,42 +221,16 @@ class PlayersListScreenTest {
     }
 
     @Test
-    fun whenNameHasAString_thenNameFieldShowsIt() {
-        launchScreen(
-            playersListUiState = PlayersListUiState(
-                name = "Luiz"
-            )
-        )
-
-        robot.clickAddPlayerButton()
-
-        robot.assertNameTextFieldHasName("Luiz")
-    }
-
-    @Test
     fun whenNicknameHasAString_thenNicknameFieldShowsIt() {
         launchScreen(
             playersListUiState = PlayersListUiState(
-                nickname = "Zinho"
+                nickname = luiz.nickname
             )
         )
 
         robot.clickAddPlayerButton()
 
-        robot.assertNicknameTextFieldHasNickname("Zinho")
-    }
-
-    @Test
-    fun whenNameErrorIsEmpty_thenEmptyErrorAppears() {
-        launchScreen(
-            playersListUiState = PlayersListUiState(
-                nameError = NameOrNicknameError.Empty
-            )
-        )
-
-        robot.clickAddPlayerButton()
-
-        robot.assertEmptyErrorMessageIsShownInNameTextField()
+        robot.assertNicknameTextFieldHasNickname(luiz.nickname)
     }
 
     @Test
@@ -284,19 +244,6 @@ class PlayersListScreenTest {
         robot.clickAddPlayerButton()
 
         robot.assertEmptyErrorMessageIsShownInNicknameTextField()
-    }
-
-    @Test
-    fun whenNameErrorIsExists_thenNameExistsErrorAppears() {
-        launchScreen(
-            playersListUiState = PlayersListUiState(
-                nameError = NameOrNicknameError.Exists
-            )
-        )
-
-        robot.clickAddPlayerButton()
-
-        robot.assertNameExistsErrorMessageIsShown()
     }
 
     @Test

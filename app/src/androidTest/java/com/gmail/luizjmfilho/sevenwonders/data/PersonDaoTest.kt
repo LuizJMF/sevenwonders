@@ -39,7 +39,7 @@ class PersonDaoTest {
     @Test
     fun onDeletePlayer_WhenDeleteAPerson_HappyPath() = runTest {
         dao.addPlayer(luiz)
-        dao.deletePlayer(luiz.name)
+        dao.deletePlayer(luiz.nickname)
 
         val currentList = dao.readPlayer()
 
@@ -54,37 +54,6 @@ class PersonDaoTest {
 
         val currentList = dao.readPlayer()
         assertTrue(listOf(anna, cristian, luiz) == currentList)
-    }
-
-    @Test
-    fun onNumberOfPlayersWithThisName_WhenNameHaveDifferentCases_ThenItCountsJustOne() = runTest {
-        dao.addPlayer(luiz)
-        val numberOfPlayers = dao.numberOfPlayersWithThisName(luiz.name.uppercase())
-
-        assertEquals(1, numberOfPlayers)
-    }
-
-    @Test
-    fun onNumberOfPlayersWithThisName_WhenNoPlayers_ThenReturnZero() = runTest {
-        val numberOfPlayers = dao.numberOfPlayersWithThisName(luiz.name)
-        assertEquals(0, numberOfPlayers)
-    }
-
-    @Test
-    fun onNumberOfPlayersWithThisName_WhenOnePlayerWithThatName_ThenReturnOne() = runTest {
-        dao.addPlayer(luiz)
-        dao.addPlayer(cristian)
-        val numberOfPlayers = dao.numberOfPlayersWithThisName(luiz.name)
-        assertEquals(1, numberOfPlayers)
-    }
-
-    @Test
-    fun onNumberOfPlayersWithThisName_WhenTwoPlayersWithThatName_ThenReturnTwo() = runTest {
-        dao.addPlayer(anna)
-        dao.addPlayer(anna.copy(id = 5))
-        dao.addPlayer(cristian)
-        val numberOfPlayers = dao.numberOfPlayersWithThisName(anna.name)
-        assertEquals(2, numberOfPlayers)
     }
 
     @Test

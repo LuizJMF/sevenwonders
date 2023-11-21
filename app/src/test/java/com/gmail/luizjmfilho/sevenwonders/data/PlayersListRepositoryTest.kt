@@ -26,93 +26,35 @@ class PlayersListRepositoryTest {
             .thenReturn(result)
     }
 
-    private suspend fun mockNumberOfPlayersWithThisName(searchedName: String, result: Int) {
-        whenever(dao.numberOfPlayersWithThisName(searchedName))
-            .thenReturn(result)
+    @Test
+    fun onAddPlayer_whenNicknameIsEmpty_thenNicknameErrorIsEmpty() = runTest {
+
+        val addPlayerResult = repository.addPlayer("")
+
+        assertEquals(AddPlayerResult(NameOrNicknameError.Empty), addPlayerResult)
     }
 
     @Test
-    fun onAddPlayer_whenNameIsEmptyAndNicknameIsNot_thenIsNameErrorEmpty() = runTest {
-        mockNumberOfPlayersWithThisNickname(luiz.nickname, 0)
+    fun onAddPlayer_whenNicknameIsJustASpace_thenNicknameErrorIsEmpty() = runTest {
+        val addPlayerResult = repository.addPlayer(" ")
 
-        val addPlayerResult = repository.addPlayer("",luiz.nickname)
-
-        assertEquals(AddPlayerResult(NameOrNicknameError.Empty, null), addPlayerResult)
-    }
-
-    @Test
-    fun onAddPlayer_whenNicknameIsEmptyAndNameIsNot_thenIsNicknameErrorEmpty() = runTest {
-        mockNumberOfPlayersWithThisName(luiz.name, 0)
-
-        val addPlayerResult = repository.addPlayer(luiz.name,"")
-
-        assertEquals(AddPlayerResult(null, NameOrNicknameError.Empty), addPlayerResult)
-    }
-
-    @Test
-    fun onAddPlayer_whenNameAndNicknameEmpty_thenIsErrorEmpty() = runTest {
-        val addPlayerResult = repository.addPlayer("","")
-
-        assertEquals(AddPlayerResult(NameOrNicknameError.Empty, NameOrNicknameError.Empty), addPlayerResult)
-    }
-
-    @Test
-    fun onAddPlayer_whenIsNameAndNicknameJustASpace_thenIsNameAndNicknameErrorEmpty() = runTest {
-        val addPlayerResult = repository.addPlayer(" "," ")
-
-        assertEquals(AddPlayerResult(NameOrNicknameError.Empty, NameOrNicknameError.Empty), addPlayerResult)
-    }
-
-    @Test
-    fun onAddPlayer_whenIsNameJustASpace_thenIsNameErrorEmpty() = runTest {
-        val addPlayerResult = repository.addPlayer(" ","")
-
-        assertEquals(AddPlayerResult(NameOrNicknameError.Empty, NameOrNicknameError.Empty), addPlayerResult)
-    }
-
-    @Test
-    fun onAddPlayer_whenIsNicknameJustASpace_thenIsNicknameErrorEmpty() = runTest {
-        val addPlayerResult = repository.addPlayer(""," ")
-
-        assertEquals(AddPlayerResult(NameOrNicknameError.Empty, NameOrNicknameError.Empty), addPlayerResult)
-    }
-
-
-    @Test
-    fun onAddPlayer_whenNameExists_thenIsNameErrorExist() = runTest {
-        mockNumberOfPlayersWithThisName(luiz.name, 1)
-
-        val addPlayerResult = repository.addPlayer(luiz.name,"")
-
-        assertEquals(AddPlayerResult(NameOrNicknameError.Exists, NameOrNicknameError.Empty), addPlayerResult)
+        assertEquals(AddPlayerResult(NameOrNicknameError.Empty), addPlayerResult)
     }
 
     @Test
     fun onAddPlayer_whenNicknameExists_thenIsNicknameErrorExist() = runTest {
         mockNumberOfPlayersWithThisNickname(luiz.nickname, 1)
 
-        val addPlayerResult = repository.addPlayer("",luiz.nickname)
+        val addPlayerResult = repository.addPlayer(luiz.nickname)
 
-        assertEquals(AddPlayerResult(NameOrNicknameError.Empty, NameOrNicknameError.Exists), addPlayerResult)
-    }
-
-    @Test
-    fun onAddPlayer_whenNameAndNicknameExists_thenIsErrorsExist() = runTest {
-        mockNumberOfPlayersWithThisName(luiz.name, 1)
-        mockNumberOfPlayersWithThisNickname(luiz.nickname, 1)
-
-        val addPlayerResult = repository.addPlayer(luiz.name,luiz.nickname)
-
-        assertEquals(AddPlayerResult(NameOrNicknameError.Exists, NameOrNicknameError.Exists), addPlayerResult)
+        assertEquals(AddPlayerResult(NameOrNicknameError.Exists), addPlayerResult)
     }
 
     @Test
     fun onAddPlayer_happyPath() = runTest {
-        mockNumberOfPlayersWithThisName(luiz.name, 0)
         mockNumberOfPlayersWithThisNickname(luiz.nickname, 0)
 
-
-        val addPlayerResult = repository.addPlayer(luiz.name,luiz.nickname)
+        val addPlayerResult = repository.addPlayer(luiz.nickname)
 
         assertNull(addPlayerResult)
     }

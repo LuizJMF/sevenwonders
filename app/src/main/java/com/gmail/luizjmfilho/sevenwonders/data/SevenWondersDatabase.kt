@@ -6,7 +6,7 @@ import com.gmail.luizjmfilho.sevenwonders.model.Person
 
 @Database(
     entities = [Person::class],
-    version = 1,
+    version = 2,
     exportSchema = true,
 )
 abstract class SevenWondersDatabase : RoomDatabase() {

@@ -40,36 +40,30 @@ class PlayerListScreenIntegrationTest {
 
         with(robot) {
             clickAddPlayerButton()
-            typeName("Luiz")
             typeNickname("Zinho")
             clickConfirmAddPlayerButton()
-            typeName("Crístian Deives")
             typeNickname("Deivinho")
             clickConfirmAddPlayerButton()
         }
 
         with(robot) {
-            assertPlayerNameInTheListIs("Crístian Deives", 0)
             assertPlayerNicknameInTheListIs("Deivinho", 0)
-            assertPlayerNameInTheListIs("Luiz", 1)
             assertPlayerNicknameInTheListIs("Zinho", 1)
         }
     }
 
     @Test
-    fun whenIRegisterEmptyNameAndNickname_thenEmptyErrorsAppear() {
+    fun whenIRegisterEmptyNickname_thenEmptyErrorAppears() {
         launchScreen()
 
         with(robot){
             clickAddPlayerButton()
-            typeName("")
             typeNickname("")
             clickConfirmAddPlayerButton()
         }
 
 
         with(robot) {
-            assertEmptyErrorMessageIsShownInNameTextField()
             assertEmptyErrorMessageIsShownInNicknameTextField()
         }
     }
@@ -81,10 +75,8 @@ class PlayerListScreenIntegrationTest {
 
         with(robot) {
             clickAddPlayerButton()
-            typeName("Luiz")
             typeNickname("Zinho")
             clickConfirmAddPlayerButton()
-            typeName("Crístian Deives")
             typeNickname("Deivinho")
             clickConfirmAddPlayerButton()
             clickDeletePlayerButton()

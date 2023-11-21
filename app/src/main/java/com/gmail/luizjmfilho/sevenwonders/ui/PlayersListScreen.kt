@@ -90,7 +90,6 @@ fun PlayersListScreenPrimaria(
         onBackClick = onBackClick,
         playersListUiState = playersListUiState,
         modifier = modifier,
-        onNameChange = { playersListViewModel.updateName(it) },
         onNicknameChange = { playersListViewModel.updateNickname(it) },
         deletePlayer = { nome -> playersListViewModel.deletePlayer(nome) },
         cancelAddPlayer = { playersListViewModel.cancelAddPlayer()},
@@ -103,7 +102,6 @@ fun PlayersListScreenSecundaria(
     windowWidthSizeClass: WindowWidthSizeClass,
     onBackClick: () -> Unit,
     playersListUiState: PlayersListUiState,
-    onNameChange: (String) -> Unit,
     onNicknameChange: (String) -> Unit,
     deletePlayer: (String) -> Unit,
     cancelAddPlayer: () -> Unit,
@@ -145,7 +143,6 @@ fun PlayersListScreenSecundaria(
                 onAddJogadorExpanded = { addPlayerExpanded = it },
                 cancelAddPlayer = cancelAddPlayer,
                 deletePlayer = deletePlayer,
-                onNameChange = onNameChange,
                 onNicknameChange = onNicknameChange,
                 onConfirmClicked = onConfirmClicked,
                 playersListUiState = playersListUiState,
@@ -172,7 +169,6 @@ fun PlayersListScreenSecundaria(
                 onAddJogadorExpanded = { addPlayerExpanded = it },
                 cancelAddPlayer = cancelAddPlayer,
                 deletePlayer = deletePlayer,
-                onNameChange = onNameChange,
                 onNicknameChange = onNicknameChange,
                 onConfirmClicked = onConfirmClicked,
                 playersListUiState = playersListUiState,
@@ -184,7 +180,6 @@ fun PlayersListScreenSecundaria(
 @Composable
 fun PlayersListMediumAndExpandedContent(
     playersListUiState: PlayersListUiState,
-    onNameChange: (String) -> Unit,
     onNicknameChange: (String) -> Unit,
     deletePlayer: (String) -> Unit,
     cancelAddPlayer: () -> Unit,
@@ -236,8 +231,6 @@ fun PlayersListMediumAndExpandedContent(
                 visible = addJogadorExpanded,
             ) {
                 AddPlayerWindow(
-                    name = playersListUiState.name,
-                    onNameChange = onNameChange,
                     nickname = playersListUiState.nickname,
                     onNicknameChange = onNicknameChange,
                     onCancelClick = {
@@ -245,7 +238,6 @@ fun PlayersListMediumAndExpandedContent(
                         onAddJogadorExpanded(false)
                     },
                     onConfirmClick = onConfirmClicked,
-                    nameError = playersListUiState.nameError,
                     nicknameError = playersListUiState.nicknameError,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -272,7 +264,6 @@ fun PlayersListMediumAndExpandedContent(
 @Composable
 fun PlayersListCompactContent(
     playersListUiState: PlayersListUiState,
-    onNameChange: (String) -> Unit,
     onNicknameChange: (String) -> Unit,
     deletePlayer: (String) -> Unit,
     cancelAddPlayer: () -> Unit,
@@ -322,8 +313,6 @@ fun PlayersListCompactContent(
                 visible = addJogadorExpanded
             ) {
                 AddPlayerWindow(
-                    name = playersListUiState.name,
-                    onNameChange = onNameChange,
                     nickname = playersListUiState.nickname,
                     onNicknameChange = onNicknameChange,
                     onCancelClick = {
@@ -331,7 +320,6 @@ fun PlayersListCompactContent(
                         onAddJogadorExpanded(false)
                     },
                     onConfirmClick = onConfirmClicked,
-                    nameError = playersListUiState.nameError,
                     nicknameError = playersListUiState.nicknameError,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -436,13 +424,13 @@ fun PlayersList(
                         horizontalArrangement = Arrangement.spacedBy(2.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(IntrinsicSize.Min),
+                            .height(40.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = "${index + 1}."
                         )
                         PlayersListNameAndNicknameItem(
-                            name = person.name,
                             nickname = person.nickname,
                             modifier = Modifier
                                 .weight(1f)
@@ -457,7 +445,7 @@ fun PlayersList(
                             )
                             IconButton(
                                 onClick = {
-                                    deletePlayer(person.name)
+                                    deletePlayer(person.nickname)
                                 },
                                 modifier = Modifier
                                     .size(40.dp)
@@ -486,45 +474,28 @@ fun PlayersList(
 
 @Composable
 fun PlayersListNameAndNicknameItem(
-    name: String,
     nickname: String,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(2.dp)
-    ) {
-        Text(
-            text = name,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .animateContentSize()
-                .testTag(eachPersonNameInTheListTestTag)
-        )
-        Text(
-            text = nickname,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            color = Color.Gray,
-            fontStyle = FontStyle.Italic,
-            modifier = Modifier
-                .animateContentSize()
-                .testTag(eachPersonNicknameInTheListTestTag)
-        )
-    }
+    Text(
+        text = nickname,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        color = Color(0xFF000080),
+        fontStyle = FontStyle.Italic,
+        modifier = modifier
+            .animateContentSize()
+            .testTag(eachPersonNicknameInTheListTestTag)
+    )
 }
 
 @Composable
 fun AddPlayerWindow(
-    name: String,
-    onNameChange: (String) -> Unit,
     nickname: String,
     onNicknameChange: (String) -> Unit,
     onCancelClick: () -> Unit,
     onConfirmClick: () -> Unit,
     modifier: Modifier = Modifier,
-    nameError: NameOrNicknameError?,
     nicknameError: NameOrNicknameError?,
 ) {
     Card (
@@ -541,23 +512,6 @@ fun AddPlayerWindow(
                 ) {
             Text(
                 text = stringResource(R.string.add_jogador_window_title),
-            )
-            TextField(
-                value = name,
-                onValueChange = onNameChange ,
-                label = {Text(text = stringResource(R.string.add_player_label_name_text_field))},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(nameTextFieldTestTag),
-                supportingText = {
-                    when (nameError) {
-                        NameOrNicknameError.Empty -> Text(text = stringResource(R.string.empty_error_message))
-                        NameOrNicknameError.Exists -> Text(text = stringResource(R.string.name_exists_erros_message))
-                        else -> {}
-                    }
-                },
-                keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words),
-                isError = nameError != null,
             )
             TextField(
                 value = nickname,
@@ -676,33 +630,6 @@ fun PlayersListButton(
     }
 }
 
-@Composable
-fun JanelinhaJogadorAdicionado(
-    modifier: Modifier = Modifier
-) {
-    Card(
-        colors = CardDefaults.cardColors(Color.White),
-        border = BorderStroke(1.dp, Color.Gray)
-    ){
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
-                .padding(8.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.CheckCircle,
-                contentDescription = null,
-                tint = Color.Green
-            )
-            Text(
-                text = "Jogador adicionado!",
-                color = Color.Gray,
-                fontStyle = FontStyle.Italic
-            )
-        }
-    }
-}
-
 @Preview
 @Composable
 fun PlayersListCompactPreview() {
@@ -711,14 +638,12 @@ fun PlayersListCompactPreview() {
             onBackClick = {},
             playersListUiState = PlayersListUiState(
                 "",
-                "",
                 listOf(
-                    Person("Luiz José de Medeiros Filho", "Zinho "),
-                    Person("Crístian Deives dos Santos Viana", "Deivinho"),
-                    Person("Anna Luisa Espínola de Sena Costa", "Anninha"),
+                    Person("Zinho "),
+                    Person("Deivinho"),
+                    Person("Anninha"),
                 )
             ),
-            onNameChange = {},
             onNicknameChange = {},
             deletePlayer = {},
             cancelAddPlayer = {},
@@ -736,14 +661,12 @@ fun PlayersListMediunAndExpandedPreview() {
             onBackClick = {},
             playersListUiState = PlayersListUiState(
                 "",
-                "",
                 listOf(
-                    Person("Luiz José de Medeiros Filho", "Zinho "),
-                    Person("Crístian Deives dos Santos Viana", "Deivinho"),
-                    Person("Anna Luisa Espínola de Sena Costa", "Anninha"),
+                    Person("Zinho "),
+                    Person("Deivinho"),
+                    Person("Anninha"),
                 )
             ),
-            onNameChange = {},
             onNicknameChange = {},
             deletePlayer = {},
             cancelAddPlayer = {},
@@ -760,7 +683,6 @@ fun PlayersListEmptyCompactPreview() {
         PlayersListScreenSecundaria(
             onBackClick = {},
             playersListUiState = PlayersListUiState(),
-            onNameChange = {},
             onNicknameChange = {},
             deletePlayer = {},
             cancelAddPlayer = {},
@@ -777,12 +699,25 @@ fun PlayersListEmptyMediumAndExpandedPreview() {
         PlayersListScreenSecundaria(
             onBackClick = {},
             playersListUiState = PlayersListUiState(),
-            onNameChange = {},
             onNicknameChange = {},
             deletePlayer = {},
             cancelAddPlayer = {},
             onConfirmClicked = {},
             windowWidthSizeClass = WindowWidthSizeClass.Medium
+        )
+    }
+}
+
+@Preview
+@Composable
+fun AddPlayerWindowPreview() {
+    SevenWondersTheme {
+        AddPlayerWindow(
+            nickname = "",
+            onNicknameChange = {},
+            onCancelClick = { /*TODO*/ },
+            onConfirmClick = { /*TODO*/ },
+            nicknameError = null
         )
     }
 }

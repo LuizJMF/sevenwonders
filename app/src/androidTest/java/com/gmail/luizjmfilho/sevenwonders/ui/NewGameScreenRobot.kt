@@ -84,16 +84,12 @@ class NewGameScreenRobot(
         rule.onNodeWithText(rule.activity.getString(R.string.generic_confirm_text)).performClick()
     }
 
-    fun assertThereIsNoPlayerInAvailablePlayersListWithNickname(nickname: String) {
-        rule.onNodeWithTag(eachPersonNicknameInTheListTestTag).assertDoesNotExist()
+    fun assertThereIsNoPlayerInTheScreenWithThisNickname(nickname: String) {
+        rule.onNodeWithText(nickname).assertDoesNotExist()
     }
 
-    fun assertThereIsNoPlayerInTheScreenWithThisName(name: String) {
-        rule.onNodeWithText(name).assertDoesNotExist()
-    }
-
-    fun assertThereIsAPlayerInTheScreenWithThisName(name: String) {
-        rule.onNodeWithText(name).assertExists()
+    fun assertThereIsAPlayerInTheScreenWithThisNickname(nickname: String) {
+        rule.onNodeWithText(nickname).assertExists()
     }
 
     fun assertNewGameScreenIsCurrentScreen() {

@@ -5,21 +5,12 @@ import com.gmail.luizjmfilho.sevenwonders.ui.NameOrNicknameError
 import javax.inject.Inject
 
 data class AddPlayerResult(
-    val nameError: NameOrNicknameError?,
     val nicknameError: NameOrNicknameError?,
 )
 
 class PlayersListRepository @Inject constructor (private val personDao: PersonDao) {
 
-    suspend fun addPlayer(name: String, nickname: String): AddPlayerResult? {
-        val nameWithoutSpace = name.trim()
-        val nameError: NameOrNicknameError? = if (nameWithoutSpace == "") {
-            NameOrNicknameError.Empty
-        } else if (personDao.numberOfPlayersWithThisName(nameWithoutSpace) > 0) {
-            NameOrNicknameError.Exists
-        } else {
-            null
-        }
+    suspend fun addPlayer(nickname: String): AddPlayerResult? {
 
         val nicknameWithoutSpace = nickname.trim()
         val nicknameError: NameOrNicknameError? = if (nicknameWithoutSpace == "") {
@@ -30,19 +21,18 @@ class PlayersListRepository @Inject constructor (private val personDao: PersonDa
             null
         }
 
-        if (nameError == null && nicknameError == null) {
-            personDao.addPlayer(Person(nameWithoutSpace, nicknameWithoutSpace))
+        if (nicknameError == null) {
+            personDao.addPlayer(Person(nicknameWithoutSpace))
             return null
         } else {
             return AddPlayerResult(
-                nameError = nameError,
                 nicknameError = nicknameError
             )
         }
     }
 
-    suspend fun deletePlayer(name: String) {
-        personDao.deletePlayer(name)
+    suspend fun deletePlayer(nickname: String) {
+        personDao.deletePlayer(nickname)
     }
 
     suspend fun readPlayer(): List<Person> {

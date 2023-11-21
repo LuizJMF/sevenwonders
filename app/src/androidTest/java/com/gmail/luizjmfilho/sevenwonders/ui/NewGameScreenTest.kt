@@ -230,11 +230,11 @@ class NewGameScreenTest {
         robot.clickChoosePlayerButton(0)
 
         with(robot) {
-            assertThereIsAPlayerInTheScreenWithThisName(luiz.name)
-            assertThereIsAPlayerInTheScreenWithThisName(anna.name)
-            assertThereIsAPlayerInTheScreenWithThisName(cristian.name)
-            assertThereIsAPlayerInTheScreenWithThisName(ivana.name)
-            assertThereIsNoPlayerInTheScreenWithThisName(gian.name)
+            assertThereIsAPlayerInTheScreenWithThisNickname(luiz.nickname)
+            assertThereIsAPlayerInTheScreenWithThisNickname(anna.nickname)
+            assertThereIsAPlayerInTheScreenWithThisNickname(cristian.nickname)
+            assertThereIsAPlayerInTheScreenWithThisNickname(ivana.nickname)
+            assertThereIsNoPlayerInTheScreenWithThisNickname(gian.nickname)
         }
 
     }

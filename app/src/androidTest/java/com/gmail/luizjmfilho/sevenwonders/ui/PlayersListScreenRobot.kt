@@ -74,24 +74,12 @@ class PlayersListScreenRobot(
         rule.onAllNodesWithTag(deleteIconTestTag)[0].assertExists()
     }
 
-    fun assertNameTextFieldHasName(name: String) {
-        rule.onNodeWithTag(nameTextFieldTestTag).assert(hasEditableText(name))
-    }
-
     fun assertNicknameTextFieldHasNickname(nickname: String) {
         rule.onNodeWithTag(nicknameTextFieldTestTag).assert(hasEditableText(nickname))
     }
 
-    fun assertEmptyErrorMessageIsShownInNameTextField() {
-        rule.onNodeWithTag(nameTextFieldTestTag).assertTextContains(rule.activity.getString(R.string.empty_error_message))
-    }
-
     fun assertEmptyErrorMessageIsShownInNicknameTextField() {
         rule.onNodeWithTag(nicknameTextFieldTestTag).assertTextContains(rule.activity.getString(R.string.empty_error_message))
-    }
-
-    fun assertNameExistsErrorMessageIsShown() {
-        rule.onNodeWithText(rule.activity.getString(R.string.name_exists_erros_message)).assertExists()
     }
 
     fun assertNicknameExistsErrorMessageIsShown() {

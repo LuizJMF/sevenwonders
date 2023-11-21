@@ -31,15 +31,6 @@ class PlayersListViewModel @Inject constructor(
         }
     }
 
-    fun updateName(novoNome: String){
-        _uiState.update { currentState ->
-            currentState.copy(
-                name = novoNome,
-                nameError = null,
-            )
-        }
-    }
-
     fun updateNickname(novoApelido: String){
         _uiState.update { currentState ->
             currentState.copy(
@@ -51,9 +42,7 @@ class PlayersListViewModel @Inject constructor(
     fun cancelAddPlayer(){
         _uiState.update { currentState ->
             currentState.copy(
-                name = "",
                 nickname = "",
-                nameError = null,
                 nicknameError = null,
             )
         }
@@ -63,18 +52,15 @@ class PlayersListViewModel @Inject constructor(
     fun onConfirmAddPlayerClick () {
         viewModelScope.launch {
             _uiState.update { currentState ->
-                val addPlayerResult = playersListRepository.addPlayer(currentState.name, currentState.nickname)
+                val addPlayerResult = playersListRepository.addPlayer(currentState.nickname)
                 if (addPlayerResult == null) {
                     currentState.copy(
-                        name = "",
                         nickname = "",
                         playersList = playersListRepository.readPlayer(),
-                        nameError = null,
                         nicknameError = null,
                     )
                 } else {
                     currentState.copy(
-                        nameError = addPlayerResult.nameError,
                         nicknameError = addPlayerResult.nicknameError
                     )
                 }
@@ -82,11 +68,11 @@ class PlayersListViewModel @Inject constructor(
         }
     }
 
-    fun deletePlayer (name: String) {
+    fun deletePlayer (nickname: String) {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 try {
-                    playersListRepository.deletePlayer(name)
+                    playersListRepository.deletePlayer(nickname)
                     val x = playersListRepository.readPlayer()
                     currentState.copy(
                         playersList = x,

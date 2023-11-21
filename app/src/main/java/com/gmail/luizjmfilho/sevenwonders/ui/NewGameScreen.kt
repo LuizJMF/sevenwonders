@@ -36,6 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
@@ -324,7 +325,7 @@ fun PlayersListDialog(
                     ) {
                         list.forEach { person ->
                             Row(
-                                Modifier
+                                modifier = Modifier
                                     .fillMaxWidth()
                                     .selectable(
                                         selected = (person.nickname == selectedNickname),
@@ -332,7 +333,8 @@ fun PlayersListDialog(
                                             selectedNickname = person.nickname
                                         }
                                     )
-                                    .padding(horizontal = 16.dp)
+                                    .padding(horizontal = 16.dp),
+                                verticalAlignment = CenterVertically
                             ) {
                                 RadioButton(
                                     selected = (person.nickname == selectedNickname),
@@ -341,7 +343,6 @@ fun PlayersListDialog(
                                     }
                                 )
                                 PlayersListNameAndNicknameItem(
-                                    name = person.name,
                                     nickname = person.nickname,
                                 )
                             }

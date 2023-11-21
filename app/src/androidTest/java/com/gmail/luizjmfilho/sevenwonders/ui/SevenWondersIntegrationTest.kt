@@ -80,10 +80,8 @@ class SevenWondersIntegrationTest {
         homeScreenRobot.clickPlayersListButton()
         with(playersListScreenRobot) {
             clickAddPlayerButton()
-            typeName(luiz.name)
             typeNickname(luiz.nickname)
             clickConfirmAddPlayerButton()
-            typeName(cristian.name)
             typeNickname(cristian.nickname)
             clickConfirmAddPlayerButton()
         }
@@ -91,9 +89,9 @@ class SevenWondersIntegrationTest {
         homeScreenRobot.clickNewGameButton()
         with(newGameScreenRobot) {
             clickChoosePlayerButton(0)
-            assertThereIsAPlayerInTheScreenWithThisName(luiz.name)
-            assertThereIsAPlayerInTheScreenWithThisName(cristian.name)
-            assertThereIsNoPlayerInTheScreenWithThisName(anna.name)
+            assertThereIsAPlayerInTheScreenWithThisNickname(luiz.nickname)
+            assertThereIsAPlayerInTheScreenWithThisNickname(cristian.nickname)
+            assertThereIsNoPlayerInTheScreenWithThisNickname(anna.nickname)
         }
 
 
