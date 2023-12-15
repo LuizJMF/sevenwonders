@@ -15,6 +15,7 @@ enum class ScreenNames {
     PlayersListScreen,
     NewGameScreen,
     MatchDetailsScreen,
+    CalculationScreen,
 }
 
 @AndroidEntryPoint

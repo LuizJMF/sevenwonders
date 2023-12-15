@@ -24,7 +24,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
@@ -65,13 +64,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.model.Person
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
 const val deleteIconTestTag: String = "ícone X de deletar"
-const val nameTextFieldTestTag: String = "Name TextField"
 const val nicknameTextFieldTestTag: String = "Nickname TextField"
 const val eachPersonNameInTheListTestTag: String = "Person Name"
 const val eachPersonNicknameInTheListTestTag: String = "Person Nickname"

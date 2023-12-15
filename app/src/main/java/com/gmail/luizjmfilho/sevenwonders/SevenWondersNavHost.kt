@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.gmail.luizjmfilho.sevenwonders.ui.CalculationScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.HomeScreen
 import com.gmail.luizjmfilho.sevenwonders.ui.MatchDetailsScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.NewGameScreenPrimaria
@@ -47,6 +48,15 @@ fun SevenWondersNavHost(
 
         composable(route = "${ScreenNames.MatchDetailsScreen.name}/{playerNicknames}") {
             MatchDetailsScreenPrimaria(
+                onBackClick = { navController.navigateUp() },
+                onNextClick = { playerDetailsList ->
+                    navController.navigate("${ScreenNames.CalculationScreen.name}/${playerDetailsList.joinToString(";")}")
+                }
+            )
+        }
+
+        composable(route = "${ScreenNames.CalculationScreen.name}/{playerDetailsList}") {
+            CalculationScreenPrimaria(
                 onBackClick = { navController.navigateUp() },
                 onNextClick = { }
             )

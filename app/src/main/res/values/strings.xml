@@ -43,4 +43,22 @@
     <string name="generic_wonder_rhodos">RHÓDOS</string>
     <string name="alert_dialog_match_details_wonder_selection_title">Escolher maravilha</string>
     <string name="match_details_deselect_wonder_dialog">Desselecionar a maravilha atual</string>
+    <string name="summary_top_bar">Pré-visualização</string>
+    <string name="summary_configuration_subtitle">Configuração do jogo:</string>
+    <string name="point_category_wonder">Maravilhas</string>
+    <string name="point_category_coin">Moedas</string>
+    <string name="point_category_war">Guerras</string>
+    <string name="point_category_blue_card">Cartas azuis</string>
+    <string name="point_category_yellow_card">Cartas amarelas</string>
+    <string name="point_category_green_card">Cartas verdes</string>
+    <string name="point_category_purple_card">Cartas roxas</string>
+    <string name="calculation_top_bar">Calcular pontuações</string>
+    <string name="general_socring_acronym">Pts</string>
+    <string name="minus_one_point">-1</string>
+    <string name="plus_two_points">+2</string>
+    <string name="plus_one_point">+1</string>
+    <string name="calculation_show_total_grid">Ver totais</string>
+    <string name="generic_back">Voltar</string>
+    <string name="generic_calculate">calcular</string>
+    <string name="calculation_science_grid_comand">Quantidade de cada símbolo</string>
 </resources>

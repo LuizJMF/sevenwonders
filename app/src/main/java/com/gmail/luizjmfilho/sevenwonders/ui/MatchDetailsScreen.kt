@@ -74,7 +74,7 @@ const val moveDownCardIconTestTag: String = "ícone de mover o card pra baixo"
 @Composable
 fun MatchDetailsScreenPrimaria(
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit,
+    onNextClick: (List<PlayerDetails>) -> Unit,
     modifier: Modifier = Modifier,
     matchDetailsViewModel: MatchDetailsViewModel = hiltViewModel()
 ) {
@@ -96,7 +96,7 @@ fun MatchDetailsScreenPrimaria(
 @Composable
 fun MatchDetailsScreenSecundaria(
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit,
+    onNextClick: (List<PlayerDetails>) -> Unit,
     onConfirmClick: (RaffleOrChoose, RaffleOrChoose) -> Unit,
     onTrailingIconClick: (Int) -> Unit,
     onTextButtonClick: () -> Unit,
@@ -238,7 +238,7 @@ fun MatchDetailsScreenSecundaria(
                     Row {
                         Spacer(Modifier.weight(1f))
                         TextButton(
-                            onClick = onNextClick,
+                            onClick = { onNextClick(matchDetailsUiState.matchPlayersDetails) },
                             enabled = (matchDetailsUiState.isAdvanceButtonEnabled)
                         ) {
                             Row(
