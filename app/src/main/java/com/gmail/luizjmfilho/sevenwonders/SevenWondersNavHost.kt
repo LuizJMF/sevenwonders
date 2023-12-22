@@ -10,6 +10,7 @@ import com.gmail.luizjmfilho.sevenwonders.ui.HomeScreen
 import com.gmail.luizjmfilho.sevenwonders.ui.MatchDetailsScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.NewGameScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.PlayersListScreenPrimaria
+import com.gmail.luizjmfilho.sevenwonders.ui.SummaryScreenPrimaria
 
 @Composable
 fun SevenWondersNavHost(
@@ -58,7 +59,14 @@ fun SevenWondersNavHost(
         composable(route = "${ScreenNames.CalculationScreen.name}/{playerDetailsList}") {
             CalculationScreenPrimaria(
                 onBackClick = { navController.navigateUp() },
-                onNextClick = { }
+                onConfirmNextScreen = { navController.navigate(ScreenNames.SummaryScreen.name) }
+            )
+        }
+
+        composable(route = ScreenNames.SummaryScreen.name) {
+            SummaryScreenPrimaria(
+                onBackClick = { navController.navigateUp() },
+                onNextClick = { navController.popBackStack(route = ScreenNames.HomeScreen.name, false) }
             )
         }
     }

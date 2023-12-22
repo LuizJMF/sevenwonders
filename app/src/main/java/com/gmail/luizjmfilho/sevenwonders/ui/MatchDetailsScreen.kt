@@ -453,6 +453,11 @@ fun convertWonderToString(wonder: Wonders?): String {
 }
 
 @Composable
+fun convertWonderSideToString(wonderSide: WonderSide): String {
+    return if (wonderSide == WonderSide.Day) "Dia" else "Noite"
+}
+
+@Composable
 fun convertStringToWonder(wonderName: String?): Wonders {
     val name = when (wonderName) {
         stringResource(R.string.generic_wonder_alexandria) -> Wonders.ALEXANDRIA

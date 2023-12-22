@@ -7,6 +7,7 @@ data class CalculationUiState(
     val totalScoreList: List<Int> = List(7) {0},
     val wonderBoardScoreList: List<Int> = List(7) {0},
     val coinScoreList: List<Int> = List(7) {0},
+    val coinQuantityList: List<Int> = List(7) {0},
     val warScoreList: List<Int> = List(7) {0},
     val blueCardScoreList: List<Int> = List(7) {0},
     val yellowCardScoreList: List<Int> = List(7) {0},
@@ -29,6 +30,7 @@ enum class CalculationSubScreen {
     TotalGrid,
     ParcialGrid,
     ScienceGrid,
+    CoinGrid,
 }
 
 enum class ScienceSymbol {

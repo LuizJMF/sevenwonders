@@ -61,4 +61,9 @@
     <string name="generic_back">Voltar</string>
     <string name="generic_calculate">calcular</string>
     <string name="calculation_science_grid_comand">Quantidade de cada símbolo</string>
+    <string name="summary_to_complete_match">Concluir partida</string>
+    <string name="calculation_screen_alert_dialog_title">Tem certeza que acabou de configurar a pontuação da partida?</string>
+    <string name="calculation_screen_alert_dialog_text">Você concluiu a pontuação e deseja seguir para a tela de resultados?</string>
+    <string name="calculation_screen_coin_grid_title">Quantidade de moedas</string>
+    <string name="calculation_screen_coin_grid_attention">Atenção: não são os pontos de moeda, mas sim a quantidade de moedas.</string>
 </resources>

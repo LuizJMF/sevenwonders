@@ -22,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -33,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
@@ -58,14 +61,16 @@ import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 @Composable
 fun CalculationScreenPrimaria(
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit,
+    onConfirmNextScreen: () -> Unit,
     modifier: Modifier = Modifier,
     calculationViewModel: CalculationViewModel = hiltViewModel(),
 ) {
     val calculationUiState by calculationViewModel.uiState.collectAsState()
     CalculationScreenSecundaria(
         onBackClick = onBackClick,
-        onNextClick = onNextClick,
+        onNextClick = calculationViewModel::addPlayerMatchInfo,
+        onConfirmNextScreen = onConfirmNextScreen,
+        onDismissNextScreen = calculationViewModel::deleteMatch,
         onPreviousCategory = calculationViewModel::onPreviousCategory,
         onNextCategory = calculationViewModel::onNextCategory,
         calculationUiState = calculationUiState,
@@ -75,10 +80,15 @@ fun CalculationScreenPrimaria(
         onShowTotalGrid = calculationViewModel::onShowTotalGrid,
         onShowPartialGrid = calculationViewModel::onShowPartialGrid,
         onShowScienceGrid = calculationViewModel::onShowSciendGrid,
+        onShowCoinGrid = calculationViewModel::onShowCoinGrid,
         onMinusOneScienceCard = calculationViewModel::onMinusOneScienceCard,
         onPlusOneScienceCard = calculationViewModel::onPlusOneScienceCard,
         onScienceGridConfirm = calculationViewModel::onScienceGridConfirm,
-        modifier = modifier
+        onMinusOneCoinQuantity = calculationViewModel::onMinusOneCoinQuantity,
+        onPlusOneCoinQuantity = calculationViewModel::onPlusOneCoinQuantity,
+        onPlusTwoCoinsQuantity = calculationViewModel::onPlusTwoCoinsQuantity,
+        onCoinGridConfirm = calculationViewModel::onCoinGridConfirm,
+        modifier = modifier,
     )
 }
 
@@ -86,6 +96,8 @@ fun CalculationScreenPrimaria(
 fun CalculationScreenSecundaria(
     onBackClick: () -> Unit,
     onNextClick: () -> Unit,
+    onConfirmNextScreen: () -> Unit,
+    onDismissNextScreen: () -> Unit,
     onPreviousCategory: () -> Unit,
     onNextCategory: () -> Unit,
     calculationUiState: CalculationUiState,
@@ -95,9 +107,14 @@ fun CalculationScreenSecundaria(
     onShowTotalGrid: () -> Unit,
     onShowPartialGrid: () -> Unit,
     onShowScienceGrid: () -> Unit,
+    onShowCoinGrid: (Int, Int, Int) -> Unit,
     onMinusOneScienceCard: (Int) -> Unit,
     onPlusOneScienceCard: (Int) -> Unit,
     onScienceGridConfirm: (String) -> Unit,
+    onMinusOneCoinQuantity: (Int) -> Unit,
+    onPlusOneCoinQuantity: (Int) -> Unit,
+    onPlusTwoCoinsQuantity: (Int) -> Unit,
+    onCoinGridConfirm: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold (
@@ -110,7 +127,8 @@ fun CalculationScreenSecundaria(
         modifier = modifier
             .testTag(newGameScreenTestTag),
     ) { scaffoldPadding ->
-        var playerScienceIndexBeingSelected by rememberSaveable { mutableIntStateOf(0)}
+        var alertDialogShown by rememberSaveable { mutableStateOf(false)}
+        var playerScienceOrCoinIndexBeingSelected by rememberSaveable { mutableIntStateOf(0)}
         Box(
             modifier = modifier
                 .padding(scaffoldPadding)
@@ -152,8 +170,12 @@ fun CalculationScreenSecundaria(
                                     onPlusTwoPointsClick = onPlusTwoPointsClick,
                                     onShowTotalGrid = onShowTotalGrid,
                                     onShowScienceGrid = { playerIndexBeingSelected ->
-                                        playerScienceIndexBeingSelected = playerIndexBeingSelected
+                                        playerScienceOrCoinIndexBeingSelected = playerIndexBeingSelected
                                         onShowScienceGrid()
+                                    },
+                                    onShowCoinGrid = { playerIndexBeingSelected, coinsQuantity, coinsScore ->
+                                        playerScienceOrCoinIndexBeingSelected = playerIndexBeingSelected
+                                        onShowCoinGrid(playerIndexBeingSelected, coinsQuantity, coinsScore)
                                     },
                                     onPlusOnePointsClick = onPlusOnePointsClick
                                 )
@@ -167,12 +189,25 @@ fun CalculationScreenSecundaria(
                             }
                             CalculationSubScreen.ScienceGrid -> {
                                 ScienceGrid(
-                                    playerShown = calculationUiState.playersList[playerScienceIndexBeingSelected],
+                                    playerShown = calculationUiState.playersList[playerScienceOrCoinIndexBeingSelected],
                                     calculationUiState = calculationUiState,
                                     onMinusOneScienceCard = onMinusOneScienceCard,
                                     onPlusOneScienceCard = onPlusOneScienceCard,
                                     onShowPartialGrid = onShowPartialGrid,
-                                    onScienceGridConfirm = { onScienceGridConfirm(calculationUiState.playersList[playerScienceIndexBeingSelected]) }
+                                    onScienceGridConfirm = { onScienceGridConfirm(calculationUiState.playersList[playerScienceOrCoinIndexBeingSelected]) }
+                                )
+                            }
+                            CalculationSubScreen.CoinGrid -> {
+                                CoinGrid(
+                                    playerShown = calculationUiState.playersList[playerScienceOrCoinIndexBeingSelected],
+                                    calculationUiState = calculationUiState,
+                                    onMinusOneCoinQuantity = onMinusOneCoinQuantity,
+                                    onPlusOneCoinQuantity = onPlusOneCoinQuantity,
+                                    onPlusTwoCoinsQuantity = onPlusTwoCoinsQuantity,
+                                    onShowPartialGrid = onShowPartialGrid,
+                                    onCoinGridConfirm = { playerNickname ->
+                                        onCoinGridConfirm(playerNickname)
+                                    },
                                 )
                             }
                         }
@@ -180,7 +215,10 @@ fun CalculationScreenSecundaria(
                     Row {
                         Spacer(Modifier.weight(1f))
                         TextButton(
-                            onClick = onNextClick,
+                            onClick = {
+                                onNextClick()
+                                alertDialogShown = true
+                            },
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -193,6 +231,32 @@ fun CalculationScreenSecundaria(
                                 )
                             }
                         }
+                    }
+                    if (alertDialogShown) {
+                        AlertDialog(
+                            onDismissRequest = {},
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        alertDialogShown = false
+                                        onConfirmNextScreen()
+                                    },
+                                ) {
+                                    Text(text = stringResource(R.string.generic_confirm_text))
+                                }
+                            },
+                            text = { Text(text = stringResource(R.string.calculation_screen_alert_dialog_text)) },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        onDismissNextScreen()
+                                        alertDialogShown = false
+                                    }
+                                ) {
+                                    Text(text = stringResource(R.string.generic_cancel_text))
+                                }
+                            }
+                        )
                     }
                 }
             }
@@ -354,6 +418,7 @@ fun ScoringGrid(
     onPlusOnePointsClick: (Int) -> Unit,
     onShowTotalGrid: () -> Unit,
     onShowScienceGrid: (Int) -> Unit,
+    onShowCoinGrid: (Int, Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val spaceBetweenCards = 3.dp
@@ -463,7 +528,7 @@ fun ScoringGrid(
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            if (currentCategory != PointCategory.GreenCard) {
+                            if (currentCategory != PointCategory.GreenCard && currentCategory != PointCategory.Coin) {
                                 IconButton(
                                     onClick = { onMinusOnePointClick(nicknameList.indexOf(player)) }
                                 ) {
@@ -483,10 +548,6 @@ fun ScoringGrid(
                                             player
                                         )].toString()
 
-                                        PointCategory.Coin -> calculationUiState.coinScoreList[nicknameList.indexOf(
-                                            player
-                                        )].toString()
-
                                         PointCategory.BlueCard -> calculationUiState.blueCardScoreList[nicknameList.indexOf(
                                             player
                                         )].toString()
@@ -499,7 +560,7 @@ fun ScoringGrid(
                                             player
                                         )].toString()
 
-                                        else -> ""
+                                        else -> "" // esse caso em teoria nunca vai acontecer
                                     },
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier
@@ -526,15 +587,41 @@ fun ScoringGrid(
                             } else {
                                 Spacer(modifier = Modifier.weight(0.5f))
                                 Text(
-                                    text = calculationUiState.greenCardScoreList[nicknameList.indexOf(player)].toString(),
+                                    text = when (currentCategory) {
+                                        PointCategory.GreenCard -> calculationUiState.greenCardScoreList[nicknameList.indexOf(
+                                            player
+                                        )].toString()
+
+                                        PointCategory.Coin -> calculationUiState.coinScoreList[nicknameList.indexOf(
+                                            player
+                                        )].toString()
+
+                                        else -> "" // esse caso em teoria nunca vai acontecer
+                                    },
                                 )
                                 Spacer(modifier = Modifier.weight(0.5f))
                                 TextButton(
-                                    onClick = { onShowScienceGrid(nicknameList.indexOf(player)) }
+                                    onClick = {
+                                        when (currentCategory) {
+                                            PointCategory.GreenCard -> onShowScienceGrid(nicknameList.indexOf(player))
+
+                                            PointCategory.Coin -> onShowCoinGrid(
+                                                nicknameList.indexOf(player),
+                                                calculationUiState.coinQuantityList[nicknameList.indexOf(player)],
+                                                calculationUiState.coinScoreList[nicknameList.indexOf(player)],
+                                            )
+
+                                            else -> {} // em teoria esse casso nunca vai acontecer
+                                        }
+                                    }
                                 ) {
                                     Text(
                                         text = stringResource(R.string.generic_calculate),
-                                        color = Color(0xFF63C963),
+                                        color = when (currentCategory) {
+                                            PointCategory.GreenCard -> Color(0xFF63C963)
+                                            PointCategory.Coin -> Color(0xFFDD8A10)
+                                            else -> Color(0xFF000000) // em teoria não será usado
+                                        } ,
                                         fontStyle = FontStyle.Italic
                                     )
                                 }
@@ -757,6 +844,125 @@ fun TotalScoringGrid(
 }
 
 @Composable
+fun CoinGrid(
+    playerShown: String,
+    calculationUiState: CalculationUiState,
+    onMinusOneCoinQuantity: (Int) -> Unit,
+    onPlusOneCoinQuantity: (Int) -> Unit,
+    onPlusTwoCoinsQuantity: (Int) -> Unit,
+    onShowPartialGrid: () -> Unit,
+    onCoinGridConfirm: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        Text(
+            text = stringResource(R.string.calculation_screen_coin_grid_title),
+            fontStyle = FontStyle.Italic,
+            color = Color(0xFFDD8A10),
+            modifier = Modifier
+                .padding(3.dp)
+        )
+        Text(
+            text = stringResource(R.string.calculation_screen_coin_grid_attention),
+            fontStyle = FontStyle.Italic,
+            color = Color(0xFFFF0000),
+            modifier = Modifier
+                .padding(3.dp),
+            fontSize = 10.sp,
+            textAlign = TextAlign.Center
+        )
+        Row(
+            modifier = Modifier
+                .height(IntrinsicSize.Max),
+            horizontalArrangement = Arrangement.spacedBy(1.dp)
+        ) {
+            NicknameCard(
+                nickname = playerShown,
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(3.dp),
+            ) {
+                Card(
+                    modifier = Modifier
+                        .weight(1f)
+                        .widthIn(max = 150.dp),
+                    colors = CardDefaults.cardColors(Color.White),
+                    border = BorderStroke(1.dp, Color.Black),
+                    shape = RoundedCornerShape(0.dp, 12.dp, 12.dp, 0.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxHeight(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        TextButton(
+                            onClick = { onMinusOneCoinQuantity(calculationUiState.playersList.indexOf(playerShown))  }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.minus_one_point),
+                                color = Color(0xFFA2A0A0),
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text(
+                            text = calculationUiState.coinQuantityList[calculationUiState.playersList.indexOf(playerShown)].toString(),
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFDD8A10)
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        TextButton(
+                            onClick = { onPlusOneCoinQuantity(calculationUiState.playersList.indexOf(playerShown)) }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.plus_one_point),
+                                color = Color(0xFFA2A0A0),
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
+                        TextButton(
+                            onClick = { onPlusTwoCoinsQuantity(calculationUiState.playersList.indexOf(playerShown)) }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.plus_two_points),
+                                color = Color(0xFFA2A0A0),
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        Row {
+            TextButton(
+                onClick = onShowPartialGrid,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.generic_back),
+                    color = Color(0xFFDD8A10),
+                    modifier = Modifier
+                        .padding(end = 20.dp),
+                )
+            }
+            TextButton(
+                onClick = { onCoinGridConfirm(playerShown) }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.generic_confirm_text),
+                    color = Color(0xFFDD8A10),
+                    modifier = Modifier
+                        .padding(start = 20.dp)
+
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun ScienceGrid(
     playerShown: String,
     calculationUiState: CalculationUiState,
@@ -899,6 +1105,22 @@ fun ScienceIconCard(
 
 @Preview
 @Composable
+fun CoinGridPreview() {
+    SevenWondersTheme {
+        CoinGrid(
+            playerShown = "Luiz",
+            calculationUiState = CalculationUiState(),
+            onMinusOneCoinQuantity = {},
+            onPlusOneCoinQuantity = {},
+            onShowPartialGrid = {},
+            onCoinGridConfirm = {},
+            onPlusTwoCoinsQuantity = {}
+        )
+    }
+}
+
+@Preview
+@Composable
 fun ScienceGridPreview() {
     SevenWondersTheme {
         ScienceGrid(
@@ -951,6 +1173,7 @@ fun ScoringGridPreview() {
             onShowTotalGrid = {},
             onShowScienceGrid = {},
             onPlusOnePointsClick = {},
+            onShowCoinGrid = {_, _, _ ->}
         )
     }
 }
@@ -1000,6 +1223,13 @@ fun CalculationScreenParcialGridSecundariaPreview() {
             onMinusOneScienceCard = {},
             onScienceGridConfirm = {},
             onPlusOnePointsClick = {},
+            onConfirmNextScreen = {},
+            onDismissNextScreen = {},
+            onCoinGridConfirm = {},
+            onShowCoinGrid = {_, _, _ ->},
+            onPlusOneCoinQuantity = {},
+            onMinusOneCoinQuantity = {},
+            onPlusTwoCoinsQuantity = {},
         )
     }
 }
@@ -1030,6 +1260,13 @@ fun CalculationScreenTotalGridSecundariaPreview() {
             onMinusOneScienceCard = {},
             onScienceGridConfirm = {},
             onPlusOnePointsClick = {},
+            onConfirmNextScreen = {},
+            onDismissNextScreen = {},
+            onCoinGridConfirm = {},
+            onShowCoinGrid = {_, _, _ ->},
+            onPlusOneCoinQuantity = {},
+            onMinusOneCoinQuantity = {},
+            onPlusTwoCoinsQuantity = {},
         )
     }
 }
@@ -1059,7 +1296,14 @@ fun CalculationScreenScienceGridSecundariaPreview() {
             onMinusOneScienceCard = {},
             onPlusOneScienceCard = {},
             onShowScienceGrid = {},
-            onPlusOnePointsClick = {}
+            onPlusOnePointsClick = {},
+            onConfirmNextScreen = {},
+            onDismissNextScreen = {},
+            onCoinGridConfirm = {},
+            onShowCoinGrid = {_, _, _ ->},
+            onPlusOneCoinQuantity = {},
+            onMinusOneCoinQuantity = {},
+            onPlusTwoCoinsQuantity = {},
         )
     }
 }

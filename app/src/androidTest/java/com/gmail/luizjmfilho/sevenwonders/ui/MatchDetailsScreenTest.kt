@@ -21,7 +21,7 @@ class MatchDetailsScreenTest {
 
     private fun launchScreen(
         onBackClick: () -> Unit = {},
-        onNextClick: () -> Unit = {},
+        onNextClick: (List<PlayerDetails>) -> Unit = {},
         onConfirmClick: (RaffleOrChoose, RaffleOrChoose) -> Unit = {_, _ ->},
         onTrailingIconClick: (Int) -> Unit = {},
         onTextButtonClick: () -> Unit = {},

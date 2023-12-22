@@ -3,11 +3,14 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -49,7 +52,7 @@ fun HomeScreen(
             contentAlignment = Alignment.Center,
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fundob),
+                painter = painterResource(id = R.drawable.fundohomescreen),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -70,22 +73,32 @@ fun HomeScreen(
                 Spacer(Modifier.weight(1f))
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .width(IntrinsicSize.Max)
                 ) {
                     HomeScreenButton(
                         onClick = onCriarPartidaClick,
-                        textinho = stringResource(R.string.criar_partida_button)
+                        textinho = stringResource(R.string.criar_partida_button),
+                        modifier = Modifier
+                            .fillMaxWidth()
                     )
                     HomeScreenButton(
                         onClick = onListaDeJogadoresClick,
-                        textinho = stringResource(R.string.players_list_button)
+                        textinho = stringResource(R.string.players_list_button),
+                        modifier = Modifier
+                            .fillMaxWidth()
                     )
                     HomeScreenButton(
                         onClick = { /*TODO*/ },
-                        textinho = stringResource(R.string.estatisticas_button)
+                        textinho = stringResource(R.string.estatisticas_button),
+                        modifier = Modifier
+                            .fillMaxWidth()
                     )
                     HomeScreenButton(
                         onClick = { /*TODO*/ },
-                        textinho = stringResource(R.string.historico_de_partidas_button)
+                        textinho = stringResource(R.string.historico_de_partidas_button),
+                        modifier = Modifier
+                            .fillMaxWidth()
                     )
                 }
                 Spacer(Modifier.weight(1f))

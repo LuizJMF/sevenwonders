@@ -2,26 +2,33 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bedtime
-import androidx.compose.material.icons.filled.WbSunny
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,22 +37,38 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
+import com.gmail.luizjmfilho.sevenwonders.model.Match
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
 @Composable
 fun SummaryScreenPrimaria(
-
+    onBackClick: () -> Unit,
+    onNextClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    summaryViewModel: SummaryViewModel = hiltViewModel()
 ) {
 
+    val summaryUiState by summaryViewModel.uiState.collectAsState()
+    SummaryScreenSecundaria(
+        onBackClick = onBackClick,
+        onNextClick = onNextClick,
+        summaryUiState = summaryUiState,
+        modifier = modifier,
+    )
 }
 
 @Composable
 fun SummaryScreenSecundaria(
     onBackClick: () -> Unit,
+    onNextClick: () -> Unit,
+    summaryUiState: SummaryUiState,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -76,24 +99,60 @@ fun SummaryScreenSecundaria(
                     .fillMaxSize()
             ) {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(3.dp)
+                    verticalArrangement = Arrangement.spacedBy(3.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
                 ) {
-                    Text(
-                        text = stringResource(R.string.summary_configuration_subtitle)
-                    )
-                    PlayerSummaryCard(
-                        wonder = Wonders.HALIKARNASSOS,
-                        wonderSide = WonderSide.Day
-                    )
-                    PlayerSummaryCard(
-                        wonder = Wonders.OLYMPIA,
-                        wonderSide = WonderSide.Day
-                    )
-                    PlayerSummaryCard(
-                        wonder = Wonders.GIZAH,
-                        wonderSide = WonderSide.Night
-                    )
-
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 15.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.podio),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .width(110.dp)
+                        )
+                    }
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .verticalScroll(rememberScrollState()),
+                            verticalArrangement = Arrangement.spacedBy(3.dp),
+                        ) {
+                            for (i in 0..<summaryUiState.matchList.size) {
+                                PlayerInfoRow(
+                                    wonder = summaryUiState.matchList[i].wonder,
+                                    wonderSide = summaryUiState.matchList[i].wonderSide,
+                                    nickname = summaryUiState.matchList[i].nickname,
+                                    score = summaryUiState.matchList[i].totalScore,
+                                    playerPosition = "${i + 1}º"
+                                )
+                            }
+                        }
+                    }
+                    Row {
+                        Spacer(Modifier.weight(1f))
+                        TextButton(
+                            onClick = onNextClick,
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(5.dp)
+                            ) {
+                                Text(text = stringResource(R.string.summary_to_complete_match).uppercase())
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowForward,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -102,15 +161,48 @@ fun SummaryScreenSecundaria(
     }
 }
 
+@Composable
+fun PlayerInfoRow(
+    wonder: Wonders,
+    wonderSide: WonderSide,
+    nickname: String,
+    score: Int,
+    playerPosition: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .height(IntrinsicSize.Max),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = playerPosition,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF0B206B),
+            )
+        }
+        PlayerSummaryCard(wonder = wonder, wonderSide = wonderSide)
+        InfoColumn(nickname = nickname, wonderSide = wonderSide, score = score, wonder = wonder)
+
+    }
+}
+
 
 @Composable
 fun PlayerSummaryCard(
     wonder: Wonders,
     wonderSide: WonderSide,
+    modifier: Modifier = Modifier
 ) {
     Card(
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier
+        modifier = modifier
             .width(180.dp)
             .aspectRatio(2.037037f),
         border = BorderStroke(1.dp, Color.Gray)
@@ -125,56 +217,6 @@ fun PlayerSummaryCard(
                 modifier = Modifier
                     .fillMaxWidth()
             )
-            Column(
-                verticalArrangement = Arrangement.spacedBy(3.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Card(
-                    shape = RoundedCornerShape(5.dp),
-                    colors = CardDefaults.cardColors(Color.White.copy(0.8f)),
-                    border = BorderStroke(1.dp, Color.Black),
-                ) {
-                    Text(
-                        text = "Luiz",
-                        modifier = Modifier
-                            .padding(3.dp),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-                Card(
-                    shape = RoundedCornerShape(5.dp),
-                    colors = CardDefaults.cardColors(Color.White.copy(0.8f)),
-                    border = BorderStroke(1.dp, Color.Black),
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(3.dp),
-                        modifier = Modifier
-                            .padding(3.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = convertWonderToString(wonder = wonder),
-                            modifier = Modifier
-                                .padding(3.dp),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Icon(
-                            imageVector = when (wonderSide) {
-                                WonderSide.Day -> Icons.Filled.WbSunny
-                                WonderSide.Night -> Icons.Filled.Bedtime
-                            },
-                            tint = when (wonderSide) {
-                                WonderSide.Day -> Color(0xFFFF8C00)
-                                WonderSide.Night -> Color.Blue
-                            },
-                            contentDescription = null,
-                        )
-                    }
-                }
-            }
-
         }
     }
 }
@@ -227,6 +269,58 @@ private fun identifyTheBackgroundImage(wonder: Wonders, wonderSide: WonderSide):
     }
 }
 
+@Composable
+fun InfoColumn(
+    nickname: String,
+    wonder: Wonders,
+    wonderSide: WonderSide,
+    score: Int,
+    modifier: Modifier = Modifier,
+) {
+    val titleColor = Color(0xFF0833CF)
+    val descriptionColor = Color(0xFF474747)
+    Column(
+        modifier = modifier
+    ) {
+        Text(
+            text = "Jogador: $nickname",
+            color = titleColor,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            text = "Wonder: ${convertWonderToString(wonder = wonder)}",
+            color = descriptionColor,
+            fontStyle = FontStyle.Italic,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            text = "Lado: ${convertWonderSideToString(wonderSide = wonderSide)}",
+            color = descriptionColor,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            fontStyle = FontStyle.Italic
+        )
+        Text(
+            text = "Pontuação: ${score.toString()}",
+            color = descriptionColor,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            fontStyle = FontStyle.Italic
+        )
+    }
+}
+
+@Preview
+@Composable
+fun InfoColumnPreview() {
+    SevenWondersTheme {
+        InfoColumn(nickname = "Luiz", wonderSide = WonderSide.Day, score = 59, wonder = Wonders.HALIKARNASSOS)
+    }
+}
+
 @Preview
 @Composable
 fun PlayerSummaryCardPreview() {
@@ -243,7 +337,41 @@ fun PlayerSummaryCardPreview() {
 fun SummaryScreenPreview() {
     SevenWondersTheme {
         SummaryScreenSecundaria(
-            onBackClick = { /*TODO*/ }
+            onBackClick = { /*TODO*/ },
+            onNextClick = {},
+            summaryUiState = SummaryUiState(
+                matchList = listOf(
+                    Match(
+                        matchId = 1,
+                        nickname = "Luiz",
+                        wonder = Wonders.GIZAH,
+                        wonderSide = WonderSide.Night,
+                        totalScore = 62,
+                        wonderBoardScore = 10,
+                        coinScore = 3,
+                        warScore = 10,
+                        blueCardScore = 10,
+                        yellowCardScore = 10,
+                        greenCardScore = 2,
+                        purpleCardScore = 2,
+                        coinQuantity = 5
+                    )
+                )
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+fun playerInfoRowPreview() {
+    SevenWondersTheme {
+        PlayerInfoRow(
+            wonderSide = WonderSide.Day,
+            wonder = Wonders.HALIKARNASSOS,
+            nickname = "Luiz",
+            score = 59,
+            playerPosition = "1º"
         )
     }
 }
