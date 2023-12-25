@@ -9,6 +9,8 @@ import com.gmail.luizjmfilho.sevenwonders.ui.Wonders
 data class Match(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val matchId: Int,
+    val dataAndTime: String,
+    val position: Int,
     val nickname: String,
     val wonder: Wonders,
     val wonderSide: WonderSide,

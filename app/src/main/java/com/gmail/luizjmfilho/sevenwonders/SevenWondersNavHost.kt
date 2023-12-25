@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.gmail.luizjmfilho.sevenwonders.ui.CalculationScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.HomeScreen
 import com.gmail.luizjmfilho.sevenwonders.ui.MatchDetailsScreenPrimaria
+import com.gmail.luizjmfilho.sevenwonders.ui.MatchesHistoryPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.NewGameScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.PlayersListScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.SummaryScreenPrimaria
@@ -25,7 +26,8 @@ fun SevenWondersNavHost(
         composable(route = ScreenNames.HomeScreen.name) {
             HomeScreen(
                 onCriarPartidaClick = { navController.navigate(ScreenNames.NewGameScreen.name) },
-                onListaDeJogadoresClick = { navController.navigate(ScreenNames.PlayersListScreen.name) }
+                onListaDeJogadoresClick = { navController.navigate(ScreenNames.PlayersListScreen.name) },
+                onMatchesHistoryClick = { navController.navigate(ScreenNames.MatchesHistoryScreen.name) }
             )
         }
 
@@ -67,6 +69,12 @@ fun SevenWondersNavHost(
             SummaryScreenPrimaria(
                 onBackClick = { navController.navigateUp() },
                 onNextClick = { navController.popBackStack(route = ScreenNames.HomeScreen.name, false) }
+            )
+        }
+
+        composable(route = ScreenNames.MatchesHistoryScreen.name) {
+            MatchesHistoryPrimaria(
+                onBackClick = {navController.navigateUp()}
             )
         }
     }

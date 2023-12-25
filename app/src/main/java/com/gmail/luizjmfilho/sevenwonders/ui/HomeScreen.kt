@@ -39,6 +39,7 @@ val homeScreenTestTag: String = "Home Screen"
 fun HomeScreen(
     onCriarPartidaClick: () -> Unit,
     onListaDeJogadoresClick: () -> Unit,
+    onMatchesHistoryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -52,7 +53,7 @@ fun HomeScreen(
             contentAlignment = Alignment.Center,
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fundohomescreen),
+                painter = painterResource(id = R.drawable.fundo_preto_home_screen_2),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -64,12 +65,6 @@ fun HomeScreen(
                     .fillMaxHeight()
                     .verticalScroll(rememberScrollState())
             ) {
-                Text(
-                    text = stringResource(R.string.app_name),
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier
-                        .padding(top = 30.dp)
-                )
                 Spacer(Modifier.weight(1f))
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -95,7 +90,7 @@ fun HomeScreen(
                             .fillMaxWidth()
                     )
                     HomeScreenButton(
-                        onClick = { /*TODO*/ },
+                        onClick = onMatchesHistoryClick,
                         textinho = stringResource(R.string.historico_de_partidas_button),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -146,7 +141,8 @@ fun HomeScreenPreview() {
     SevenWondersTheme {
         HomeScreen(
             onCriarPartidaClick = {},
-            onListaDeJogadoresClick = {}
+            onListaDeJogadoresClick = {},
+            onMatchesHistoryClick = {}
         )
     }
 }

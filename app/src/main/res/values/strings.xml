@@ -66,4 +66,10 @@
     <string name="calculation_screen_alert_dialog_text">Você concluiu a pontuação e deseja seguir para a tela de resultados?</string>
     <string name="calculation_screen_coin_grid_title">Quantidade de moedas</string>
     <string name="calculation_screen_coin_grid_attention">Atenção: não são os pontos de moeda, mas sim a quantidade de moedas.</string>
+    <string name="generic_podium">Pódio</string>
+    <string name="matches_history_screen_title">Histórico de partidas</string>
+    <string name="matches_history_empty_message">Você ainda não jogou nenhuma pertida, portanto seu histórico está vazio.</string>
+    <string name="matches_history_confirm_dialog_button">Sim, deletar</string>
+    <string name="matches_history_dialog_text">Todos os dados referentes a esta partida serão perdidos. Você deseja realmente excluir esta partida?</string>
+    <string name="calculation_screen_coin_alert">Mesmo que você tenha zero pontos nesta categoria, coloque sua quantidade de moedas no campo calcular para efeitos de desempate ao final da partida</string>
 </resources>

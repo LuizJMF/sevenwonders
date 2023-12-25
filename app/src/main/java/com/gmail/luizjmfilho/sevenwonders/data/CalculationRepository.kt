@@ -13,7 +13,8 @@ class CalculationRepository @Inject constructor(private val matchDao: MatchDao) 
         return matchDao.getLastMatchId()
     }
 
-    suspend fun deleteMatch() {
-        matchDao.deleteMatch(matchDao.getLastMatchId()!!)
+    suspend fun deleteLastMatch() {
+        matchDao.deleteMatchWhoseIdIs(matchDao.getLastMatchId()!!)
     }
+
 }

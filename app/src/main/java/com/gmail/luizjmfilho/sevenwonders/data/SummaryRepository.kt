@@ -8,4 +8,5 @@ class SummaryRepository @Inject constructor(private val matchDao: MatchDao) {
     suspend fun getCurrentMatchList(): List<Match> {
         return matchDao.getCurrentMatchList(matchDao.getLastMatchId()!!)
     }
+
 }

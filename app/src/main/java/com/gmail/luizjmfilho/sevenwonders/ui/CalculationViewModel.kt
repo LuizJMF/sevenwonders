@@ -365,14 +365,30 @@ class CalculationViewModel @Inject constructor(
         }
     }
 
-    fun addPlayerMatchInfo() {
+    fun addPlayerMatchInfo(dateAndTime: String,) {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 val matchId = if (calculationRepository.getLastMatchId() == null) 1 else calculationRepository.getLastMatchId()!! + 1
 
+                val nicknameList = currentState.playersList
+                val totalScoreList = currentState.totalScoreList
+                val coinQuantityList = currentState.coinQuantityList
+
+                val sortedNicknameList = nicknameList
+                    .zip(totalScoreList)
+                    .zip(coinQuantityList)
+                    .sortedWith(compareByDescending<Pair<Pair<String, Int>, Int>> {
+                        it.first.second
+                    }.thenByDescending {
+                        it.second
+                    })
+                    .map { it.first.first }
+
                 for (i in 0..< currentState.playersList.size) {
                     val match = Match(
                         matchId = matchId,
+                        position = sortedNicknameList.indexOf(currentState.playersList[i]) + 1,
+                        dataAndTime = dateAndTime,
                         nickname = _playerDetailsOfPreviousScreen.map { it.nickname }[i],
                         wonder = _playerDetailsOfPreviousScreen.map { it.wonder }[i]!!,
                         wonderSide = _playerDetailsOfPreviousScreen.map { it.wonderSide }[i]!!,
@@ -384,7 +400,7 @@ class CalculationViewModel @Inject constructor(
                         blueCardScore = currentState.blueCardScoreList[i],
                         yellowCardScore = currentState.yellowCardScoreList[i],
                         greenCardScore = currentState.greenCardScoreList[i],
-                        purpleCardScore = currentState.purpleCardScoreList[i]
+                        purpleCardScore = currentState.purpleCardScoreList[i],
                     )
                     calculationRepository.addPlayerMatchInfo(match)
                 }
@@ -396,7 +412,7 @@ class CalculationViewModel @Inject constructor(
     fun deleteMatch() {
         viewModelScope.launch {
             _uiState.update { currentState ->
-                calculationRepository.deleteMatch()
+                calculationRepository.deleteLastMatch()
                 currentState.copy()
             }
         }

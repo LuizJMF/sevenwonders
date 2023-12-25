@@ -21,7 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -75,7 +74,7 @@ fun SummaryScreenSecundaria(
         topBar = {
             SevenWondersAppBar(
                 onBackClick = onBackClick,
-                title = stringResource(id = R.string.summary_top_bar)
+                title = stringResource(R.string.generic_podium)
             )
         },
         modifier = modifier
@@ -87,7 +86,7 @@ fun SummaryScreenSecundaria(
                 .padding(scaffoldPadding)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fundoe),
+                painter = painterResource(id = R.drawable.fundo_principal_claro_desenho),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -354,7 +353,9 @@ fun SummaryScreenPreview() {
                         yellowCardScore = 10,
                         greenCardScore = 2,
                         purpleCardScore = 2,
-                        coinQuantity = 5
+                        coinQuantity = 5,
+                        dataAndTime = "oi",
+                        position = 1
                     )
                 )
             )

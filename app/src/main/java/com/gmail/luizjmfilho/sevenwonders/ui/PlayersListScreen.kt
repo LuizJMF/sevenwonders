@@ -345,7 +345,7 @@ fun BackgroundImage(
     modifier: Modifier = Modifier,
 ) {
     Image(
-        painter = painterResource(id = R.drawable.fundoa),
+        painter = painterResource(id = R.drawable.fundo_principal_colorido),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = modifier

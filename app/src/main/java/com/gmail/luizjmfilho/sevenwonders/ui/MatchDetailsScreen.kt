@@ -125,7 +125,7 @@ fun MatchDetailsScreenSecundaria(
                 .padding(scaffoldPadding)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fundoe),
+                painter = painterResource(id = R.drawable.fundo_principal_claro_desenho),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

@@ -33,8 +33,10 @@ class PlayersListViewModel @Inject constructor(
 
     fun updateNickname(novoApelido: String){
         _uiState.update { currentState ->
+            val previousNickname = currentState.nickname
+            val nickname = if (novoApelido.length <= 10) novoApelido else previousNickname
             currentState.copy(
-                nickname = novoApelido,
+                nickname = nickname,
             )
         }
     }

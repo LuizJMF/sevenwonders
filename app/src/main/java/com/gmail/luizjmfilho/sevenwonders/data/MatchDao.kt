@@ -18,5 +18,11 @@ interface MatchDao {
     suspend fun getCurrentMatchList(matchId: Int): List<Match>
 
     @Query("DELETE FROM `Match` WHERE matchId = :matchId")
-    suspend fun deleteMatch(matchId: Int)
+    suspend fun deleteMatchWhoseIdIs(matchId: Int)
+
+    @Query("SELECT * FROM `Match`")
+    suspend fun selectAllMatches(): List<Match>?
+
+    @Query("UPDATE `Match` SET matchId = (matchId - 1) WHERE matchId > :idRemoved")
+    suspend fun updateAllMatchesID(idRemoved: Int)
 }
