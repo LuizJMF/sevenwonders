@@ -17,7 +17,7 @@ class MatchesHistoryViewModel @Inject constructor(
     private val matchesHistoryRepository: MatchesHistoryRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MatchesHistoryUiState(emptyList(), 1))
+    private val _uiState = MutableStateFlow(MatchesHistoryUiState())
     val uiState: StateFlow<MatchesHistoryUiState> = _uiState.asStateFlow()
 
     init {

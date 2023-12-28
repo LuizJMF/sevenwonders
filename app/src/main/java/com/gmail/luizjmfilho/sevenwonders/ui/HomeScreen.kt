@@ -40,6 +40,7 @@ fun HomeScreen(
     onCriarPartidaClick: () -> Unit,
     onListaDeJogadoresClick: () -> Unit,
     onMatchesHistoryClick: () -> Unit,
+    onStatsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -84,7 +85,7 @@ fun HomeScreen(
                             .fillMaxWidth()
                     )
                     HomeScreenButton(
-                        onClick = { /*TODO*/ },
+                        onClick = onStatsClick,
                         textinho = stringResource(R.string.estatisticas_button),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -142,7 +143,8 @@ fun HomeScreenPreview() {
         HomeScreen(
             onCriarPartidaClick = {},
             onListaDeJogadoresClick = {},
-            onMatchesHistoryClick = {}
+            onMatchesHistoryClick = {},
+            onStatsClick = {}
         )
     }
 }

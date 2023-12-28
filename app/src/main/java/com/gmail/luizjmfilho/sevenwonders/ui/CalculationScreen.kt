@@ -126,8 +126,8 @@ fun CalculationScreenSecundaria(
                 title = stringResource(R.string.calculation_top_bar)
             )
         },
-        modifier = modifier
-            .testTag(newGameScreenTestTag),
+//        modifier = modifier
+//            .testTag(newGameScreenTestTag),
     ) { scaffoldPadding ->
         var alertDialogShown by rememberSaveable { mutableStateOf(false)}
         var playerScienceOrCoinIndexBeingSelected by rememberSaveable { mutableIntStateOf(0)}
@@ -1040,13 +1040,13 @@ fun ScienceGrid(
                                 .fillMaxHeight(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            TextButton(
+                            IconButton(
                                 onClick = { onMinusOneScienceCard(i) }
                             ) {
-                                Text(
-                                    text = stringResource(R.string.minus_one_point),
-                                    color = Color(0xFFA2A0A0),
-                                    fontStyle = FontStyle.Italic
+                                Icon(
+                                    imageVector = Icons.Filled.Remove,
+                                    contentDescription = null,
+                                    tint = Color(0xFFA2A0A0),
                                 )
                             }
                             Spacer(modifier = Modifier.weight(1f))
@@ -1056,13 +1056,13 @@ fun ScienceGrid(
                                 color = Color(0xFF1E9923)
                             )
                             Spacer(modifier = Modifier.weight(1f))
-                            TextButton(
+                            IconButton(
                                 onClick = { onPlusOneScienceCard(i) }
                             ) {
-                                Text(
-                                    text = stringResource(R.string.plus_one_point),
-                                    color = Color(0xFFA2A0A0),
-                                    fontStyle = FontStyle.Italic
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    tint = Color(0xFFA2A0A0),
+                                    contentDescription = null,
                                 )
                             }
                         }

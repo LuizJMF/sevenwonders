@@ -84,8 +84,8 @@ fun MatchesHistorySecundaria(
                 title = stringResource(R.string.matches_history_screen_title)
             )
         },
-        modifier = modifier
-            .testTag(newGameScreenTestTag),
+//        modifier = modifier
+//            .testTag(newGameScreenTestTag),
     ) { scaffoldPadding ->
 
         var alertDialogShown by rememberSaveable { mutableStateOf(false) }

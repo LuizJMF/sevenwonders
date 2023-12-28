@@ -72,4 +72,16 @@
     <string name="matches_history_confirm_dialog_button">Sim, deletar</string>
     <string name="matches_history_dialog_text">Todos os dados referentes a esta partida serão perdidos. Você deseja realmente excluir esta partida?</string>
     <string name="calculation_screen_coin_alert">Mesmo que você tenha zero pontos nesta categoria, coloque sua quantidade de moedas no campo calcular para efeitos de desempate ao final da partida</string>
+    <string name="stats_screen_title">Estatísticas</string>
+    <string name="best_score_per_player">Maior pontuação por jogador</string>
+    <string name="worst_score_per_player">Menor pontuação por jogador</string>
+    <string name="best_score">Maior pontuação</string>
+    <string name="worst_score">Menor pontuação</string>
+    <string name="average_winner_score">Pontuação média para ser o vencedor</string>
+    <string name="average_score_per_player">Pontuação média de cada jogador</string>
+    <string name="stats_screen_empty_database">Não existem estatísticas a serem mostradas, pois nenhuma partida foi jogada.</string>
+    <string name="generic_absoluto">Absoluto:</string>
+    <string name="generic_relative">Relativo:</string>
+    <string name="number_of_absolute_victories">Número de vitórias por jogador</string>
+    <string name="relative_ratio_victories">Porcetagem relativa de vitórias</string>
 </resources>

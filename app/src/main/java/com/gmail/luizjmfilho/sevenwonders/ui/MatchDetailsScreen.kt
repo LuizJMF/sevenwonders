@@ -117,8 +117,8 @@ fun MatchDetailsScreenSecundaria(
                 title = stringResource(id = R.string.match_details_top_bar)
             )
         },
-        modifier = modifier
-            .testTag(newGameScreenTestTag),
+//        modifier = modifier
+//            .testTag(newGameScreenTestTag),
     ) { scaffoldPadding ->
         Box(
             modifier = modifier
@@ -137,104 +137,108 @@ fun MatchDetailsScreenSecundaria(
                     .border(1.dp, Color.Gray)
                     .fillMaxSize()
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(5.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.Bottom
+                Column {
+                    Column(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxWidth()
+                            .weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(5.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            text = stringResource(R.string.match_details_choose_methods),
-                            modifier = Modifier
-                                .padding(bottom = 15.dp)
-                        )
-                        IconButton(
-                            onClick = {
-                                raffleAndChooseBoxesExpanded = !raffleAndChooseBoxesExpanded
-                                positionMethod = null
-                                wonderMethod = null
-                            },
-                            modifier = Modifier
-                                .testTag(expandLessTestTag)
+                        Row(
+                            verticalAlignment = Alignment.Bottom
                         ) {
-                            val degree by animateFloatAsState(
-                                targetValue = if (raffleAndChooseBoxesExpanded) 0f else 180f,
-                            )
-                            Icon(
-                                imageVector = Icons.Filled.ExpandLess,
-                                contentDescription = null,
+                            Text(
+                                text = stringResource(R.string.match_details_choose_methods),
                                 modifier = Modifier
-                                    .rotate(degree)
+                                    .padding(bottom = 15.dp)
                             )
-                        }
-                    }
-                    AnimatedVisibility(
-                        visible = raffleAndChooseBoxesExpanded
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .height(IntrinsicSize.Min)
-                                    .padding(bottom = 15.dp),
-                            ) {
-                                RaffleAndChooseBox(
-                                    category = stringResource(R.string.generic_positions),
-                                    modifier = Modifier
-                                        .padding(end = 5.dp),
-                                    onRadioButtonClick = {
-                                        positionMethod = it
-                                    }
-                                )
-                                Divider(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .width(1.dp)
-                                )
-                                RaffleAndChooseBox(
-                                    category = stringResource(R.string.generic_wonders),
-                                    modifier = Modifier
-                                        .padding(start = 5.dp),
-                                    onRadioButtonClick = {
-                                        wonderMethod = it
-                                    }
-                                )
-                            }
-                            OutlinedButton(
+                            IconButton(
                                 onClick = {
-                                    onConfirmClick(positionMethod!!, wonderMethod!!)
-                                    raffleAndChooseBoxesExpanded = false
+                                    raffleAndChooseBoxesExpanded = !raffleAndChooseBoxesExpanded
+                                    positionMethod = null
+                                    wonderMethod = null
                                 },
-                                enabled = (raffleAndChooseBoxesExpanded && positionMethod != null && wonderMethod != null)
+                                modifier = Modifier
+                                    .testTag(expandLessTestTag)
                             ) {
-                                Text(text = stringResource(id = R.string.generic_confirm_text).uppercase())
+                                val degree by animateFloatAsState(
+                                    targetValue = if (raffleAndChooseBoxesExpanded) 0f else 180f,
+                                )
+                                Icon(
+                                    imageVector = Icons.Filled.ExpandLess,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .rotate(degree)
+                                )
                             }
                         }
+                        AnimatedVisibility(
+                            visible = raffleAndChooseBoxesExpanded
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .height(IntrinsicSize.Min)
+                                        .padding(bottom = 15.dp),
+                                ) {
+                                    RaffleAndChooseBox(
+                                        category = stringResource(R.string.generic_positions),
+                                        modifier = Modifier
+                                            .padding(end = 5.dp),
+                                        onRadioButtonClick = {
+                                            positionMethod = it
+                                        }
+                                    )
+                                    Divider(
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .width(1.dp)
+                                    )
+                                    RaffleAndChooseBox(
+                                        category = stringResource(R.string.generic_wonders),
+                                        modifier = Modifier
+                                            .padding(start = 5.dp),
+                                        onRadioButtonClick = {
+                                            wonderMethod = it
+                                        }
+                                    )
+                                }
+                                OutlinedButton(
+                                    onClick = {
+                                        onConfirmClick(positionMethod!!, wonderMethod!!)
+                                        raffleAndChooseBoxesExpanded = false
+                                    },
+                                    enabled = (raffleAndChooseBoxesExpanded && positionMethod != null && wonderMethod != null)
+                                ) {
+                                    Text(text = stringResource(id = R.string.generic_confirm_text).uppercase())
+                                }
+                            }
+                        }
+                        AnimatedVisibility(
+                            visible = (matchDetailsUiState.creationMethod != null)
+                        ) {
+                            MatchSetupBox(
+                                matchPlayersDetails = matchDetailsUiState.matchPlayersDetails,
+                                modifier = Modifier
+                                    .padding(top = 15.dp),
+                                creationMethod = matchDetailsUiState.creationMethod!!,
+                                onTrailingIconClick = onTrailingIconClick,
+                                onTextButtonClick = onTextButtonClick,
+                                onDialogConfirmClick = onDialogConfirmClick,
+                                availableWondersList = matchDetailsUiState.availableWondersList.map { wonder ->
+                                    convertWonderToString(wonder = wonder)
+                                },
+                                onDeselectWonder = onDeselectWonderClick,
+                                onMoveCardDown = onMoveCardDown,
+                            )
+                        }
                     }
-                    AnimatedVisibility(
-                        visible = (matchDetailsUiState.creationMethod != null)
-                    ) {
-                        MatchSetupBox(
-                            matchPlayersDetails = matchDetailsUiState.matchPlayersDetails,
-                            modifier = Modifier
-                                .padding(top = 15.dp),
-                            creationMethod = matchDetailsUiState.creationMethod!!,
-                            onTrailingIconClick = onTrailingIconClick,
-                            onTextButtonClick = onTextButtonClick,
-                            onDialogConfirmClick = onDialogConfirmClick,
-                            availableWondersList = matchDetailsUiState.availableWondersList.map{ wonder ->
-                                convertWonderToString(wonder = wonder)
-                            },
-                            onDeselectWonder = onDeselectWonderClick,
-                            onMoveCardDown = onMoveCardDown,
-                        )
-                    }
-                    Spacer(Modifier.weight(1f))
                     Row {
                         Spacer(Modifier.weight(1f))
                         TextButton(

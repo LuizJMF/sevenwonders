@@ -77,8 +77,8 @@ fun SummaryScreenSecundaria(
                 title = stringResource(R.string.generic_podium)
             )
         },
-        modifier = modifier
-            .testTag(newGameScreenTestTag),
+//        modifier = modifier
+//            .testTag(newGameScreenTestTag),
     ) { scaffoldPadding ->
 
         Box(
@@ -221,7 +221,7 @@ fun PlayerSummaryCard(
 }
 
 @Composable
-private fun identifyTheBackgroundImage(wonder: Wonders, wonderSide: WonderSide): Painter {
+fun identifyTheBackgroundImage(wonder: Wonders, wonderSide: WonderSide): Painter {
     return when (wonder) {
         Wonders.ALEXANDRIA -> {
             when (wonderSide) {
