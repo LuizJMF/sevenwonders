@@ -345,7 +345,7 @@ fun BackgroundImage(
     modifier: Modifier = Modifier,
 ) {
     Image(
-        painter = painterResource(id = R.drawable.fundo_principal_colorido),
+        painter = painterResource(id = R.drawable.fundo_principal_claro_desenho),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = modifier
@@ -478,7 +478,7 @@ fun PlayersListNameAndNicknameItem(
         text = nickname,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        color = Color(0xFF000080),
+        color = MaterialTheme.colorScheme.primary,
         fontStyle = FontStyle.Italic,
         modifier = modifier
             .animateContentSize()

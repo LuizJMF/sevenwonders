@@ -331,6 +331,7 @@ fun PlayersListDialog(
                                         selected = (person.nickname == selectedNickname),
                                         onClick = {
                                             selectedNickname = person.nickname
+                                            onConfirmClick(selectedNickname!!)
                                         }
                                     )
                                     .padding(horizontal = 16.dp),
@@ -340,6 +341,7 @@ fun PlayersListDialog(
                                     selected = (person.nickname == selectedNickname),
                                     onClick = {
                                         selectedNickname = person.nickname
+                                        onConfirmClick(selectedNickname!!)
                                     }
                                 )
                                 PlayersListNameAndNicknameItem(
@@ -351,21 +353,8 @@ fun PlayersListDialog(
                 }
             }
         },
-        dismissButton = {
-            TextButton(
-                onClick = onDismissRequest
-            ) {
-                Text(text = stringResource(R.string.generic_cancel_text))
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = { onConfirmClick(selectedNickname!!) },
-                enabled = selectedNickname != null
-            ) {
-                Text(text = stringResource(R.string.generic_confirm_text))
-            }
-        },
+        dismissButton = {},
+        confirmButton = {},
         modifier = modifier,
     )
 }

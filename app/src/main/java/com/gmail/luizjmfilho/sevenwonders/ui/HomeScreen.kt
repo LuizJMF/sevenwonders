@@ -1,6 +1,7 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -16,6 +17,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -54,7 +57,7 @@ fun HomeScreen(
             contentAlignment = Alignment.Center,
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fundo_preto_home_screen_2),
+                painter = painterResource(id = R.drawable.fundohomescreen),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -107,11 +110,10 @@ fun HomeScreen(
                     TextButton(
                         onClick = { /*TODO*/ }
                     ) {
-                        Text(text = "Sobre", color = Color.White)
+                        Text(text = "Sobre",)
                         Icon(
                             imageVector = Icons.Outlined.Info,
                             contentDescription = null,
-                            tint = Color.White
                         )
                     }
                 }
@@ -128,7 +130,7 @@ fun HomeScreenButton(
 ){
     Button(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Text(
             text = textinho,

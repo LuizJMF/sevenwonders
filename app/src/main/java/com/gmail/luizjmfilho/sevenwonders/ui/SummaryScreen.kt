@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -276,14 +277,13 @@ fun InfoColumn(
     score: Int,
     modifier: Modifier = Modifier,
 ) {
-    val titleColor = Color(0xFF0833CF)
-    val descriptionColor = Color(0xFF474747)
+    val descriptionColor = MaterialTheme.colorScheme.tertiary
     Column(
         modifier = modifier
     ) {
         Text(
             text = "Jogador: $nickname",
-            color = titleColor,
+            color = MaterialTheme.colorScheme.secondary,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

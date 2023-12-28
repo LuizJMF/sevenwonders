@@ -23,9 +23,11 @@ import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -96,7 +98,7 @@ fun MatchesHistorySecundaria(
                 .padding(scaffoldPadding)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fundohomescreen),
+                painter = painterResource(id = R.drawable.fundo_principal_claro_desenho),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -172,7 +174,8 @@ fun MatchCard(
     if (playersMatchInfoList.isNotEmpty()) {
         Card(
             modifier = modifier,
-            border = BorderStroke(2.dp, Color(0xFF0303CC))
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.secondary),
+            colors = CardDefaults.cardColors(Color.White)
         ) {
             var expanded by rememberSaveable { mutableStateOf(false)}
             Column(
@@ -211,7 +214,7 @@ fun MatchCard(
                                 Icon(
                                     imageVector = Icons.Filled.Person,
                                     contentDescription = null,
-                                    tint = Color(0xFF0000FF),
+                                    tint = MaterialTheme.colorScheme.primary,
                                 )
                                 Text(
                                     text = "${playersMatchInfoList.size}",
@@ -220,7 +223,7 @@ fun MatchCard(
                                 )
                                 Text(
                                     text = "Vencedor(a): ",
-                                    color = Color(0xFF0000FF),
+                                    color = MaterialTheme.colorScheme.secondary,
                                 )
                                 Text(
                                     text = playersMatchInfoList.minBy { it.position }.nickname,
@@ -271,6 +274,7 @@ fun MatchCard(
                                     text = "${i}º",
                                     modifier = Modifier
                                         .fillMaxWidth(),
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                             }
                         }

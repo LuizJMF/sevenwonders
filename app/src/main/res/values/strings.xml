@@ -23,7 +23,7 @@
     <string name="alert_dialog_new_game_player_selection_title">Selecionar jogador</string>
     <string name="generic_cancel_text">Cancelar</string>
     <string name="generic_confirm_text">Confirmar</string>
-    <string name="alert_dialog_new_game_text_when_list_is_empty">Você não tem nenhum jogador cadastrado na lista de jogadores ou então já usou todos os jogadores disponíveis.</string>
+    <string name="alert_dialog_new_game_text_when_list_is_empty">Você não tem nenhum jogador cadastrado na lista de jogadores ou então já usou todos os jogadores disponíveis. Volte para a tela Lista de Jogadores para cadastrar mais nomes.</string>
     <string name="new_game_add_player_button">Adicionar</string>
     <string name="new_game_remove_player_button">Remover</string>
     <string name="generic_advance_button">Avançar</string>
