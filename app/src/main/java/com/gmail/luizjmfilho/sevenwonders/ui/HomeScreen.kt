@@ -2,6 +2,7 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -44,7 +45,7 @@ fun HomeScreen(
     onListaDeJogadoresClick: () -> Unit,
     onMatchesHistoryClick: () -> Unit,
     onStatsClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Scaffold(
         modifier = Modifier
@@ -57,7 +58,11 @@ fun HomeScreen(
             contentAlignment = Alignment.Center,
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fundohomescreen),
+                painter = if (isSystemInDarkTheme()) {
+                    painterResource(id = R.drawable.fundohomescreendark)
+                }  else {
+                    painterResource(id = R.drawable.fundohomescreen)
+                },
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

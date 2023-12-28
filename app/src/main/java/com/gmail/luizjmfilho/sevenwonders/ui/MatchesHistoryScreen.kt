@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -98,7 +99,11 @@ fun MatchesHistorySecundaria(
                 .padding(scaffoldPadding)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fundo_principal_claro_desenho),
+                painter = if (isSystemInDarkTheme()) {
+                    painterResource(id = R.drawable.fundo_desenho_dark)
+                }  else {
+                    painterResource(id = R.drawable.fundo_principal_claro_desenho)
+                },
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -175,7 +180,7 @@ fun MatchCard(
         Card(
             modifier = modifier,
             border = BorderStroke(2.dp, MaterialTheme.colorScheme.secondary),
-            colors = CardDefaults.cardColors(Color.White)
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
         ) {
             var expanded by rememberSaveable { mutableStateOf(false)}
             Column(

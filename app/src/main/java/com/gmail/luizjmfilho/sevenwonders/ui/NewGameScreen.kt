@@ -3,6 +3,7 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +24,9 @@ import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.PersonRemove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -105,7 +108,11 @@ fun NewGameScreenSecundaria(
                 .padding(scaffoldPadding)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fundo_principal_claro_desenho),
+                painter = if (isSystemInDarkTheme()) {
+                    painterResource(id = R.drawable.fundo_desenho_dark)
+                }  else {
+                    painterResource(id = R.drawable.fundo_principal_claro_desenho)
+                },
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -124,7 +131,10 @@ fun NewGameScreenSecundaria(
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
-                    Text(text = "Insira os jogadores pelo nome:")
+                    Text(
+                        text = "Insira os jogadores pelo nome:",
+                        color = MaterialTheme.colorScheme.primary
+                    )
                     NewGameTextFieldGroup(
                         activePlayersList = newGameUiState.activePlayersList,
                         activePlayersNumber = newGameUiState.activePlayersNumber,
@@ -260,8 +270,8 @@ fun NewGameTextField(
     onTrailingIconClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val textColor = Color.Blue
-    val generalColor = Color.Black
+    val textColor = MaterialTheme.colorScheme.primary
+    val generalColor = MaterialTheme.colorScheme.onBackground
     TextField(
         value = value,
         onValueChange = {},
@@ -342,7 +352,10 @@ fun PlayersListDialog(
                                     onClick = {
                                         selectedNickname = person.nickname
                                         onConfirmClick(selectedNickname!!)
-                                    }
+                                    },
+                                    colors = RadioButtonDefaults.colors(
+                                        unselectedColor = MaterialTheme.colorScheme.onBackground
+                                    )
                                 )
                                 PlayersListNameAndNicknameItem(
                                     nickname = person.nickname,

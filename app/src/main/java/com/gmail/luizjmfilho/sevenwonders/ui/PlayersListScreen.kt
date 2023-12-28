@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -345,7 +346,11 @@ fun BackgroundImage(
     modifier: Modifier = Modifier,
 ) {
     Image(
-        painter = painterResource(id = R.drawable.fundo_principal_claro_desenho),
+        painter = if (isSystemInDarkTheme()) {
+            painterResource(id = R.drawable.fundo_desenho_dark)
+        }  else {
+            painterResource(id = R.drawable.fundo_principal_claro_desenho)
+        },
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = modifier
@@ -391,7 +396,7 @@ fun PlayersList(
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(Color.White),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
         border = BorderStroke(1.dp, Color.Black),
 
         ) {

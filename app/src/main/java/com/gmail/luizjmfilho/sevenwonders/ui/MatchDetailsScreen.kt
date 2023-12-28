@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,8 +35,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -125,7 +128,11 @@ fun MatchDetailsScreenSecundaria(
                 .padding(scaffoldPadding)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fundo_principal_claro_desenho),
+                painter = if (isSystemInDarkTheme()) {
+                    painterResource(id = R.drawable.fundo_desenho_dark)
+                }  else {
+                    painterResource(id = R.drawable.fundo_principal_claro_desenho)
+                },
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -345,7 +352,7 @@ fun PersonAndWonderCard(
         modifier = modifier
             .fillMaxWidth(),
         border = BorderStroke(1.dp, Color.Gray),
-        colors = CardDefaults.cardColors(Color.White)
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
     ) {
         Row(
             verticalAlignment = CenterVertically
@@ -431,7 +438,7 @@ fun PersonAndWonderCard(
                         },
                         tint = when (playerDetails.wonderSide) {
                             WonderSide.Day -> Color(0xFFFF8C00)
-                            WonderSide.Night -> Color.Blue
+                            WonderSide.Night -> if(isSystemInDarkTheme()) Color(0xFFFAE52D) else Color.Blue
                         },
                         contentDescription = null,
                     )
@@ -562,10 +569,14 @@ fun WondersListDialog(
                                 selected = (wonder == selectedWonderName),
                                 onClick = {
                                     selectedWonderName = wonder
-                                }
+                                },
+                                colors = RadioButtonDefaults.colors(
+                                    unselectedColor = MaterialTheme.colorScheme.onBackground
+                                )
                             )
                             Text(
                                 text = wonder,
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
                     }

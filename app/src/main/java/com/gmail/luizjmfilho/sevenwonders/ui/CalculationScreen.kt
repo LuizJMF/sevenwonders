@@ -3,6 +3,7 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -59,6 +61,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
+import com.gmail.luizjmfilho.sevenwonders.ui.theme.preto
 import java.text.DateFormat
 import java.util.Calendar
 
@@ -79,7 +82,6 @@ fun CalculationScreenPrimaria(
         onNextCategory = calculationViewModel::onNextCategory,
         calculationUiState = calculationUiState,
         onMinusOnePointClick = calculationViewModel::onMinusOnePointClick,
-        onPlusTwoPointsClick = calculationViewModel::onPlusTwoPointsClick,
         onPlusOnePointsClick = calculationViewModel::onPlusOnePointsClick,
         onShowTotalGrid = calculationViewModel::onShowTotalGrid,
         onShowPartialGrid = calculationViewModel::onShowPartialGrid,
@@ -105,7 +107,6 @@ fun CalculationScreenSecundaria(
     onNextCategory: () -> Unit,
     calculationUiState: CalculationUiState,
     onMinusOnePointClick: (Int) -> Unit,
-    onPlusTwoPointsClick: (Int) -> Unit,
     onPlusOnePointsClick: (Int) -> Unit,
     onShowTotalGrid: () -> Unit,
     onShowPartialGrid: () -> Unit,
@@ -136,7 +137,11 @@ fun CalculationScreenSecundaria(
                 .padding(scaffoldPadding)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fundo_principal_claro_desenho),
+                painter = if (isSystemInDarkTheme()) {
+                    painterResource(id = R.drawable.fundo_desenho_dark)
+                }  else {
+                    painterResource(id = R.drawable.fundo_principal_claro_desenho)
+                },
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -169,7 +174,6 @@ fun CalculationScreenSecundaria(
                                     onNextCategory = onNextCategory,
                                     calculationUiState = calculationUiState,
                                     onMinusOnePointClick = onMinusOnePointClick,
-                                    onPlusTwoPointsClick = onPlusTwoPointsClick,
                                     onShowTotalGrid = onShowTotalGrid,
                                     onShowScienceGrid = { playerIndexBeingSelected ->
                                         playerScienceOrCoinIndexBeingSelected = playerIndexBeingSelected
@@ -274,7 +278,7 @@ fun CategoryCard(
         shape = RoundedCornerShape(0.dp, 8.dp, 0.dp, 0.dp),
         modifier = modifier
             .height(40.dp),
-        colors = CardDefaults.cardColors(Color.White),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
         border = BorderStroke(1.dp, Color.Black)
     ) {
         Row(
@@ -286,7 +290,7 @@ fun CategoryCard(
         ) {
             Text(
                 text = convertPointCategoryToString(category).uppercase(),
-                color = Color(0xFF000080),
+                color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .weight(1f)
@@ -321,7 +325,7 @@ fun IconCategoryCard(
         modifier = modifier
             .height(40.dp)
             .padding(1.dp),
-        colors = CardDefaults.cardColors(Color.White),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
         border = BorderStroke(1.dp, Color.Black)
     ) {
         Box(
@@ -384,7 +388,7 @@ fun NicknameCard(
         shape = RoundedCornerShape(8.dp, 0.dp, 0.dp, 8.dp),
         modifier = modifier
             .widthIn(max = 90.dp),
-        colors = CardDefaults.cardColors(Color(0xFFF3ECCF)),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
         border = BorderStroke(1.dp, Color.Black)
     ) {
         Row(
@@ -398,7 +402,7 @@ fun NicknameCard(
                     .padding(3.dp)
                     .fillMaxWidth(),
                 fontStyle = FontStyle.Italic,
-                color = Color(0xFF50504F),
+                color = MaterialTheme.colorScheme.tertiary,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -415,7 +419,6 @@ fun ScoringGrid(
     onNextCategory: () -> Unit,
     calculationUiState: CalculationUiState,
     onMinusOnePointClick: (Int) -> Unit,
-    onPlusTwoPointsClick: (Int) -> Unit,
     onPlusOnePointsClick: (Int) -> Unit,
     onShowTotalGrid: () -> Unit,
     onShowScienceGrid: (Int) -> Unit,
@@ -470,7 +473,7 @@ fun ScoringGrid(
                             text = stringResource(R.string.general_socring_acronym).uppercase(),
                             modifier = Modifier
                                 .padding(3.dp),
-                            color = Color(0xFF000080)
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -494,7 +497,7 @@ fun ScoringGrid(
                                     .padding(3.dp)
                                     .fillMaxWidth(),
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF000080),
+                                color = MaterialTheme.colorScheme.primary,
                                 textAlign = TextAlign.Center
                             )
                         }
@@ -521,13 +524,13 @@ fun ScoringGrid(
                             .height(cardsHeight)
                             .fillMaxWidth(),
                         colors = when(currentCategory) {
-                            PointCategory.WonderBoard -> CardDefaults.cardColors(Color(0xFFC4C4C4))
-                            PointCategory.Coin -> CardDefaults.cardColors(Color(0xFFF0D995))
-                            PointCategory.War -> CardDefaults.cardColors(Color(0xFFFFA7A7))
-                            PointCategory.BlueCard -> CardDefaults.cardColors(Color(0xFFB3BFFF))
-                            PointCategory.YellowCard -> CardDefaults.cardColors(Color(0xFFFFEB3B))
-                            PointCategory.GreenCard -> CardDefaults.cardColors(Color(0xFFB8FFBA))
-                            PointCategory.PurpleCard -> CardDefaults.cardColors(Color(0xFFDCC9FF))
+                            PointCategory.WonderBoard -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF4D4D4D)) else CardDefaults.cardColors(Color(0xFFC4C4C4))
+                            PointCategory.Coin -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFFCA9D16)) else CardDefaults.cardColors(Color(0xFFF0D995))
+                            PointCategory.War -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF960404)) else CardDefaults.cardColors(Color(0xFFFFA7A7))
+                            PointCategory.BlueCard -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF0028B8)) else CardDefaults.cardColors(Color(0xFFB3BFFF))
+                            PointCategory.YellowCard -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFFA37E10)) else CardDefaults.cardColors(Color(0xFFFFEB3B))
+                            PointCategory.GreenCard -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF17770C)) else CardDefaults.cardColors(Color(0xFFB8FFBA))
+                            PointCategory.PurpleCard -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF670D72)) else CardDefaults.cardColors(Color(0xFFDCC9FF))
                         },
                     ) {
                         Row(
@@ -544,13 +547,8 @@ fun ScoringGrid(
                                     Icon(
                                         imageVector = Icons.Filled.Remove,
                                         contentDescription = null,
-                                        tint = Color(0xFFA2A0A0),
+                                        tint = if (isSystemInDarkTheme()) Color(0xFFEBEBEB) else Color(0xFFA2A0A0),
                                     )
-//                                    Text(
-//                                        text = stringResource(R.string.minus_one_point),
-//                                        color = Color(0xFFA2A0A0),
-//                                        fontStyle = FontStyle.Italic
-//                                    )
                                 }
                                 Spacer(modifier = Modifier.weight(1f))
                                 Text(
@@ -579,7 +577,7 @@ fun ScoringGrid(
                                     },
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier
-                                        .padding(start = 5.dp, end = 5.dp)
+                                        .padding(start = 5.dp, end = 5.dp),
                                 )
                                 Spacer(modifier = Modifier.weight(1f))
                                 IconButton(
@@ -588,13 +586,8 @@ fun ScoringGrid(
                                     Icon(
                                         imageVector = Icons.Filled.Add,
                                         contentDescription = null,
-                                        tint = Color(0xFFA2A0A0),
+                                        tint = if (isSystemInDarkTheme()) Color(0xFFEBEBEB) else Color(0xFFA2A0A0),
                                     )
-                                    /*Text(
-                                        text = stringResource(R.string.plus_one_point),
-                                        color = Color(0xFFA2A0A0),
-                                        fontStyle = FontStyle.Italic
-                                    )*/
                                 }
                             } else {
                                 Spacer(modifier = Modifier.weight(0.5f))
@@ -610,6 +603,7 @@ fun ScoringGrid(
 
                                         else -> "" // esse caso em teoria nunca vai acontecer
                                     },
+                                    color = Color.Black
                                 )
                                 Spacer(modifier = Modifier.weight(0.5f))
                                 TextButton(
@@ -630,8 +624,8 @@ fun ScoringGrid(
                                     Text(
                                         text = stringResource(R.string.generic_calculate),
                                         color = when (currentCategory) {
-                                            PointCategory.GreenCard -> Color(0xFF63C963)
-                                            PointCategory.Coin -> Color(0xFFDD8A10)
+                                            PointCategory.GreenCard -> if(isSystemInDarkTheme()) Color(0xFF9CFF9C) else Color(0xFF63C963)
+                                            PointCategory.Coin -> if(isSystemInDarkTheme()) Color(0xFFF8EBC5) else Color(0xFFDD8A10)
                                             else -> Color(0xFF000000) // em teoria não será usado
                                         } ,
                                         fontStyle = FontStyle.Italic
@@ -739,7 +733,7 @@ fun TotalScoringGrid(
                             text = stringResource(R.string.general_socring_acronym).uppercase(),
                             modifier = Modifier
                                 .padding(3.dp),
-                            color = Color(0xFF000080)
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -763,7 +757,7 @@ fun TotalScoringGrid(
                                     .padding(3.dp)
                                     .fillMaxWidth(),
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF000080),
+                                color = MaterialTheme.colorScheme.primary,
                                 textAlign = TextAlign.Center
                             )
                         }
@@ -800,13 +794,13 @@ fun TotalScoringGrid(
                                 .height(cardsHeight)
                                 .fillMaxWidth(),
                             colors = when (i) {
-                                1 -> CardDefaults.cardColors(Color(0xFFC4C4C4))
-                                2 -> CardDefaults.cardColors(Color(0xFFF0D995))
-                                3 -> CardDefaults.cardColors(Color(0xFFFFA7A7))
-                                4 -> CardDefaults.cardColors(Color(0xFFB3BFFF))
-                                5 -> CardDefaults.cardColors(Color(0xFFFFEB3B))
-                                6 -> CardDefaults.cardColors(Color(0xFFB8FFBA))
-                                else -> CardDefaults.cardColors(Color(0xFFDCC9FF))
+                                1 -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF4D4D4D)) else CardDefaults.cardColors(Color(0xFFC4C4C4))
+                                2 -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFFCA9D16)) else CardDefaults.cardColors(Color(0xFFF0D995))
+                                3 -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF960404)) else CardDefaults.cardColors(Color(0xFFFFA7A7))
+                                4 -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF0028B8)) else CardDefaults.cardColors(Color(0xFFB3BFFF))
+                                5 -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFFA37E10)) else CardDefaults.cardColors(Color(0xFFFFEB3B))
+                                6 -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF17770C)) else CardDefaults.cardColors(Color(0xFFB8FFBA))
+                                else -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF670D72)) else CardDefaults.cardColors(Color(0xFFDCC9FF))
                             },
                         ) {
                             Box(
@@ -845,7 +839,7 @@ fun TotalScoringGrid(
                                         )].toString()
                                     },
                                     modifier = Modifier
-                                        .padding(1.dp)
+                                        .padding(1.dp),
                                 )
                             }
                         }
@@ -1196,7 +1190,6 @@ fun ScoringGridPreview() {
             onPreviousCategory = { },
             onNextCategory = { },
             calculationUiState = CalculationUiState(),
-            onPlusTwoPointsClick = {},
             onMinusOnePointClick = {},
             onShowTotalGrid = {},
             onShowScienceGrid = {},
@@ -1243,7 +1236,6 @@ fun CalculationScreenParcialGridSecundariaPreview() {
             ),
             onPreviousCategory = { },
             onNextCategory = { },
-            onPlusTwoPointsClick = {},
             onMinusOnePointClick = {},
             onShowPartialGrid = {},
             onShowTotalGrid = {},
@@ -1279,7 +1271,6 @@ fun CalculationScreenTotalGridSecundariaPreview() {
             ),
             onPreviousCategory = { },
             onNextCategory = { },
-            onPlusTwoPointsClick = {},
             onMinusOnePointClick = {},
             onShowPartialGrid = {},
             onShowTotalGrid = {},
@@ -1315,7 +1306,6 @@ fun CalculationScreenScienceGridSecundariaPreview() {
             ),
             onPreviousCategory = { },
             onNextCategory = { },
-            onPlusTwoPointsClick = {},
             onMinusOnePointClick = {},
             onShowPartialGrid = {},
             onShowTotalGrid = {},
