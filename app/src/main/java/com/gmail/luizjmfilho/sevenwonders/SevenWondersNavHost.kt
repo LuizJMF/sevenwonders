@@ -1,5 +1,7 @@
 package com.gmail.luizjmfilho.sevenwonders
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -24,7 +26,15 @@ fun SevenWondersNavHost(
         navController = navController,
         startDestination = ScreenNames.HomeScreen.name,
     ) {
-        composable(route = ScreenNames.HomeScreen.name) {
+        composable(
+            route = ScreenNames.HomeScreen.name,
+            popEnterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                    animationSpec = tween(500)
+                )
+            },
+        ) {
             HomeScreen(
                 onCriarPartidaClick = { navController.navigate(ScreenNames.NewGameScreen.name) },
                 onListaDeJogadoresClick = { navController.navigate(ScreenNames.PlayersListScreen.name) },
@@ -35,7 +45,12 @@ fun SevenWondersNavHost(
 
         composable(
             route = ScreenNames.PlayersListScreen.name,
-
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                    animationSpec = tween(500)
+                )
+            },
         ) {
             PlayersListScreenPrimaria(
                 windowWidthSizeClass = windowWidthSizeClass,
@@ -43,7 +58,21 @@ fun SevenWondersNavHost(
             )
         }
 
-        composable(route = ScreenNames.NewGameScreen.name) {
+        composable(
+            route = ScreenNames.NewGameScreen.name,
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                    animationSpec = tween(500)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                    animationSpec = tween(500)
+                )
+            },
+        ) {
             NewGameScreenPrimaria(
                 onBackClick = {
                     navController.navigateUp()
@@ -54,7 +83,21 @@ fun SevenWondersNavHost(
             )
         }
 
-        composable(route = "${ScreenNames.MatchDetailsScreen.name}/{playerNicknames}") {
+        composable(
+            route = "${ScreenNames.MatchDetailsScreen.name}/{playerNicknames}",
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                    animationSpec = tween(500)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                    animationSpec = tween(500)
+                )
+            },
+        ) {
             MatchDetailsScreenPrimaria(
                 onBackClick = { navController.navigateUp() },
                 onNextClick = { playerDetailsList ->
@@ -63,27 +106,67 @@ fun SevenWondersNavHost(
             )
         }
 
-        composable(route = "${ScreenNames.CalculationScreen.name}/{playerDetailsList}") {
+        composable(
+            route = "${ScreenNames.CalculationScreen.name}/{playerDetailsList}",
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                    animationSpec = tween(500)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Right,
+                    animationSpec = tween(500)
+                )
+            },
+        ) {
             CalculationScreenPrimaria(
                 onBackClick = { navController.navigateUp() },
                 onConfirmNextScreen = { navController.navigate(ScreenNames.SummaryScreen.name) }
             )
         }
 
-        composable(route = ScreenNames.SummaryScreen.name) {
+        composable(
+            route = ScreenNames.SummaryScreen.name,
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                    animationSpec = tween(500)
+                )
+            },
+        ) {
             SummaryScreenPrimaria(
                 onBackClick = { navController.navigateUp() },
                 onNextClick = { navController.popBackStack(route = ScreenNames.HomeScreen.name, false) }
             )
         }
 
-        composable(route = ScreenNames.MatchesHistoryScreen.name) {
+        composable(
+            route = ScreenNames.MatchesHistoryScreen.name,
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                    animationSpec = tween(500),
+
+                    )
+            },
+        ) {
             MatchesHistoryPrimaria(
                 onBackClick = {navController.navigateUp()}
             )
         }
 
-        composable(route = ScreenNames.StatsScreen.name) {
+        composable(
+            route = ScreenNames.StatsScreen.name,
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                    animationSpec = tween(500),
+
+                    )
+            },
+        ) {
             StatsScreenPrimaria(
                 onBackClick = {navController.navigateUp()}
             )
