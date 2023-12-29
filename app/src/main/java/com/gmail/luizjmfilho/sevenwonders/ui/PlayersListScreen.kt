@@ -113,7 +113,7 @@ fun PlayersListScreenSecundaria(
         topBar = {
             SevenWondersAppBar(
                 onBackClick = onBackClick,
-                title = stringResource(id = R.string.players_list_top_bar)
+                title = stringResource(id = R.string.players_list_button)
             )
         },
         modifier = modifier

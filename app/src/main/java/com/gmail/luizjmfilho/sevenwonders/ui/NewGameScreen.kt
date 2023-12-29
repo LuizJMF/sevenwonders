@@ -132,7 +132,7 @@ fun NewGameScreenSecundaria(
                     verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
                     Text(
-                        text = "Insira os jogadores pelo nome:",
+                        text = stringResource(R.string.new_game_screen_subtitle),
                         color = MaterialTheme.colorScheme.primary
                     )
                     NewGameTextFieldGroup(

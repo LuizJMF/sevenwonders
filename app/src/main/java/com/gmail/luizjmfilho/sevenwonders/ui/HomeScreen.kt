@@ -1,5 +1,6 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -74,11 +76,18 @@ fun HomeScreen(
                     .fillMaxHeight()
                     .verticalScroll(rememberScrollState())
             ) {
-                Spacer(Modifier.weight(1f))
+                Image(
+                    painter = if (isSystemInDarkTheme()) painterResource(id = R.drawable.logodarkk) else painterResource(id = R.drawable.logolight),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(150.dp)
+                )
+                Spacer(Modifier.weight(0.40f))
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .width(IntrinsicSize.Max)
+                        .fillMaxHeight()
                 ) {
                     HomeScreenButton(
                         onClick = onCriarPartidaClick,
@@ -105,7 +114,7 @@ fun HomeScreen(
                             .fillMaxWidth()
                     )
                 }
-                Spacer(Modifier.weight(1f))
+                Spacer(Modifier.weight(0.60f))
                 Row(
                     modifier = Modifier
                         .padding(bottom = 15.dp),
@@ -115,7 +124,7 @@ fun HomeScreen(
                     TextButton(
                         onClick = { /*TODO*/ }
                     ) {
-                        Text(text = "Sobre",)
+                        Text(text = stringResource(R.string.About))
                         Icon(
                             imageVector = Icons.Outlined.Info,
                             contentDescription = null,
@@ -143,7 +152,7 @@ fun HomeScreenButton(
     }
 }
 
-@Preview
+@Preview()
 @Composable
 fun HomeScreenPreview() {
     SevenWondersTheme {

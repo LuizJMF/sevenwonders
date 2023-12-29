@@ -3,6 +3,7 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -324,7 +325,8 @@ fun IconCategoryCard(
         ),
         modifier = modifier
             .height(40.dp)
-            .padding(1.dp),
+            .padding(1.dp)
+            .width(27.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
         border = BorderStroke(1.dp, Color.Black)
     ) {
@@ -691,6 +693,7 @@ fun TotalScoringGrid(
         modifier = modifier
             .width(IntrinsicSize.Max)
             .verticalScroll(rememberScrollState())
+            .horizontalScroll(rememberScrollState())
     ) {
         Row(
             verticalAlignment = Alignment.Bottom,
@@ -920,11 +923,6 @@ fun CoinGrid(
                                 contentDescription = null,
                                 tint = Color(0xFFA2A0A0),
                             )
-                            /*Text(
-                                text = stringResource(R.string.minus_one_point),
-                                color = Color(0xFFA2A0A0),
-                                fontStyle = FontStyle.Italic
-                            )*/
                         }
                         Spacer(modifier = Modifier.weight(1f))
                         Text(
@@ -941,11 +939,6 @@ fun CoinGrid(
                                 contentDescription = null,
                                 tint = Color(0xFFA2A0A0),
                             )
-                            /*Text(
-                                text = stringResource(R.string.plus_one_point),
-                                color = Color(0xFFA2A0A0),
-                                fontStyle = FontStyle.Italic
-                            )*/
                         }
                     }
                 }

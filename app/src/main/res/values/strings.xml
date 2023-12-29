@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">7 Wonders</string>
     <string name="criar_partida_button">Criar partida</string>
-    <string name="players_list_button">Lista de Jogadores</string>
-    <string name="players_list_top_bar">Lista de Jogadores</string>
+    <string name="players_list_button">Lista de jogadores</string>
     <string name="estatisticas_button">Estatísticas</string>
     <string name="historico_de_partidas_button">Histórico de Partidas</string>
     <string name="add_player_button">Add jogador</string>
@@ -84,4 +83,27 @@
     <string name="generic_relative">Relativo:</string>
     <string name="number_of_absolute_victories">Número de vitórias por jogador</string>
     <string name="relative_ratio_victories">Porcetagem relativa de vitórias</string>
+    <string name="About">Sobre</string>
+    <string name="new_game_screen_subtitle">Escolha os jogadores pelo nome:</string>
+    <string name="info_column_nickname">Jogador: %s</string>
+    <string name="info_column_wonder">Maravilha: %s</string>
+    <string name="info_column_wonder_side">Lado: %s</string>
+    <string name="info_column_score">Pontuação: %d</string>
+    <string name="match_number">Partida nº %d</string>
+    <string name="winner">"Vencedor(a): "</string>
+    <string name="position_acronym">Pos</string>
+    <string name="position">%1$sº</string>
+    <string name="player">Jogador</string>
+    <string name="points_acronym">Pts</string>
+    <string name="wonder">Maravilha</string>
+    <string name="maravilha_que_mais_venceu">Maravilha que mais venceu</string>
+    <string name="num_victories">(%1$s vitórias)</string>
+    <string name="mais_pontos_em">Mais pontos em</string>
+    <string name="just_two_dots">%1$s:</string>
+    <string name="just_percentage_symbol">%1$s%</string>
+    <string name="maior_vencedor">Maior vencedor</string>
+    <string name="vez">(%1$s vez)</string>
+    <string name="vezes">(%1$s vezes)</string>
+    <string name="percentagem_das_vezes">(%1$s% das vezes)</string>
+    <string name="names_separated_by_hifen">(%1$s - %2$s)</string>
 </resources>

@@ -152,7 +152,7 @@ fun BestWonder(
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         Text(
-            text = "Maravilha que mais venceu",
+            text = stringResource(R.string.maravilha_que_mais_venceu),
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(bottom = 5.dp)
@@ -183,7 +183,7 @@ fun BestWonder(
                         )
                     }
                     Text(
-                        text = "(${wonderList[i].times} vitórias)",
+                        text = stringResource(R.string.num_victories, wonderList[i].times),
                         fontStyle = FontStyle.Italic,
                         modifier = Modifier
                             .padding(start = 15.dp)
@@ -207,7 +207,7 @@ fun CardsRecord(
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         Text(
-            text = "Mais pontos em",
+            text = stringResource(R.string.mais_pontos_em),
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(bottom = 5.dp)
@@ -323,7 +323,10 @@ fun VictoriesAbsoluteOrRelativePerPlayer(
             Column {
                 for (i in playerAndVictoriesList.indices) {
                     Text(
-                        text = "${playerAndVictoriesList[i].first}:",
+                        text = stringResource(
+                            R.string.just_two_dots,
+                            playerAndVictoriesList[i].first
+                        ),
                         modifier = Modifier
                             .padding(end = 10.dp)
                     )
@@ -332,7 +335,9 @@ fun VictoriesAbsoluteOrRelativePerPlayer(
             Column {
                 for (i in playerAndVictoriesList.indices) {
                     Text(
-                        text = if (isAbsolute) playerAndVictoriesList[i].second.toString() else "${playerAndVictoriesList[i].second}%",
+                        text = if (isAbsolute) playerAndVictoriesList[i].second.toString() else stringResource(
+                            R.string.just_percentage_symbol, playerAndVictoriesList[i].second
+                        ),
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF30B612),
                     )
@@ -352,7 +357,7 @@ fun MostChampion(
         modifier = modifier
     ) {
         Text(
-            text = "Maior vencedor",
+            text = stringResource(R.string.maior_vencedor),
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(bottom = 5.dp)
@@ -380,9 +385,9 @@ fun MostChampion(
             )
             Text(
                 text = if (absoluteList.isEmpty()) "-" else if (absoluteList[0].second == 1) {
-                    "(${absoluteList[0].second} vez)"
+                    stringResource(R.string.vez, absoluteList[0].second)
                 }  else {
-                    "(${absoluteList[0].second} vezes)"
+                    stringResource(R.string.vezes, absoluteList[0].second)
                 } ,
                 fontStyle = FontStyle.Italic
             )
@@ -408,7 +413,10 @@ fun MostChampion(
                 color = Color(0xFF30B612)
             )
             Text(
-                text = if (relativeList.isEmpty()) "-" else "(${relativeList[0].second}% das vezes)",
+                text = if (relativeList.isEmpty()) "-" else stringResource(
+                    R.string.percentagem_das_vezes,
+                    relativeList[0].second
+                ),
                 fontStyle = FontStyle.Italic
             )
         }
@@ -462,7 +470,7 @@ fun AverageScorePerPlayer(
             Column {
                 for (i in playerAndScoreList.indices) {
                     Text(
-                        text = "${playerAndScoreList[i].first}:",
+                        text = stringResource(R.string.just_two_dots, playerAndScoreList[i].first),
                         modifier = Modifier
                             .padding(end = 10.dp)
                     )
@@ -503,7 +511,7 @@ fun BestOrWorstScorePerPlayer(
             Column {
                 for (i in matchList.indices) {
                     Text(
-                        text = "${matchList[i].nickname}:",
+                        text = stringResource(R.string.just_two_dots, matchList[i].nickname),
                         modifier = Modifier
                             .padding(end = 10.dp)
                     )
@@ -523,7 +531,11 @@ fun BestOrWorstScorePerPlayer(
             Column {
                 for (i in matchList.indices) {
                     Text(
-                        text = "(${convertWonderToString(matchList[i].wonder)} - ${convertWonderSideToString(matchList[i].wonderSide)})",
+                        text = stringResource(
+                            R.string.names_separated_by_hifen,
+                            convertWonderToString(matchList[i].wonder),
+                            convertWonderSideToString(matchList[i].wonderSide)
+                        ),
                         fontStyle = FontStyle.Italic,
                         color = Color(0xFF706E6E),
                     )

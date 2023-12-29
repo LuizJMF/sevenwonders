@@ -287,28 +287,28 @@ fun InfoColumn(
         modifier = modifier
     ) {
         Text(
-            text = "Jogador: $nickname",
+            text = stringResource(id = R.string.info_column_nickname, nickname),
             color = MaterialTheme.colorScheme.secondary,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
         Text(
-            text = "Wonder: ${convertWonderToString(wonder = wonder)}",
+            text = stringResource(id = R.string.info_column_wonder, convertWonderToString(wonder = wonder)),
             color = descriptionColor,
             fontStyle = FontStyle.Italic,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
         Text(
-            text = "Lado: ${convertWonderSideToString(wonderSide = wonderSide)}",
+            text = stringResource(id = R.string.info_column_wonder_side, convertWonderSideToString(wonderSide = wonderSide)),
             color = descriptionColor,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             fontStyle = FontStyle.Italic
         )
         Text(
-            text = "Pontuação: ${score.toString()}",
+            text = stringResource(id = R.string.info_column_score, score),
             color = descriptionColor,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

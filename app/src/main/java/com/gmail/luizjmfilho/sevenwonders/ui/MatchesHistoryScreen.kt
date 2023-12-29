@@ -202,7 +202,7 @@ fun MatchCard(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "Partida nº${playersMatchInfoList[0].matchId}",
+                                    text = stringResource(id = R.string.match_number, playersMatchInfoList[0].matchId),
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier
                                         .padding(end = 30.dp)
@@ -227,7 +227,7 @@ fun MatchCard(
                                         .padding(end = 15.dp)
                                 )
                                 Text(
-                                    text = "Vencedor(a): ",
+                                    text = stringResource(R.string.winner),
                                     color = MaterialTheme.colorScheme.secondary,
                                 )
                                 Text(
@@ -269,14 +269,14 @@ fun MatchCard(
                                 .width(IntrinsicSize.Max)
                         ) {
                             Text(
-                                text = "Pos",
+                                text = stringResource(R.string.position_acronym),
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier
                                     .fillMaxWidth(),
                             )
                             for (i in 1..playersMatchInfoList.size) {
                                 Text(
-                                    text = "${i}º",
+                                    text = stringResource(R.string.position, i),
                                     modifier = Modifier
                                         .fillMaxWidth(),
                                     color = MaterialTheme.colorScheme.secondary
@@ -288,7 +288,7 @@ fun MatchCard(
                                 .width(100.dp)
                         ) {
                             Text(
-                                text = "Jogador",
+                                text = stringResource(R.string.player),
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier
                                     .fillMaxWidth(),
@@ -308,7 +308,7 @@ fun MatchCard(
                                 .width(IntrinsicSize.Max)
                         ) {
                             Text(
-                                text = "Pts",
+                                text = stringResource(R.string.points_acronym),
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier
                                     .fillMaxWidth(),
@@ -328,7 +328,7 @@ fun MatchCard(
                                 .width(IntrinsicSize.Max)
                         ) {
                             Text(
-                                text = "Maravilha",
+                                text = stringResource(R.string.wonder),
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier
                                     .fillMaxWidth(),
