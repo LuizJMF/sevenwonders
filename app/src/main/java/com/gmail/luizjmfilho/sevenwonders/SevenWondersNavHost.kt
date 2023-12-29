@@ -33,7 +33,10 @@ fun SevenWondersNavHost(
             )
         }
 
-        composable(route = ScreenNames.PlayersListScreen.name) {
+        composable(
+            route = ScreenNames.PlayersListScreen.name,
+
+        ) {
             PlayersListScreenPrimaria(
                 windowWidthSizeClass = windowWidthSizeClass,
                 onBackClick = { navController.navigateUp() }

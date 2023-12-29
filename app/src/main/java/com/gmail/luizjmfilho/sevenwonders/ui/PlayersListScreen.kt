@@ -2,6 +2,7 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -119,6 +120,7 @@ fun PlayersListScreenSecundaria(
         modifier = modifier
             .testTag(playersListScreenTestTag),
     ) { scaffoldPadding ->
+
         if (windowWidthSizeClass == WindowWidthSizeClass.Compact) {
             PlayersListCompactContent(
                 modifier = Modifier

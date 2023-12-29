@@ -92,18 +92,19 @@
     <string name="match_number">Match id: %d</string>
     <string name="winner">"Winner: "</string>
     <string name="position_acronym">Pos</string>
-    <string name="position">%1$sº</string>
+    <string name="position">%1$dº</string>
     <string name="player">Player</string>
     <string name="points_acronym">Pts</string>
     <string name="wonder">Wonder</string>
     <string name="maravilha_que_mais_venceu">The wonder that won the most</string>
-    <string name="num_victories">(%1$s wins)</string>
+    <string name="num_victories">(%1$d wins)</string>
     <string name="mais_pontos_em">More points at</string>
     <string name="just_two_dots">%1$s:</string>
-    <string name="just_percentage_symbol">%1$s%</string>
+    <string name="just_percentage_symbol">%1$d%%</string>
     <string name="maior_vencedor">Biggest winner</string>
-    <string name="vez">(%1$s time)</string>
-    <string name="vezes">(%1$s times)</string>
-    <string name="percentagem_das_vezes">(%1$s% of the time)</string>
+    <string name="vez">(%1$d time)</string>
+    <string name="vezes">(%1$d times)</string>
+    <string name="percentagem_das_vezes">(%1$d%% of the time)</string>
     <string name="names_separated_by_hifen">(%1$s - %2$s)</string>
+    <string name="loading">Loading</string>
 </resources>

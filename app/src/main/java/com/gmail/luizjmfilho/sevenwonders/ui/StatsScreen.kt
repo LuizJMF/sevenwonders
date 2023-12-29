@@ -16,13 +16,18 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.WbSunny
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -40,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.model.Match
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
+import kotlinx.coroutines.delay
 
 @Composable
 fun StatsScreenPrimaria(
@@ -72,6 +78,12 @@ fun StatsScreenSecundaria(
 //            .testTag(newGameScreenTestTag),
     ) { scaffoldPadding ->
 
+        var loading by rememberSaveable { mutableStateOf(true) }
+        LaunchedEffect(true) {
+            delay(2000)
+            loading = false
+        }
+
         Box(
             modifier = modifier
                 .padding(scaffoldPadding)
@@ -89,53 +101,62 @@ fun StatsScreenSecundaria(
                 modifier = Modifier
                     .fillMaxSize()
             )
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                if (statsUiState.isDatabaseEmpty) {
-                    Text(
-                        text = stringResource(R.string.stats_screen_empty_database),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentWidth(),
-                        color = Color.Red,
-                        fontStyle = FontStyle.Italic,
-                        textAlign = TextAlign.Center
-                    )
-                } else {
-                    BestOrWorstScore(matchList = statsUiState.bestScoresList, true)
-                    Divider()
-                    BestOrWorstScore(matchList = statsUiState.worstScoresList, false)
-                    Divider()
-                    AverageWinnerScore(averageScore = statsUiState.averageWinnerScore)
-                    Divider()
-                    BestWonder(wonderList = statsUiState.bestWondersList)
-                    Divider()
-                    CardsRecord(
-                        blueList = statsUiState.blueList,
-                        yellowList = statsUiState.yellowList,
-                        greenList = statsUiState.greenList,
-                        purpleList = statsUiState.purpleList,
-                    )
-                    Divider()
-                    MostChampion(
-                        absoluteList = statsUiState.mostAbsoluteChampionList,
-                        relativeList = statsUiState.mostRelativeChampionList,
-                    )
-                    Divider()
-                    BestOrWorstScorePerPlayer(matchList = statsUiState.bestScoresPerPlayerList, true)
-                    Divider()
-                    BestOrWorstScorePerPlayer(matchList = statsUiState.worstScoresPerPlayerList, false)
-                    Divider()
-                    AverageScorePerPlayer(playerAndScoreList = statsUiState.averageScorePerPlayer)
-                    Divider()
-                    VictoriesAbsoluteOrRelativePerPlayer(playerAndVictoriesList = statsUiState.allAbsoluteVictoriesList, true)
-                    Divider()
-                    VictoriesAbsoluteOrRelativePerPlayer(playerAndVictoriesList = statsUiState.allRelativeVictoriesList, false)
+            if (loading) {
+                Column(
+                    horizontalAlignment = CenterHorizontally
+                ) {
+                    CircularProgressIndicator()
+                    Text(text = stringResource(R.string.loading))
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(10.dp)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    if (statsUiState.isDatabaseEmpty) {
+                        Text(
+                            text = stringResource(R.string.stats_screen_empty_database),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentWidth(),
+                            color = Color.Red,
+                            fontStyle = FontStyle.Italic,
+                            textAlign = TextAlign.Center
+                        )
+                    } else {
+                        BestOrWorstScore(matchList = statsUiState.bestScoresList, true)
+                        Divider()
+                        BestOrWorstScore(matchList = statsUiState.worstScoresList, false)
+                        Divider()
+                        AverageWinnerScore(averageScore = statsUiState.averageWinnerScore)
+                        Divider()
+                        BestWonder(wonderList = statsUiState.bestWondersList)
+                        Divider()
+                        CardsRecord(
+                            blueList = statsUiState.blueList,
+                            yellowList = statsUiState.yellowList,
+                            greenList = statsUiState.greenList,
+                            purpleList = statsUiState.purpleList,
+                        )
+                        Divider()
+                        MostChampion(
+                            absoluteList = statsUiState.mostAbsoluteChampionList,
+                            relativeList = statsUiState.mostRelativeChampionList,
+                        )
+                        Divider()
+                        BestOrWorstScorePerPlayer(matchList = statsUiState.bestScoresPerPlayerList, true)
+                        Divider()
+                        BestOrWorstScorePerPlayer(matchList = statsUiState.worstScoresPerPlayerList, false)
+                        Divider()
+                        AverageScorePerPlayer(playerAndScoreList = statsUiState.averageScorePerPlayer)
+                        Divider()
+                        VictoriesAbsoluteOrRelativePerPlayer(playerAndVictoriesList = statsUiState.allAbsoluteVictoriesList, true)
+                        Divider()
+                        VictoriesAbsoluteOrRelativePerPlayer(playerAndVictoriesList = statsUiState.allRelativeVictoriesList, false)
+                    }
                 }
             }
         }
@@ -413,10 +434,7 @@ fun MostChampion(
                 color = Color(0xFF30B612)
             )
             Text(
-                text = if (relativeList.isEmpty()) "-" else stringResource(
-                    R.string.percentagem_das_vezes,
-                    relativeList[0].second
-                ),
+                text = if (relativeList.isEmpty()) "-" else stringResource(R.string.percentagem_das_vezes, relativeList[0].second),
                 fontStyle = FontStyle.Italic
             )
         }
