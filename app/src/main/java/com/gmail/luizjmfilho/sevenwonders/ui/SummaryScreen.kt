@@ -148,7 +148,7 @@ fun SummaryScreenSecundaria(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(5.dp)
                             ) {
-                                Text(text = stringResource(R.string.summary_to_complete_match).uppercase())
+                                Text(text = stringResource(R.string.ir_para_a_tela_inicial).uppercase())
                                 Icon(
                                     imageVector = Icons.Filled.ArrowForward,
                                     contentDescription = null

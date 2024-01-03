@@ -110,4 +110,7 @@
     <string name="Drawing">Drawing</string>
     <string name="about_the_app">About the app</string>
     <string name="app_version">Versão %s</string>
+    <string name="day">Day</string>
+    <string name="night">Night</string>
+    <string name="ir_para_a_tela_inicial">Go to the home screen</string>
 </resources>

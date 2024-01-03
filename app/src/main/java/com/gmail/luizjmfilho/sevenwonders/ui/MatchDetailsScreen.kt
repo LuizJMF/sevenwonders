@@ -466,7 +466,7 @@ fun convertWonderToString(wonder: Wonders?): String {
 
 @Composable
 fun convertWonderSideToString(wonderSide: WonderSide): String {
-    return if (wonderSide == WonderSide.Day) "Dia" else "Noite"
+    return if (wonderSide == WonderSide.Day) stringResource(R.string.day) else stringResource(R.string.night)
 }
 
 @Composable

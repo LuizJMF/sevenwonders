@@ -108,4 +108,7 @@
     <string name="loading">Carregando</string>
     <string name="Drawing">Sorteando</string>
     <string name="about_the_app">Sobre o aplicativo</string>
+    <string name="day">Dia</string>
+    <string name="night">Noite</string>
+    <string name="ir_para_a_tela_inicial">Ir para a tela inicial</string>
 </resources>
