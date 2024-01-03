@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -112,7 +113,7 @@ fun StatsScreenSecundaria(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(10.dp)
+                        .padding(start = 10.dp, end = 10.dp)
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
@@ -121,13 +122,18 @@ fun StatsScreenSecundaria(
                             text = stringResource(R.string.stats_screen_empty_database),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .wrapContentWidth(),
+                                .wrapContentWidth()
+                                .padding(top = 10.dp),
                             color = Color.Red,
                             fontStyle = FontStyle.Italic,
                             textAlign = TextAlign.Center
                         )
                     } else {
-                        BestOrWorstScore(matchList = statsUiState.bestScoresList, true)
+                        BestOrWorstScore(
+                            matchList = statsUiState.bestScoresList,
+                            true,
+                            modifier = Modifier.padding(top = 10.dp)
+                        )
                         Divider()
                         BestOrWorstScore(matchList = statsUiState.worstScoresList, false)
                         Divider()
@@ -155,7 +161,12 @@ fun StatsScreenSecundaria(
                         Divider()
                         VictoriesAbsoluteOrRelativePerPlayer(playerAndVictoriesList = statsUiState.allAbsoluteVictoriesList, true)
                         Divider()
-                        VictoriesAbsoluteOrRelativePerPlayer(playerAndVictoriesList = statsUiState.allRelativeVictoriesList, false)
+                        VictoriesAbsoluteOrRelativePerPlayer(
+                            playerAndVictoriesList = statsUiState.allRelativeVictoriesList,
+                            false,
+                            modifier = Modifier
+                                .padding(bottom = 10.dp)
+                        )
                     }
                 }
             }
@@ -178,37 +189,49 @@ fun BestWonder(
             modifier = Modifier
                 .padding(bottom = 5.dp)
         )
-        for (i in wonderList.indices) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(),
-                verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = CenterHorizontally
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(3.dp)
             ) {
-                PlayerSummaryCard(wonder = wonderList[i].wonder, wonderSide = wonderList[i].wonderSide)
-                Column {
+                for (i in wonderList.indices) {
                     Row(
-                        modifier = Modifier
-                            .padding(start = 15.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = convertWonderToString(wonder = wonderList[i].wonder),
-                            modifier = Modifier
-                                .padding(end = 10.dp)
+                        PlayerSummaryCard(
+                            wonder = wonderList[i].wonder,
+                            wonderSide = wonderList[i].wonderSide
                         )
-                        Icon(
-                            imageVector = if (wonderList[i].wonderSide == WonderSide.Day) Icons.Filled.WbSunny else Icons.Filled.Bedtime,
-                            contentDescription = null,
-                            tint = if (wonderList[i].wonderSide == WonderSide.Day) Color(0xFFFF8C00) else Color.Blue,
-                        )
+                        Column {
+                            Row(
+                                modifier = Modifier
+                                    .padding(start = 15.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = convertWonderToString(wonder = wonderList[i].wonder),
+                                    modifier = Modifier
+                                        .padding(end = 10.dp)
+                                )
+                                Icon(
+                                    imageVector = if (wonderList[i].wonderSide == WonderSide.Day) Icons.Filled.WbSunny else Icons.Filled.Bedtime,
+                                    contentDescription = null,
+                                    tint = if (wonderList[i].wonderSide == WonderSide.Day) Color(
+                                        0xFFFF8C00
+                                    ) else Color.Blue,
+                                )
+                            }
+                            Text(
+                                text = stringResource(R.string.num_victories, wonderList[i].times),
+                                fontStyle = FontStyle.Italic,
+                                modifier = Modifier
+                                    .padding(start = 15.dp)
+                            )
+                        }
                     }
-                    Text(
-                        text = stringResource(R.string.num_victories, wonderList[i].times),
-                        fontStyle = FontStyle.Italic,
-                        modifier = Modifier
-                            .padding(start = 15.dp)
-                    )
                 }
             }
         }

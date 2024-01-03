@@ -3,11 +3,13 @@ package com.gmail.luizjmfilho.sevenwonders.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
 @Composable
 fun getLightThemeColor(): ColorScheme {
-    return MaterialTheme.colorScheme.copy(
+    return lightColorScheme(
         surface = azulClarissimo,
         onSurface = azulEscuro,
         primary = azulEscuro,
@@ -21,7 +23,7 @@ fun getLightThemeColor(): ColorScheme {
 
 @Composable
 fun getDarkThemeColor(): ColorScheme {
-    return MaterialTheme.colorScheme.copy(
+    return darkColorScheme(
         surface = roxoEscuro,
         onSurface = roxoClaro,
         primary = roxoClaro,
@@ -37,7 +39,6 @@ fun getDarkThemeColor(): ColorScheme {
 @Composable
 fun SevenWondersTheme(darkTheme: Boolean = isSystemInDarkTheme(),content: @Composable () -> Unit) {
     val colors = if (darkTheme) getDarkThemeColor() else getLightThemeColor()
-
     MaterialTheme(
         typography = Typography,
         content = content,

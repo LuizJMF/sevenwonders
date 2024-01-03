@@ -123,6 +123,7 @@ fun MatchDetailsScreenSecundaria(
 //        modifier = modifier
 //            .testTag(newGameScreenTestTag),
     ) { scaffoldPadding ->
+
         Box(
             modifier = modifier
                 .padding(scaffoldPadding)

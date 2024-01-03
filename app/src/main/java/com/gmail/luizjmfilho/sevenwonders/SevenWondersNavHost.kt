@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.gmail.luizjmfilho.sevenwonders.ui.AboutScreen
 import com.gmail.luizjmfilho.sevenwonders.ui.CalculationScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.HomeScreen
 import com.gmail.luizjmfilho.sevenwonders.ui.MatchDetailsScreenPrimaria
@@ -39,7 +40,8 @@ fun SevenWondersNavHost(
                 onCriarPartidaClick = { navController.navigate(ScreenNames.NewGameScreen.name) },
                 onListaDeJogadoresClick = { navController.navigate(ScreenNames.PlayersListScreen.name) },
                 onMatchesHistoryClick = { navController.navigate(ScreenNames.MatchesHistoryScreen.name) },
-                onStatsClick = { navController.navigate(ScreenNames.StatsScreen.name) }
+                onStatsClick = { navController.navigate(ScreenNames.StatsScreen.name) },
+                onAboutClick = { navController.navigate(ScreenNames.AboutScreen.name) }
             )
         }
 
@@ -137,7 +139,6 @@ fun SevenWondersNavHost(
             },
         ) {
             SummaryScreenPrimaria(
-                onBackClick = { navController.navigateUp() },
                 onNextClick = { navController.popBackStack(route = ScreenNames.HomeScreen.name, false) }
             )
         }
@@ -148,8 +149,7 @@ fun SevenWondersNavHost(
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
                     animationSpec = tween(500),
-
-                    )
+                )
             },
         ) {
             MatchesHistoryPrimaria(
@@ -168,6 +168,21 @@ fun SevenWondersNavHost(
             },
         ) {
             StatsScreenPrimaria(
+                onBackClick = {navController.navigateUp()}
+            )
+        }
+
+        composable(
+            route = ScreenNames.AboutScreen.name,
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                    animationSpec = tween(500),
+
+                    )
+            },
+        ) {
+            AboutScreen(
                 onBackClick = {navController.navigateUp()}
             )
         }

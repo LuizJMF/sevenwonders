@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">7 Wonders</string>
     <string name="criar_partida_button">New match</string>
     <string name="players_list_button">Players list</string>
     <string name="estatisticas_button">Statistics</string>
@@ -62,7 +61,7 @@
     <string name="calculation_science_grid_comand">Quantity of each symbol</string>
     <string name="summary_to_complete_match">Finish match</string>
     <string name="calculation_screen_alert_dialog_title">Are you sure you\'ve finished setting up the match score?</string>
-    <string name="calculation_screen_alert_dialog_text">Have you finished scoring and want to go to the results screen?</string>
+    <string name="calculation_screen_alert_dialog_text">Do you want to end the match? Once you click "Confirm", the action cannot be undone.</string>
     <string name="calculation_screen_coin_grid_title">Number of coins</string>
     <string name="calculation_screen_coin_grid_attention">Please note: it\'s not the coin points, but the number of coins.</string>
     <string name="generic_podium">Podium</string>
@@ -107,4 +106,6 @@
     <string name="percentagem_das_vezes">(%1$d%% of the time)</string>
     <string name="names_separated_by_hifen">(%1$s - %2$s)</string>
     <string name="loading">Loading</string>
+    <string name="Drawing">Drawing</string>
+    <string name="about_the_app">About the app</string>
 </resources>

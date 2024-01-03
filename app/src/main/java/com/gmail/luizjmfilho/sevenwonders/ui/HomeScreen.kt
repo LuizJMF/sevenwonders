@@ -47,6 +47,7 @@ fun HomeScreen(
     onListaDeJogadoresClick: () -> Unit,
     onMatchesHistoryClick: () -> Unit,
     onStatsClick: () -> Unit,
+    onAboutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -122,7 +123,7 @@ fun HomeScreen(
                 ) {
                     Spacer(Modifier.weight(1f))
                     TextButton(
-                        onClick = { /*TODO*/ }
+                        onClick = onAboutClick
                     ) {
                         Text(text = stringResource(R.string.About))
                         Icon(
@@ -160,7 +161,8 @@ fun HomeScreenPreview() {
             onCriarPartidaClick = {},
             onListaDeJogadoresClick = {},
             onMatchesHistoryClick = {},
-            onStatsClick = {}
+            onStatsClick = {},
+            onAboutClick = {}
         )
     }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">7 Wonders</string>
+    <string name="app_name">7 Wonders - Score Tracker</string>
     <string name="criar_partida_button">Criar partida</string>
     <string name="players_list_button">Lista de jogadores</string>
     <string name="estatisticas_button">Estatísticas</string>
@@ -62,7 +62,7 @@
     <string name="calculation_science_grid_comand">Quantidade de cada símbolo</string>
     <string name="summary_to_complete_match">Concluir partida</string>
     <string name="calculation_screen_alert_dialog_title">Tem certeza que acabou de configurar a pontuação da partida?</string>
-    <string name="calculation_screen_alert_dialog_text">Você concluiu a pontuação e deseja seguir para a tela de resultados?</string>
+    <string name="calculation_screen_alert_dialog_text">Você deseja finalizar a partida? Após clicar em "Confirmar", a ação não poderá ser desfeita.</string>
     <string name="calculation_screen_coin_grid_title">Quantidade de moedas</string>
     <string name="calculation_screen_coin_grid_attention">Atenção: não são os pontos de moeda, mas sim a quantidade de moedas.</string>
     <string name="generic_podium">Pódio</string>
@@ -107,4 +107,7 @@
     <string name="percentagem_das_vezes">(%1$d%% das vezes)</string>
     <string name="names_separated_by_hifen">(%1$s - %2$s)</string>
     <string name="loading">Carregando</string>
+    <string name="Drawing">Sorteando</string>
+    <string name="about_the_app">Sobre o aplicativo</string>
+    <string name="app_version">Versão %s</string>
 </resources>

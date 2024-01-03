@@ -1,5 +1,6 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -50,7 +51,6 @@ import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
 @Composable
 fun SummaryScreenPrimaria(
-    onBackClick: () -> Unit,
     onNextClick: () -> Unit,
     modifier: Modifier = Modifier,
     summaryViewModel: SummaryViewModel = hiltViewModel()
@@ -58,7 +58,6 @@ fun SummaryScreenPrimaria(
 
     val summaryUiState by summaryViewModel.uiState.collectAsState()
     SummaryScreenSecundaria(
-        onBackClick = onBackClick,
         onNextClick = onNextClick,
         summaryUiState = summaryUiState,
         modifier = modifier,
@@ -67,7 +66,6 @@ fun SummaryScreenPrimaria(
 
 @Composable
 fun SummaryScreenSecundaria(
-    onBackClick: () -> Unit,
     onNextClick: () -> Unit,
     summaryUiState: SummaryUiState,
     modifier: Modifier = Modifier
@@ -75,7 +73,7 @@ fun SummaryScreenSecundaria(
     Scaffold(
         topBar = {
             SevenWondersAppBar(
-                onBackClick = onBackClick,
+                onBackClick = null,
                 title = stringResource(R.string.generic_podium)
             )
         },
@@ -341,7 +339,6 @@ fun PlayerSummaryCardPreview() {
 fun SummaryScreenPreview() {
     SevenWondersTheme {
         SummaryScreenSecundaria(
-            onBackClick = { /*TODO*/ },
             onNextClick = {},
             summaryUiState = SummaryUiState(
                 matchList = listOf(

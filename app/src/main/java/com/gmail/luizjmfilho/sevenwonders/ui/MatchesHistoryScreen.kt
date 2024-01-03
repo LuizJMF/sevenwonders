@@ -111,7 +111,7 @@ fun MatchesHistorySecundaria(
             )
             Box(
                 modifier = Modifier
-                    .padding(start = 10.dp, top = 10.dp, bottom = 10.dp)
+                    .padding(start = 10.dp, end = 10.dp)
                     .fillMaxSize(),
                 contentAlignment = Alignment.TopCenter
             ) {
@@ -135,7 +135,12 @@ fun MatchesHistorySecundaria(
                                     it.matchId == i
                                 }
                             Row(
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .padding(
+                                        top = if (i == matchesHistoryUiState.matchQuantity) 10.dp else 0.dp,
+                                        bottom = if (i == 1) 10.dp else 0.dp
+                                    )
                             ) {
                                 MatchCard(
                                     playersMatchInfoList = playerInfoListOfMatchNumberi,

@@ -1,5 +1,14 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -15,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -36,6 +46,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -49,6 +60,9 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -63,6 +77,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.preto
+import kotlinx.coroutines.delay
 import java.text.DateFormat
 import java.util.Calendar
 
@@ -225,12 +240,13 @@ fun CalculationScreenSecundaria(
                                 onNextClick(getDateAndTime())
                                 alertDialogShown = true
                             },
+                            enabled = (calculationUiState.currentCategory == PointCategory.PurpleCard)
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(5.dp)
                             ) {
-                                Text(text = stringResource(R.string.generic_advance_button).uppercase())
+                                Text(text = stringResource(R.string.summary_to_complete_match).uppercase())
                                 Icon(
                                     imageVector = Icons.Filled.ArrowForward,
                                     contentDescription = null
@@ -427,6 +443,7 @@ fun ScoringGrid(
     onShowCoinGrid: (Int, Int, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
     val spaceBetweenCards = 3.dp
     val cardsHeight = 56.dp
     Column(
@@ -506,7 +523,6 @@ fun ScoringGrid(
                     }
                 }
             }
-
             Column(
                 verticalArrangement = Arrangement.spacedBy(spaceBetweenCards),
                 modifier = Modifier
@@ -525,14 +541,34 @@ fun ScoringGrid(
                         modifier = Modifier
                             .height(cardsHeight)
                             .fillMaxWidth(),
-                        colors = when(currentCategory) {
-                            PointCategory.WonderBoard -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF4D4D4D)) else CardDefaults.cardColors(Color(0xFFC4C4C4))
-                            PointCategory.Coin -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFFCA9D16)) else CardDefaults.cardColors(Color(0xFFF0D995))
-                            PointCategory.War -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF960404)) else CardDefaults.cardColors(Color(0xFFFFA7A7))
-                            PointCategory.BlueCard -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF0028B8)) else CardDefaults.cardColors(Color(0xFFB3BFFF))
-                            PointCategory.YellowCard -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFFA37E10)) else CardDefaults.cardColors(Color(0xFFFFEB3B))
-                            PointCategory.GreenCard -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF17770C)) else CardDefaults.cardColors(Color(0xFFB8FFBA))
-                            PointCategory.PurpleCard -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF670D72)) else CardDefaults.cardColors(Color(0xFFDCC9FF))
+                        colors = when (currentCategory) {
+                            PointCategory.WonderBoard -> if (isSystemInDarkTheme()) CardDefaults.cardColors(
+                                Color(0xFF4D4D4D)
+                            ) else CardDefaults.cardColors(Color(0xFFC4C4C4))
+
+                            PointCategory.Coin -> if (isSystemInDarkTheme()) CardDefaults.cardColors(
+                                Color(0xFFCA9D16)
+                            ) else CardDefaults.cardColors(Color(0xFFF0D995))
+
+                            PointCategory.War -> if (isSystemInDarkTheme()) CardDefaults.cardColors(
+                                Color(0xFF960404)
+                            ) else CardDefaults.cardColors(Color(0xFFFFA7A7))
+
+                            PointCategory.BlueCard -> if (isSystemInDarkTheme()) CardDefaults.cardColors(
+                                Color(0xFF0028B8)
+                            ) else CardDefaults.cardColors(Color(0xFFB3BFFF))
+
+                            PointCategory.YellowCard -> if (isSystemInDarkTheme()) CardDefaults.cardColors(
+                                Color(0xFFA37E10)
+                            ) else CardDefaults.cardColors(Color(0xFFFFEB3B))
+
+                            PointCategory.GreenCard -> if (isSystemInDarkTheme()) CardDefaults.cardColors(
+                                Color(0xFF17770C)
+                            ) else CardDefaults.cardColors(Color(0xFFB8FFBA))
+
+                            PointCategory.PurpleCard -> if (isSystemInDarkTheme()) CardDefaults.cardColors(
+                                Color(0xFF670D72)
+                            ) else CardDefaults.cardColors(Color(0xFFDCC9FF))
                         },
                     ) {
                         Row(
@@ -549,7 +585,9 @@ fun ScoringGrid(
                                     Icon(
                                         imageVector = Icons.Filled.Remove,
                                         contentDescription = null,
-                                        tint = if (isSystemInDarkTheme()) Color(0xFFEBEBEB) else Color(0xFFA2A0A0),
+                                        tint = if (isSystemInDarkTheme()) Color(0xFFEBEBEB) else Color(
+                                            0xFFA2A0A0
+                                        ),
                                     )
                                 }
                                 Spacer(modifier = Modifier.weight(1f))
@@ -588,7 +626,9 @@ fun ScoringGrid(
                                     Icon(
                                         imageVector = Icons.Filled.Add,
                                         contentDescription = null,
-                                        tint = if (isSystemInDarkTheme()) Color(0xFFEBEBEB) else Color(0xFFA2A0A0),
+                                        tint = if (isSystemInDarkTheme()) Color(0xFFEBEBEB) else Color(
+                                            0xFFA2A0A0
+                                        ),
                                     )
                                 }
                             } else {
@@ -611,12 +651,18 @@ fun ScoringGrid(
                                 TextButton(
                                     onClick = {
                                         when (currentCategory) {
-                                            PointCategory.GreenCard -> onShowScienceGrid(nicknameList.indexOf(player))
+                                            PointCategory.GreenCard -> onShowScienceGrid(
+                                                nicknameList.indexOf(player)
+                                            )
 
                                             PointCategory.Coin -> onShowCoinGrid(
                                                 nicknameList.indexOf(player),
-                                                calculationUiState.coinQuantityList[nicknameList.indexOf(player)],
-                                                calculationUiState.coinScoreList[nicknameList.indexOf(player)],
+                                                calculationUiState.coinQuantityList[nicknameList.indexOf(
+                                                    player
+                                                )],
+                                                calculationUiState.coinScoreList[nicknameList.indexOf(
+                                                    player
+                                                )],
                                             )
 
                                             else -> {} // em teoria esse casso nunca vai acontecer
@@ -626,10 +672,16 @@ fun ScoringGrid(
                                     Text(
                                         text = stringResource(R.string.generic_calculate),
                                         color = when (currentCategory) {
-                                            PointCategory.GreenCard -> if(isSystemInDarkTheme()) Color(0xFF9CFF9C) else Color(0xFF63C963)
-                                            PointCategory.Coin -> if(isSystemInDarkTheme()) Color(0xFFF8EBC5) else Color(0xFFDD8A10)
+                                            PointCategory.GreenCard -> if (isSystemInDarkTheme()) Color(
+                                                0xFF9CFF9C
+                                            ) else Color(0xFF63C963)
+
+                                            PointCategory.Coin -> if (isSystemInDarkTheme()) Color(
+                                                0xFFF8EBC5
+                                            ) else Color(0xFFDD8A10)
+
                                             else -> Color(0xFF000000) // em teoria não será usado
-                                        } ,
+                                        },
                                         fontStyle = FontStyle.Italic
                                     )
                                 }
@@ -647,7 +699,9 @@ fun ScoringGrid(
             }
             Spacer(modifier = Modifier.weight(1f))
             IconButton(
-                onClick = onPreviousCategory,
+                onClick = {
+                    onPreviousCategory()
+                },
                 enabled = (currentCategory.ordinal in 1..6)
             ) {
                 Icon(
@@ -659,7 +713,9 @@ fun ScoringGrid(
             }
             Spacer(modifier = Modifier.weight(0.2f))
             IconButton(
-                onClick = onNextCategory,
+                onClick = {
+                    onNextCategory()
+                },
                 enabled = (currentCategory.ordinal in 0..5)
             ) {
                 Icon(

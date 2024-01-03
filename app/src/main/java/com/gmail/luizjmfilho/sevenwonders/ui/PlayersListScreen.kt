@@ -2,7 +2,6 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -562,7 +561,7 @@ fun AddPlayerWindow(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SevenWondersAppBar(
-    onBackClick: () -> Unit,
+    onBackClick: (() -> Unit)?,
     title: String,
     modifier: Modifier = Modifier
 ) {
@@ -576,14 +575,16 @@ fun SevenWondersAppBar(
                     style = MaterialTheme.typography.titleMedium
                 )
             },
-            navigationIcon ={
-                IconButton(
-                    onClick = onBackClick
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.navigation_back_content_description)
-                    )
+            navigationIcon = {
+                if (onBackClick != null) {
+                    IconButton(
+                        onClick = onBackClick
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.navigation_back_content_description)
+                        )
+                    }
                 }
             }
         )
