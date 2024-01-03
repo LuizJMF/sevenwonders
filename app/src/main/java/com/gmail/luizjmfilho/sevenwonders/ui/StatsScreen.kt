@@ -142,10 +142,10 @@ fun StatsScreenSecundaria(
                         BestWonder(wonderList = statsUiState.bestWondersList)
                         Divider()
                         CardsRecord(
-                            blueList = statsUiState.blueList,
-                            yellowList = statsUiState.yellowList,
-                            greenList = statsUiState.greenList,
-                            purpleList = statsUiState.purpleList,
+                            blueList = statsUiState.blueList.distinct(),
+                            yellowList = statsUiState.yellowList.distinct(),
+                            greenList = statsUiState.greenList.distinct(),
+                            purpleList = statsUiState.purpleList.distinct(),
                         )
                         Divider()
                         MostChampion(
