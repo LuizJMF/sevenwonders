@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -246,6 +247,7 @@ fun CardsRecord(
     purpleList: List<Pair<String, Int>>,
     modifier: Modifier = Modifier
 ) {
+    val numberWidth = 40.dp
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(5.dp)
@@ -257,7 +259,8 @@ fun CardsRecord(
                 .padding(bottom = 5.dp)
         )
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.bluecard_icon),
@@ -265,20 +268,25 @@ fun CardsRecord(
                 modifier = Modifier
                     .height(40.dp)
             )
-            Text(
-                text = if (blueList.isEmpty()) "0" else blueList[0].second.toString(),
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF000000),
-                fontSize = 30.sp,
-                modifier = Modifier.padding(end = 15.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .width(numberWidth)
+            ) {
+                Text(
+                    text = if (blueList.isEmpty()) "0" else blueList[0].second.toString(),
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF000000),
+                    fontSize = 30.sp,
+                )
+            }
             Text(
                 text = if (blueList.isEmpty()) "" else blueList.joinToString(", ") { it.first },
                 fontStyle = FontStyle.Italic
             )
         }
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.yellowcard_icon),
@@ -286,20 +294,25 @@ fun CardsRecord(
                 modifier = Modifier
                     .height(40.dp)
             )
-            Text(
-                text = if (yellowList.isEmpty()) "0" else yellowList[0].second.toString(),
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF000000),
-                fontSize = 30.sp,
-                modifier = Modifier.padding(end = 15.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .width(numberWidth)
+            ) {
+                Text(
+                    text = if (yellowList.isEmpty()) "0" else yellowList[0].second.toString(),
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF000000),
+                    fontSize = 30.sp,
+                )
+            }
             Text(
                 text = if (yellowList.isEmpty()) "" else yellowList.joinToString(", ") { it.first },
                 fontStyle = FontStyle.Italic
             )
         }
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.greencard_icon),
@@ -307,20 +320,25 @@ fun CardsRecord(
                 modifier = Modifier
                     .height(40.dp)
             )
-            Text(
-                text = if (greenList.isEmpty()) "0" else greenList[0].second.toString(),
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF000000),
-                fontSize = 30.sp,
-                modifier = Modifier.padding(end = 15.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .width(numberWidth)
+            ) {
+                Text(
+                    text = if (greenList.isEmpty()) "0" else greenList[0].second.toString(),
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF000000),
+                    fontSize = 30.sp,
+                )
+            }
             Text(
                 text = if (greenList.isEmpty()) "" else greenList.joinToString(", ") { it.first },
                 fontStyle = FontStyle.Italic
             )
         }
         Row(
-                        verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.purplecard_icon),
@@ -328,13 +346,17 @@ fun CardsRecord(
                 modifier = Modifier
                     .height(40.dp)
             )
-            Text(
-                text = if (purpleList.isEmpty()) "0" else purpleList[0].second.toString(),
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF000000),
-                fontSize = 30.sp,
-                modifier = Modifier.padding(end = 15.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .width(numberWidth)
+            ) {
+                Text(
+                    text = if (purpleList.isEmpty()) "0" else purpleList[0].second.toString(),
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF000000),
+                    fontSize = 30.sp,
+                )
+            }
             Text(
                 text = if (purpleList.isEmpty()) "" else purpleList.joinToString(", ") { it.first },
                 fontStyle = FontStyle.Italic
