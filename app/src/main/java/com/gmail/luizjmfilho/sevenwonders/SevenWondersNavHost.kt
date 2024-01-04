@@ -125,7 +125,9 @@ fun SevenWondersNavHost(
         ) {
             CalculationScreenPrimaria(
                 onBackClick = { navController.navigateUp() },
-                onConfirmNextScreen = { navController.navigate(ScreenNames.SummaryScreen.name) }
+                onConfirmNextScreen = {
+                    navController.navigate(route = ScreenNames.SummaryScreen.name)
+                }
             )
         }
 

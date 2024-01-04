@@ -58,6 +58,7 @@ fun SummaryScreenPrimaria(
 
     val summaryUiState by summaryViewModel.uiState.collectAsState()
     SummaryScreenSecundaria(
+        onBackClick = {},
         onNextClick = onNextClick,
         summaryUiState = summaryUiState,
         modifier = modifier,
@@ -66,6 +67,7 @@ fun SummaryScreenPrimaria(
 
 @Composable
 fun SummaryScreenSecundaria(
+    onBackClick: () -> Unit,
     onNextClick: () -> Unit,
     summaryUiState: SummaryUiState,
     modifier: Modifier = Modifier
@@ -80,7 +82,9 @@ fun SummaryScreenSecundaria(
 //        modifier = modifier
 //            .testTag(newGameScreenTestTag),
     ) { scaffoldPadding ->
-
+        BackHandler {
+            onBackClick()
+        }
         Box(
             modifier = modifier
                 .padding(scaffoldPadding)
@@ -339,6 +343,7 @@ fun PlayerSummaryCardPreview() {
 fun SummaryScreenPreview() {
     SevenWondersTheme {
         SummaryScreenSecundaria(
+            onBackClick = {},
             onNextClick = {},
             summaryUiState = SummaryUiState(
                 matchList = listOf(

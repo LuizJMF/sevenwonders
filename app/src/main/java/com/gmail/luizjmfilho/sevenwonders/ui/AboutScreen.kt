@@ -1,6 +1,5 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
