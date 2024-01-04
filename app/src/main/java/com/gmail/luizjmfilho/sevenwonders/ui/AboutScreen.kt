@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -41,7 +42,6 @@ fun AboutScreen(
             modifier = modifier
                 .padding(scaffoldPadding)
                 .fillMaxSize(),
-            contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = if (isSystemInDarkTheme()) {
@@ -55,18 +55,60 @@ fun AboutScreen(
                     .fillMaxSize()
             )
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(5.dp)
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(5.dp),
             ) {
-                val context = LocalContext.current
-                val version = context.packageManager.getPackageInfo(context.packageName,0).versionName
-                Text(text = stringResource(id = R.string.app_name))
-                Text(
-                    text = stringResource(R.string.app_version, version),
-                    fontStyle = FontStyle.Italic,
-                    color = MaterialTheme.colorScheme.tertiary
-                )
-                Image(painter = painterResource(id = R.drawable.official_icon), contentDescription = null)
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(5.dp),
+                    ) {
+                        val context = LocalContext.current
+                        val version = context.packageManager.getPackageInfo(context.packageName, 0).versionName
+                        Text(text = stringResource(id = R.string.app_name))
+                        Text(
+                            text = stringResource(R.string.app_version, version),
+                            fontStyle = FontStyle.Italic,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.official_icon),
+                            contentDescription = null
+                        )
+                        Text(text = stringResource(R.string.email_to_suggestions))
+                        Text(
+                            text = stringResource(R.string.email_para_contato),
+                            fontStyle = FontStyle.Italic,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+
+                    }
+                }
+                Column(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Text(text = stringResource(R.string.desenvolvido_por))
+                    Text(
+                        text = stringResource(R.string.zinho_nome_completo),
+                        fontStyle = FontStyle.Italic,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                    Text(
+                        text = stringResource(R.string.deivinho_nome_completo),
+                        fontStyle = FontStyle.Italic,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                }
+
             }
         }
     }

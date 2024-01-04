@@ -113,4 +113,9 @@
     <string name="day">Day</string>
     <string name="night">Night</string>
     <string name="ir_para_a_tela_inicial">Go to the home screen</string>
+    <string name="email_to_suggestions">E-mail for criticism/suggestions:</string>
+    <string name="email_para_contato">luizjmfilho@gmail.com</string>
+    <string name="desenvolvido_por">Developed by</string>
+    <string name="zinho_nome_completo">Luiz José de Medeiros Filho</string>
+    <string name="deivinho_nome_completo">Crístian Deives dos Santos Viana</string>
 </resources>
