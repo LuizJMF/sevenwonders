@@ -1,14 +1,5 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideIn
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -24,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -46,7 +36,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -60,10 +49,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -76,8 +61,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
-import com.gmail.luizjmfilho.sevenwonders.ui.theme.preto
-import kotlinx.coroutines.delay
 import java.text.DateFormat
 import java.util.Calendar
 
@@ -98,7 +81,7 @@ fun CalculationScreenPrimaria(
         onNextCategory = calculationViewModel::onNextCategory,
         calculationUiState = calculationUiState,
         onMinusOnePointClick = calculationViewModel::onMinusOnePointClick,
-        onPlusOnePointsClick = calculationViewModel::onPlusOnePointsClick,
+        onPlusOnePointClick = calculationViewModel::onPlusOnePointsClick,
         onShowTotalGrid = calculationViewModel::onShowTotalGrid,
         onShowPartialGrid = calculationViewModel::onShowPartialGrid,
         onShowScienceGrid = calculationViewModel::onShowSciendGrid,
@@ -123,7 +106,7 @@ fun CalculationScreenSecundaria(
     onNextCategory: () -> Unit,
     calculationUiState: CalculationUiState,
     onMinusOnePointClick: (Int) -> Unit,
-    onPlusOnePointsClick: (Int) -> Unit,
+    onPlusOnePointClick: (Int) -> Unit,
     onShowTotalGrid: () -> Unit,
     onShowPartialGrid: () -> Unit,
     onShowScienceGrid: () -> Unit,
@@ -199,7 +182,7 @@ fun CalculationScreenSecundaria(
                                         playerScienceOrCoinIndexBeingSelected = playerIndexBeingSelected
                                         onShowCoinGrid(playerIndexBeingSelected, coinsQuantity, coinsScore)
                                     },
-                                    onPlusOnePointsClick = onPlusOnePointsClick
+                                    onPlusOnePointClick = onPlusOnePointClick
                                 )
                             }
                             CalculationSubScreen.TotalGrid -> {
@@ -439,7 +422,7 @@ fun ScoringGrid(
     onNextCategory: () -> Unit,
     calculationUiState: CalculationUiState,
     onMinusOnePointClick: (Int) -> Unit,
-    onPlusOnePointsClick: (Int) -> Unit,
+    onPlusOnePointClick: (Int) -> Unit,
     onShowTotalGrid: () -> Unit,
     onShowScienceGrid: (Int) -> Unit,
     onShowCoinGrid: (Int, Int, Int) -> Unit,
@@ -623,7 +606,7 @@ fun ScoringGrid(
                                 )
                                 Spacer(modifier = Modifier.weight(1f))
                                 IconButton(
-                                    onClick = { onPlusOnePointsClick(nicknameList.indexOf(player)) }
+                                    onClick = { onPlusOnePointClick(nicknameList.indexOf(player)) }
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.Add,
@@ -1244,7 +1227,7 @@ fun ScoringGridPreview() {
             onMinusOnePointClick = {},
             onShowTotalGrid = {},
             onShowScienceGrid = {},
-            onPlusOnePointsClick = {},
+            onPlusOnePointClick = {},
             onShowCoinGrid = {_, _, _ ->}
         )
     }
@@ -1294,7 +1277,7 @@ fun CalculationScreenParcialGridSecundariaPreview() {
             onPlusOneScienceCard = {},
             onMinusOneScienceCard = {},
             onScienceGridConfirm = {},
-            onPlusOnePointsClick = {},
+            onPlusOnePointClick = {},
             onConfirmNextScreen = {},
             onDismissNextScreen = {},
             onCoinGridConfirm = {},
@@ -1329,7 +1312,7 @@ fun CalculationScreenTotalGridSecundariaPreview() {
             onPlusOneScienceCard = {},
             onMinusOneScienceCard = {},
             onScienceGridConfirm = {},
-            onPlusOnePointsClick = {},
+            onPlusOnePointClick = {},
             onConfirmNextScreen = {},
             onDismissNextScreen = {},
             onCoinGridConfirm = {},
@@ -1364,7 +1347,7 @@ fun CalculationScreenScienceGridSecundariaPreview() {
             onMinusOneScienceCard = {},
             onPlusOneScienceCard = {},
             onShowScienceGrid = {},
-            onPlusOnePointsClick = {},
+            onPlusOnePointClick = {},
             onConfirmNextScreen = {},
             onDismissNextScreen = {},
             onCoinGridConfirm = {},

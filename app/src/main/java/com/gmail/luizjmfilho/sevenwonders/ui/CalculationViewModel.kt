@@ -81,17 +81,28 @@ class CalculationViewModel @Inject constructor(
             _uiState.update { currentState ->
                 val searchedList = when(currentState.currentCategory) {
                     PointCategory.WonderBoard -> currentState.wonderBoardScoreList.toMutableList()
-                    PointCategory.Coin -> currentState.coinScoreList.toMutableList()
+                    PointCategory.Coin -> currentState.coinScoreList.toMutableList() // em teoria esse caso ñ ocorrerá, pois na Coin não tem esse botão, e sim o "calcular".
                     PointCategory.War -> currentState.warScoreList.toMutableList()
                     PointCategory.BlueCard -> currentState.blueCardScoreList.toMutableList()
                     PointCategory.YellowCard -> currentState.yellowCardScoreList.toMutableList()
-                    PointCategory.GreenCard -> currentState.greenCardScoreList.toMutableList()
+                    PointCategory.GreenCard -> currentState.greenCardScoreList.toMutableList() // em teoria esse caso ñ ocorrerá, pois na GreenCard não tem esse botão, e sim o "calcular".
                     PointCategory.PurpleCard -> currentState.purpleCardScoreList.toMutableList()
                 }
                 val totalScoreList = currentState.totalScoreList.toMutableList()
 
-                searchedList[index]--
-                totalScoreList[index]--
+                if (currentState.currentCategory != PointCategory.War) {
+                    if (searchedList[index] > 0) {
+                        searchedList[index]--
+                        totalScoreList[index]--
+                    }
+                } else {
+                    if (searchedList[index] > -6) {
+                        searchedList[index]--
+                        totalScoreList[index]--
+                    }
+                }
+
+
 
                 when(currentState.currentCategory) {
                     PointCategory.WonderBoard -> { currentState.copy(wonderBoardScoreList = searchedList, totalScoreList = totalScoreList)}
@@ -145,17 +156,25 @@ class CalculationViewModel @Inject constructor(
             _uiState.update { currentState ->
                 val searchedList = when(currentState.currentCategory) {
                     PointCategory.WonderBoard -> currentState.wonderBoardScoreList.toMutableList()
-                    PointCategory.Coin -> currentState.coinScoreList.toMutableList()
+                    PointCategory.Coin -> currentState.coinScoreList.toMutableList() // em teoria esse caso ñ ocorrerá, pois na Coin não tem esse botão, e sim o "calcular".
                     PointCategory.War -> currentState.warScoreList.toMutableList()
                     PointCategory.BlueCard -> currentState.blueCardScoreList.toMutableList()
                     PointCategory.YellowCard -> currentState.yellowCardScoreList.toMutableList()
-                    PointCategory.GreenCard -> currentState.greenCardScoreList.toMutableList()
+                    PointCategory.GreenCard -> currentState.greenCardScoreList.toMutableList() // em teoria esse caso ñ ocorrerá, pois na GreenCard não tem esse botão, e sim o "calcular".
                     PointCategory.PurpleCard -> currentState.purpleCardScoreList.toMutableList()
                 }
                 val totalScoreList = currentState.totalScoreList.toMutableList()
 
-                searchedList[index] += 1
-                totalScoreList[index] += 1
+                if (currentState.currentCategory != PointCategory.War) {
+                    searchedList[index] += 1
+                    totalScoreList[index] += 1
+                } else {
+                    if (searchedList[index] < 18) {
+                        searchedList[index] += 1
+                        totalScoreList[index] += 1
+                    }
+                }
+
 
                 when(currentState.currentCategory) {
                     PointCategory.WonderBoard -> { currentState.copy(wonderBoardScoreList = searchedList, totalScoreList = totalScoreList)}
@@ -269,7 +288,10 @@ class CalculationViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { currentState ->
                 val newList = currentState.coinQuantityList.toMutableList()
-                newList[index]--
+                if (newList[index] > 0) {
+                    newList[index]--
+                }
+
                 currentState.copy(
                     coinQuantityList = newList
                 )
