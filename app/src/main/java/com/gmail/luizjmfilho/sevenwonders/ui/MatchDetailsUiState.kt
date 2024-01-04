@@ -27,11 +27,11 @@ enum class WonderSide {
 }
 
 enum class Wonders {
+    ALEXANDRIA,
+    BABYLON,
     EPHESOS,
     GIZAH,
-    RHODOS,
-    BABYLON,
     HALIKARNASSOS,
     OLYMPIA,
-    ALEXANDRIA,
+    RHODOS,
 }

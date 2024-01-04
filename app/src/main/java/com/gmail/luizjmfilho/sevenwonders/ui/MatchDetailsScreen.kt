@@ -545,7 +545,8 @@ fun WondersListDialog(
     modifier: Modifier = Modifier,
 ) {
     var selectedWonderName: String? by rememberSaveable { mutableStateOf(null) }
-    val selectedWonder = convertStringToWonder(selectedWonderName)
+    val selectedWonder = convertStringToWonder(selectedWonderName) //essa variável não está sendo usada,
+    // mas deveria. Justamente pra resolver a gambiarra dos onConfirmClick abaixo.
 
 
     AlertDialog(
@@ -565,6 +566,18 @@ fun WondersListDialog(
                                     selected = (wonder == selectedWonderName),
                                     onClick = {
                                         selectedWonderName = wonder
+                                        onConfirmClick(
+                                            when (wonder) {
+                                                "ALEXANDRIA" -> Wonders.ALEXANDRIA
+                                                "BABYLON" -> Wonders.BABYLON
+                                                "ÉPHESOS" -> Wonders.EPHESOS
+                                                "GIZAH" -> Wonders.GIZAH
+                                                "HALIKARNASSOS" -> Wonders.HALIKARNASSOS
+                                                "OLYMPÍA" -> Wonders.OLYMPIA
+                                                "RHÓDOS" -> Wonders.RHODOS
+                                                else -> Wonders.ALEXANDRIA
+                                            }
+                                        )
                                     }
                                 )
                                 .padding(horizontal = 16.dp),
@@ -574,6 +587,18 @@ fun WondersListDialog(
                                 selected = (wonder == selectedWonderName),
                                 onClick = {
                                     selectedWonderName = wonder
+                                    onConfirmClick(
+                                        when (wonder) {
+                                            "ALEXANDRIA" -> Wonders.ALEXANDRIA
+                                            "BABYLON" -> Wonders.BABYLON
+                                            "ÉPHESOS" -> Wonders.EPHESOS
+                                            "GIZAH" -> Wonders.GIZAH
+                                            "HALIKARNASSOS" -> Wonders.HALIKARNASSOS
+                                            "OLYMPÍA" -> Wonders.OLYMPIA
+                                            "RHÓDOS" -> Wonders.RHODOS
+                                            else -> Wonders.ALEXANDRIA
+                                        }
+                                    )
                                 },
                                 colors = RadioButtonDefaults.colors(
                                     unselectedColor = MaterialTheme.colorScheme.onBackground
@@ -609,21 +634,8 @@ fun WondersListDialog(
                 }
             }
         },
-        dismissButton = {
-            TextButton(
-                onClick = onDismissRequest
-            ) {
-                Text(text = stringResource(R.string.generic_cancel_text))
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = { onConfirmClick(selectedWonder) },
-                enabled = selectedWonderName != null
-            ) {
-                Text(text = stringResource(R.string.generic_confirm_text))
-            }
-        },
+        dismissButton = {},
+        confirmButton = {},
         modifier = modifier,
     )
 }

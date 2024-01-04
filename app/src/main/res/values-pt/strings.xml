@@ -32,13 +32,6 @@
     <string name="generic_raffle">Sortear</string>
     <string name="generic_choose">Escolher</string>
     <string name="generic_wonders">Maravilhas:</string>
-    <string name="generic_wonder_alexandria">ALEXANDRIA</string>
-    <string name="generic_wonder_babylon">BABYLON</string>
-    <string name="generic_wonder_ephesos">ÉPHESOS</string>
-    <string name="generic_wonder_gizah">GIZAH</string>
-    <string name="generic_wonder_halikarnassos">HALIKARNASSOS</string>
-    <string name="generic_wonder_olympia">OLYMPÍA</string>
-    <string name="generic_wonder_rhodos">RHÓDOS</string>
     <string name="alert_dialog_match_details_wonder_selection_title">Escolher maravilha</string>
     <string name="match_details_deselect_wonder_dialog">Desselecionar a maravilha atual</string>
     <string name="summary_top_bar">Pré-visualização</string>
