@@ -345,7 +345,7 @@ fun PersonAndWonderCard(
     playerDetails: PlayerDetails,
     creationMethod: CreationMethod,
     onTrailingIconClick: () -> Unit,
-    onTextButtonClick: () -> Unit,
+    onTextButtonClick: (String) -> Unit,
     onMoveCardDown: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -390,7 +390,7 @@ fun PersonAndWonderCard(
             )
             if (playerDetails.wonder == null) {
                 TextButton(
-                    onClick = onTextButtonClick,
+                    onClick = { onTextButtonClick("escolher") },
                     modifier = Modifier
                         .weight(0.6f)
                         .testTag(chooseTextButtonTestTag),
@@ -402,7 +402,7 @@ fun PersonAndWonderCard(
             } else {
                 if (creationMethod == CreationMethod.AllChoose || creationMethod == CreationMethod.RafflePositionChooseWonder) {
                     TextButton(
-                        onClick = onTextButtonClick,
+                        onClick = { onTextButtonClick("alguma_maravilha") },
                         modifier = Modifier
                             .weight(0.6f),
                     ) {
@@ -496,6 +496,7 @@ fun MatchSetupBox(
     onMoveCardDown: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var previousWonderIsSelected by rememberSaveable { mutableStateOf(false) }
     var wonderIndexBeingSelected: Int? by rememberSaveable { mutableStateOf(null) }
 
     Column(
@@ -509,6 +510,7 @@ fun MatchSetupBox(
                 creationMethod = creationMethod,
                 onTrailingIconClick = { onTrailingIconClick(matchPlayersDetails.indexOf(player)) },
                 onTextButtonClick = {
+                    previousWonderIsSelected = (it != "escolher")
                     onTextButtonClick()
                     wonderIndexBeingSelected = matchPlayersDetails.indexOf(player)
                 },
@@ -524,9 +526,11 @@ fun MatchSetupBox(
                 onDialogConfirmClick(wonderName, wonderIndexBeingSelected!!)
                 wonderIndexBeingSelected = null
             },
-            onDeselectWonder = {
-                onDeselectWonder(wonderIndexBeingSelected!!)
-                wonderIndexBeingSelected = null
+            onDeselectWonder = if (!previousWonderIsSelected) {
+                null
+            } else {
+                { onDeselectWonder(wonderIndexBeingSelected!!)
+                wonderIndexBeingSelected = null }
             }
         )
     }
@@ -537,7 +541,7 @@ fun WondersListDialog(
     list: List<String>,
     onDismissRequest: () -> Unit,
     onConfirmClick: (Wonders) -> Unit,
-    onDeselectWonder: () -> Unit,
+    onDeselectWonder: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     var selectedWonderName: String? by rememberSaveable { mutableStateOf(null) }
@@ -582,23 +586,25 @@ fun WondersListDialog(
                         }
                     }
                 }
-                Row {
-                    IconButton(
-                        onClick = onDeselectWonder
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Delete,
-                            contentDescription = null,
-                            tint = Color.Red
-                        )
-                    }
-                    TextButton(
-                        onClick = onDeselectWonder
-                    ) {
-                        Text(
-                            text = stringResource(R.string.match_details_deselect_wonder_dialog),
-                            color = Color.Red
-                        )
+                if (onDeselectWonder != null) {
+                    Row {
+                        IconButton(
+                            onClick = onDeselectWonder
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Delete,
+                                contentDescription = null,
+                                tint = Color.Red
+                            )
+                        }
+                        TextButton(
+                            onClick = onDeselectWonder
+                        ) {
+                            Text(
+                                text = stringResource(R.string.match_details_deselect_wonder_dialog),
+                                color = Color.Red
+                            )
+                        }
                     }
                 }
             }
