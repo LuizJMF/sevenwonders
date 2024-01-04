@@ -233,24 +233,26 @@ fun CalculationScreenSecundaria(
                             }
                         }
                     }
-                    Row {
-                        Spacer(Modifier.weight(1f))
-                        TextButton(
-                            onClick = {
-                                onNextClick(getDateAndTime())
-                                alertDialogShown = true
-                            },
-                            enabled = (calculationUiState.currentCategory == PointCategory.PurpleCard)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    if (calculationUiState.subScreen == CalculationSubScreen.ParcialGrid) {
+                        Row {
+                            Spacer(Modifier.weight(1f))
+                            TextButton(
+                                onClick = {
+                                    onNextClick(getDateAndTime())
+                                    alertDialogShown = true
+                                },
+                                enabled = (calculationUiState.currentCategory == PointCategory.PurpleCard)
                             ) {
-                                Text(text = stringResource(R.string.summary_to_complete_match).uppercase())
-                                Icon(
-                                    imageVector = Icons.Filled.ArrowForward,
-                                    contentDescription = null
-                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                                ) {
+                                    Text(text = stringResource(R.string.summary_to_complete_match).uppercase())
+                                    Icon(
+                                        imageVector = Icons.Filled.ArrowForward,
+                                        contentDescription = null
+                                    )
+                                }
                             }
                         }
                     }
