@@ -2,13 +2,9 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -21,27 +17,20 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -64,7 +53,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -74,9 +62,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.model.Match
@@ -175,10 +160,7 @@ fun MatchesHistorySecundaria(
                                     alertDialogShown = alertDialogShown,
                                     onCancelDialog = { alertDialogShown = false },
                                     modifier = Modifier.weight(1f),
-                                    dropDownItens = listOf(
-                                        DropDownItem(stringResource(R.string.generic_delete))
-                                    ),
-                                    onItemClick = {
+                                    onDeleteClick = {
                                         currentMatchIdBeingDelete = i
                                         alertDialogShown = true
                                     }
@@ -192,18 +174,13 @@ fun MatchesHistorySecundaria(
     }
 }
 
-data class DropDownItem(
-    val text: String,
-)
-
 @Composable
 fun MatchCard(
     playersMatchInfoList: List<Match>,
     onDeleteMatch: () -> Unit,
     onCancelDialog: () -> Unit,
     alertDialogShown: Boolean,
-    dropDownItens: List<DropDownItem>,
-    onItemClick: (DropDownItem) -> Unit,
+    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isContextMenuVisible by rememberSaveable {
@@ -474,15 +451,13 @@ fun MatchCard(
                     y = pressOffset.y - itemHeight
                 )
             ) {
-                dropDownItens.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item.text) },
-                        onClick = {
-                            onItemClick(item)
-                            isContextMenuVisible = false
-                        }
-                    )
-                }
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(id = R.string.generic_delete)) },
+                    onClick = {
+                        onDeleteClick()
+                        isContextMenuVisible = false
+                    }
+                )
             }
         }
     }
@@ -566,8 +541,7 @@ fun MatchCardPreview() {
             onDeleteMatch = {},
             onCancelDialog = {},
             alertDialogShown = false,
-            dropDownItens = emptyList(),
-            onItemClick = {}
+            onDeleteClick = {}
         )
     }
 }

@@ -1,10 +1,12 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,6 +56,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -120,8 +123,6 @@ fun MatchDetailsScreenSecundaria(
                 title = stringResource(id = R.string.match_details_top_bar)
             )
         },
-//        modifier = modifier
-//            .testTag(newGameScreenTestTag),
     ) { scaffoldPadding ->
 
         Box(
@@ -469,16 +470,15 @@ fun convertWonderSideToString(wonderSide: WonderSide): String {
     return if (wonderSide == WonderSide.Day) stringResource(R.string.day) else stringResource(R.string.night)
 }
 
-@Composable
-fun convertStringToWonder(wonderName: String?): Wonders {
+fun convertStringToWonder(wonderName: String?, context: Context): Wonders {
     val name = when (wonderName) {
-        stringResource(R.string.generic_wonder_alexandria) -> Wonders.ALEXANDRIA
-        stringResource(R.string.generic_wonder_babylon) -> Wonders.BABYLON
-        stringResource(R.string.generic_wonder_ephesos) -> Wonders.EPHESOS
-        stringResource(R.string.generic_wonder_gizah) -> Wonders.GIZAH
-        stringResource(R.string.generic_wonder_halikarnassos) -> Wonders.HALIKARNASSOS
-        stringResource(R.string.generic_wonder_olympia) -> Wonders.OLYMPIA
-        stringResource(R.string.generic_wonder_rhodos) -> Wonders.RHODOS
+        context.getString(R.string.generic_wonder_alexandria) -> Wonders.ALEXANDRIA
+        context.getString(R.string.generic_wonder_babylon) -> Wonders.BABYLON
+        context.getString(R.string.generic_wonder_ephesos) -> Wonders.EPHESOS
+        context.getString(R.string.generic_wonder_gizah) -> Wonders.GIZAH
+        context.getString(R.string.generic_wonder_halikarnassos) -> Wonders.HALIKARNASSOS
+        context.getString(R.string.generic_wonder_olympia) -> Wonders.OLYMPIA
+        context.getString(R.string.generic_wonder_rhodos) -> Wonders.RHODOS
         else -> Wonders.RHODOS // esse caso não é pra acontecer nunca
     }
     return name
@@ -544,62 +544,30 @@ fun WondersListDialog(
     onDeselectWonder: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
-    var selectedWonderName: String? by rememberSaveable { mutableStateOf(null) }
-    val selectedWonder = convertStringToWonder(selectedWonderName) //essa variável não está sendo usada,
-    // mas deveria. Justamente pra resolver a gambiarra dos onConfirmClick abaixo.
-
-
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = { Text(text = stringResource(R.string.alert_dialog_match_details_wonder_selection_title))},
         text = {
+            val context = LocalContext.current
             Column {
                 Column(
                     modifier = Modifier
                         .verticalScroll(rememberScrollState())
                 ) {
                     list.forEach { wonder ->
+                        val onRadioButtonClick = { onConfirmClick(convertStringToWonder(wonder, context)) }
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .selectable(
-                                    selected = (wonder == selectedWonderName),
-                                    onClick = {
-                                        selectedWonderName = wonder
-                                        onConfirmClick(
-                                            when (wonder) {
-                                                "ALEXANDRIA" -> Wonders.ALEXANDRIA
-                                                "BABYLON" -> Wonders.BABYLON
-                                                "ÉPHESOS" -> Wonders.EPHESOS
-                                                "GIZAH" -> Wonders.GIZAH
-                                                "HALIKARNASSOS" -> Wonders.HALIKARNASSOS
-                                                "OLYMPÍA" -> Wonders.OLYMPIA
-                                                "RHÓDOS" -> Wonders.RHODOS
-                                                else -> Wonders.ALEXANDRIA
-                                            }
-                                        )
-                                    }
+                                .clickable(
+                                    onClick = onRadioButtonClick
                                 )
                                 .padding(horizontal = 16.dp),
                             verticalAlignment = CenterVertically
                         ) {
                             RadioButton(
-                                selected = (wonder == selectedWonderName),
-                                onClick = {
-                                    selectedWonderName = wonder
-                                    onConfirmClick(
-                                        when (wonder) {
-                                            "ALEXANDRIA" -> Wonders.ALEXANDRIA
-                                            "BABYLON" -> Wonders.BABYLON
-                                            "ÉPHESOS" -> Wonders.EPHESOS
-                                            "GIZAH" -> Wonders.GIZAH
-                                            "HALIKARNASSOS" -> Wonders.HALIKARNASSOS
-                                            "OLYMPÍA" -> Wonders.OLYMPIA
-                                            "RHÓDOS" -> Wonders.RHODOS
-                                            else -> Wonders.ALEXANDRIA
-                                        }
-                                    )
-                                },
+                                selected = false,
+                                onClick = onRadioButtonClick,
                                 colors = RadioButtonDefaults.colors(
                                     unselectedColor = MaterialTheme.colorScheme.onBackground
                                 )
