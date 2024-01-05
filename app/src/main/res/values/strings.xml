@@ -118,4 +118,6 @@
     <string name="desenvolvido_por">Developed by</string>
     <string name="zinho_nome_completo">Luiz José de Medeiros Filho</string>
     <string name="deivinho_nome_completo">Crístian Deives dos Santos Viana</string>
+    <string name="generic_delete">Delete</string>
+    <string name="side">Side</string>
 </resources>
