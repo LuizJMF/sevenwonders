@@ -89,13 +89,15 @@
     <string name="points_acronym">Pts</string>
     <string name="wonder">Maravilha</string>
     <string name="maravilha_que_mais_venceu">Maravilha que mais venceu</string>
-    <string name="num_victories">(%1$d vitórias)</string>
     <string name="mais_pontos_em">Mais pontos em</string>
     <string name="just_two_dots">%1$s:</string>
     <string name="just_percentage_symbol">%1$d%%</string>
     <string name="maior_vencedor">Maior vencedor</string>
-    <string name="vez">(%1$d vez)</string>
-    <string name="vezes">(%1$d vezes)</string>
+    <plurals name="vez">
+        <item quantity="one">(%d vez)</item>
+        <item quantity="other">(%d vezes)</item>
+        <item quantity="many">(%d vezes)</item>
+    </plurals>
     <string name="percentagem_das_vezes">(%1$d%% das vezes)</string>
     <string name="names_separated_by_hifen">(%1$s - %2$s)</string>
     <string name="loading">Carregando</string>
@@ -111,4 +113,9 @@
     <string name="deivinho_nome_completo">Crístian Deives dos Santos Viana</string>
     <string name="generic_delete">Deletar</string>
     <string name="side">Lado</string>
+    <plurals name="num_victories">
+        <item quantity="one">(%d vitória)</item>
+        <item quantity="other">(%d vitórias)</item>
+        <item quantity="many">(%d vitórias)</item>
+    </plurals>
 </resources>

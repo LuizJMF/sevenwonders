@@ -97,13 +97,14 @@
     <string name="points_acronym">Pts</string>
     <string name="wonder">Wonder</string>
     <string name="maravilha_que_mais_venceu">The wonder that won the most</string>
-    <string name="num_victories">(%1$d wins)</string>
     <string name="mais_pontos_em">More points at</string>
     <string name="just_two_dots">%1$s:</string>
     <string name="just_percentage_symbol">%1$d%%</string>
     <string name="maior_vencedor">Biggest winner</string>
-    <string name="vez">(%1$d time)</string>
-    <string name="vezes">(%1$d times)</string>
+    <plurals name="vez">
+        <item quantity="one">(%d time)</item>
+        <item quantity="other">(%d times)</item>
+    </plurals>
     <string name="percentagem_das_vezes">(%1$d%% of the time)</string>
     <string name="names_separated_by_hifen">(%1$s - %2$s)</string>
     <string name="loading">Loading</string>
@@ -120,4 +121,8 @@
     <string name="deivinho_nome_completo">Crístian Deives dos Santos Viana</string>
     <string name="generic_delete">Delete</string>
     <string name="side">Side</string>
+    <plurals name="num_victories">
+        <item quantity="one">(%d victory)</item>
+        <item quantity="many">(%d victories)</item>
+    </plurals>
 </resources>

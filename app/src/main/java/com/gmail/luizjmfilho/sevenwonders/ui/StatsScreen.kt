@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -76,8 +77,6 @@ fun StatsScreenSecundaria(
                 title = stringResource(R.string.stats_screen_title)
             )
         },
-//        modifier = modifier
-//            .testTag(newGameScreenTestTag),
     ) { scaffoldPadding ->
 
         var loading by rememberSaveable { mutableStateOf(true) }
@@ -90,7 +89,7 @@ fun StatsScreenSecundaria(
             modifier = modifier
                 .padding(scaffoldPadding)
                 .fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Center
         ) {
             Image(
                 painter = if (isSystemInDarkTheme()) {
@@ -226,7 +225,7 @@ fun BestWonder(
                                 )
                             }
                             Text(
-                                text = stringResource(R.string.num_victories, wonderList[i].times),
+                                text = pluralStringResource(R.plurals.num_victories, wonderList[i].times, wonderList[i].times),
                                 fontStyle = FontStyle.Italic,
                                 modifier = Modifier
                                     .padding(start = 15.dp)
@@ -450,11 +449,7 @@ fun MostChampion(
                 color = Color(0xFF30B612)
             )
             Text(
-                text = if (absoluteList.isEmpty()) "-" else if (absoluteList[0].second == 1) {
-                    stringResource(R.string.vez, absoluteList[0].second)
-                }  else {
-                    stringResource(R.string.vezes, absoluteList[0].second)
-                } ,
+                text = pluralStringResource(R.plurals.vez, absoluteList[0].second, absoluteList[0].second),
                 fontStyle = FontStyle.Italic
             )
         }
