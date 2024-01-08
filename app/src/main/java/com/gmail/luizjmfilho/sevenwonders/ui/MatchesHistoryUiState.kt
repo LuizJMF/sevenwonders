@@ -6,3 +6,8 @@ data class MatchesHistoryUiState(
     val playerInfoList: List<Match> = emptyList(),
     val matchQuantity: Int = 0,
 )
+
+enum class VisualizationMode {
+    GeneralInfo,
+    DetailsInfo,
+}

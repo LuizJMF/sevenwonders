@@ -114,6 +114,8 @@
     <string name="deivinho_nome_completo">Crístian Deives dos Santos Viana</string>
     <string name="generic_delete">Deletar</string>
     <string name="side">Lado</string>
+    <string name="show_details">Ver detalhes</string>
+    <string name="show_all_info">Ver gerais</string>
     <plurals name="num_victories">
         <item quantity="one">(%d vitória)</item>
         <item quantity="other">(%d vitórias)</item>

@@ -1,10 +1,15 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -15,12 +20,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
@@ -223,9 +232,15 @@ fun MatchCard(
             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
         ) {
             var expanded by rememberSaveable { mutableStateOf(false)}
+            var visualizationMode by rememberSaveable { mutableStateOf(VisualizationMode.GeneralInfo)}
             Column(
                 modifier = Modifier
-                    .padding(5.dp)
+                    .padding(
+                        start = 5.dp,
+                        top = 5.dp,
+                        end = 5.dp,
+                        bottom = if (expanded) 0.dp else 5.dp
+                    )
                     .fillMaxWidth(),
             ) {
                 Column(
@@ -301,116 +316,161 @@ fun MatchCard(
                 AnimatedVisibility(
                     visible = expanded
                 ) {
-                    Divider()
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    Column(
+                        modifier = Modifier
+                            .animateContentSize(
+                                animationSpec = spring(
+                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                    stiffness = Spring.StiffnessLow
+                                )
+                            )
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .width(IntrinsicSize.Max)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.position_acronym),
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            for (i in 1..playersMatchInfoList.size) {
-                                Text(
-                                    text = stringResource(R.string.position, i),
+                        Divider()
+                        when (visualizationMode) {
+                            VisualizationMode.GeneralInfo -> Row(
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            ) {
+                                Column(
                                     modifier = Modifier
-                                        .fillMaxWidth(),
-                                    color = MaterialTheme.colorScheme.secondary
-                                )
+                                        .width(IntrinsicSize.Max)
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.position_acronym),
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier
+                                            .fillMaxWidth(),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    for (i in 1..playersMatchInfoList.size) {
+                                        Text(
+                                            text = stringResource(R.string.position, i),
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                            color = MaterialTheme.colorScheme.secondary
+                                        )
+                                    }
+                                }
+                                Column(
+                                    modifier = Modifier
+                                        .width(100.dp)
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.player),
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier
+                                            .fillMaxWidth(),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    for (i in 1..playersMatchInfoList.size) {
+                                        Text(
+                                            text = playersMatchInfoList.filter { it.position == i }[0].nickname,
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                }
+                                Column(
+                                    modifier = Modifier
+                                        .width(IntrinsicSize.Max)
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.points_acronym),
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier
+                                            .fillMaxWidth(),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    for (i in 1..playersMatchInfoList.size) {
+                                        Text(
+                                            text = playersMatchInfoList.filter { it.position == i }[0].totalScore.toString(),
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                }
+                                Column(
+                                    modifier = Modifier
+                                        .width(90.dp)
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.wonder),
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier
+                                            .fillMaxWidth(),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    for (i in 1..playersMatchInfoList.size) {
+                                        Text(
+                                            text = convertWonderToString(wonder = playersMatchInfoList.filter { it.position == i }[0].wonder),
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                }
+                                Column(
+                                    modifier = Modifier
+                                        .width(IntrinsicSize.Max)
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.side),
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier
+                                            .fillMaxWidth(),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    for (i in 1..playersMatchInfoList.size) {
+                                        Text(
+                                            text = convertWonderSideToString(wonderSide = playersMatchInfoList.filter { it.position == i }[0].wonderSide),
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                }
+                            }
+                            VisualizationMode.DetailsInfo -> Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 3.dp, bottom = 3.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                SummaryGrid(playersMatchInfoList = playersMatchInfoList)
                             }
                         }
-                        Column(
+                        Divider()
+                        Row(
                             modifier = Modifier
-                                .width(100.dp)
+                                .fillMaxWidth(),
                         ) {
-                            Text(
-                                text = stringResource(R.string.player),
-                                fontWeight = FontWeight.Bold,
+                            TextButton(
+                                onClick = {
+                                    visualizationMode = if (visualizationMode == VisualizationMode.GeneralInfo) {
+                                        VisualizationMode.DetailsInfo
+                                    } else {
+                                        VisualizationMode.GeneralInfo
+                                    }
+                                },
                                 modifier = Modifier
-                                    .fillMaxWidth(),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            for (i in 1..playersMatchInfoList.size) {
+                                    .fillMaxWidth()
+                                    .wrapContentWidth()
+                            ) {
                                 Text(
-                                    text = playersMatchInfoList.filter { it.position == i }[0].nickname,
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                        }
-                        Column(
-                            modifier = Modifier
-                                .width(IntrinsicSize.Max)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.points_acronym),
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            for (i in 1..playersMatchInfoList.size) {
-                                Text(
-                                    text = playersMatchInfoList.filter { it.position == i }[0].totalScore.toString(),
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                        }
-                        Column(
-                            modifier = Modifier
-                                .width(90.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.wonder),
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            for (i in 1..playersMatchInfoList.size) {
-                                Text(
-                                    text = convertWonderToString(wonder = playersMatchInfoList.filter { it.position == i }[0].wonder),
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                        }
-                        Column(
-                            modifier = Modifier
-                                .width(IntrinsicSize.Max)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.side),
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            for (i in 1..playersMatchInfoList.size) {
-                                Text(
-                                    text = convertWonderSideToString(wonderSide = playersMatchInfoList.filter { it.position == i }[0].wonderSide),
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                                    text = when(visualizationMode) {
+                                        VisualizationMode.GeneralInfo -> stringResource(R.string.show_details)
+                                        VisualizationMode.DetailsInfo -> stringResource(R.string.show_all_info)
+                                    }
                                 )
                             }
                         }
@@ -458,6 +518,162 @@ fun MatchCard(
                         isContextMenuVisible = false
                     }
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun SummaryGrid(
+    playersMatchInfoList: List<Match>,
+    modifier: Modifier = Modifier,
+) {
+    val spaceBetweenCards = 3.dp
+    val cardsHeight = 30.dp
+    Column(
+        modifier = modifier
+            .width(IntrinsicSize.Max)
+            .horizontalScroll(rememberScrollState())
+    ) {
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.spacedBy(1.dp),
+            modifier = Modifier
+                .height(IntrinsicSize.Max)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(spaceBetweenCards),
+                modifier = Modifier
+                    .width(IntrinsicSize.Max)
+            ) {
+                for (player in playersMatchInfoList) {
+                    NicknameCard(
+                        nickname = player.nickname,
+                        modifier = Modifier
+                            .height(cardsHeight)
+                    )
+                }
+            }
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(spaceBetweenCards),
+                modifier = Modifier
+                    .width(IntrinsicSize.Max)
+            ) {
+                Card(
+                    shape = RoundedCornerShape(8.dp, 0.dp, 0.dp, 0.dp),
+                    colors = CardDefaults.cardColors(Color.White),
+                    border = BorderStroke(1.dp, Color.Black),
+                    modifier = Modifier
+                        .height(40.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxHeight(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.general_socring_acronym).uppercase(),
+                            modifier = Modifier
+                                .padding(3.dp),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                for (player in playersMatchInfoList) {
+                    Card(
+                        shape = RoundedCornerShape(0.dp, 0.dp, 0.dp, 0.dp),
+                        colors = CardDefaults.cardColors(Color.White),
+                        border = BorderStroke(1.dp, Color.Black),
+                        modifier = Modifier
+                            .height(cardsHeight)
+                            .fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = player.totalScore.toString(),
+                                modifier = Modifier
+                                    .padding(3.dp)
+                                    .fillMaxWidth(),
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
+            }
+
+            for (i in 1..7) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(spaceBetweenCards),
+                    modifier = Modifier
+                        .width(IntrinsicSize.Max)
+                ) {
+                    IconCategoryCard(
+                        category = when (i) {
+                            1 -> PointCategory.WonderBoard
+                            2 -> PointCategory.Coin
+                            3 -> PointCategory.War
+                            4 -> PointCategory.BlueCard
+                            5 -> PointCategory.YellowCard
+                            6 -> PointCategory.GreenCard
+                            else -> PointCategory.PurpleCard
+                        },
+                        lastCardInTheGrid = i == 7,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+
+                    for (player in playersMatchInfoList) {
+                        Card(
+                            shape = RoundedCornerShape(0.dp, 0.dp, 0.dp, 0.dp),
+                            border = BorderStroke(1.dp, Color.Black),
+                            modifier = Modifier
+                                .height(cardsHeight)
+                                .fillMaxWidth(),
+                            colors = when (i) {
+                                1 -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF4D4D4D)) else CardDefaults.cardColors(Color(0xFFC4C4C4))
+                                2 -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFFCA9D16)) else CardDefaults.cardColors(Color(0xFFF0D995))
+                                3 -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF960404)) else CardDefaults.cardColors(Color(0xFFFFA7A7))
+                                4 -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF0028B8)) else CardDefaults.cardColors(Color(0xFFB3BFFF))
+                                5 -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFFA37E10)) else CardDefaults.cardColors(Color(0xFFFFEB3B))
+                                6 -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF17770C)) else CardDefaults.cardColors(Color(0xFFB8FFBA))
+                                else -> if(isSystemInDarkTheme()) CardDefaults.cardColors(Color(0xFF670D72)) else CardDefaults.cardColors(Color(0xFFDCC9FF))
+                            },
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = when (i) {
+                                        1 -> playersMatchInfoList[playersMatchInfoList.indexOf(player)].wonderBoardScore.toString()
+
+                                        2 -> playersMatchInfoList[playersMatchInfoList.indexOf(player)].coinScore.toString()
+
+                                        3 -> playersMatchInfoList[playersMatchInfoList.indexOf(player)].warScore.toString()
+
+                                        4 -> playersMatchInfoList[playersMatchInfoList.indexOf(player)].blueCardScore.toString()
+
+                                        5 -> playersMatchInfoList[playersMatchInfoList.indexOf(player)].yellowCardScore.toString()
+
+                                        6 -> playersMatchInfoList[playersMatchInfoList.indexOf(player)].greenCardScore.toString()
+
+                                        else -> playersMatchInfoList[playersMatchInfoList.indexOf(player)].purpleCardScore.toString()
+                                    },
+                                    modifier = Modifier
+                                        .padding(1.dp),
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }
