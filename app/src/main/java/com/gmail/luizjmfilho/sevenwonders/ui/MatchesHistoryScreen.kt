@@ -790,7 +790,7 @@ fun MatchesHistorySecundariaPreview() {
                     ),
                     Match(
                         matchId = 1,
-                        nickname = "Eu Sou O Foda Para Ganhar Tudo",
+                        nickname = "Luizinho",
                         wonder = Wonders.EPHESOS,
                         wonderSide = WonderSide.Night,
                         totalScore = 62,

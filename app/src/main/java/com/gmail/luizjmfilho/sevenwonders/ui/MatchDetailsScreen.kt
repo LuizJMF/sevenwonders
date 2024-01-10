@@ -1,8 +1,14 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import android.content.Context
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOut
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.with
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -26,6 +32,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowRightAlt
+import androidx.compose.material.icons.filled.Bed
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.MoveDown
@@ -341,6 +348,7 @@ fun RaffleAndChooseBox(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PersonAndWonderCard(
     playerDetails: PlayerDetails,
@@ -428,23 +436,83 @@ fun PersonAndWonderCard(
                 }
             }
             if (playerDetails.wonderSide != null) {
-                IconButton(
-                    onClick = onTrailingIconClick,
-                    modifier = Modifier
-                        .testTag(dayNightIconTestTag)
-                ) {
-                    Icon(
-                        imageVector = when (playerDetails.wonderSide) {
-                            WonderSide.Day -> Icons.Filled.WbSunny
-                            WonderSide.Night -> Icons.Filled.Bedtime
-                        },
-                        tint = when (playerDetails.wonderSide) {
-                            WonderSide.Day -> Color(0xFFFF8C00)
-                            WonderSide.Night -> if(isSystemInDarkTheme()) Color(0xFFFAE52D) else Color.Blue
-                        },
-                        contentDescription = null,
-                    )
+                var isVisible by rememberSaveable { mutableStateOf(false) }
+                AnimatedContent(
+                    targetState = isVisible,
+                    label = "",
+                    transitionSpec = {
+                        slideInHorizontally(
+                            initialOffsetX = {
+                                -it
+                            }
+                        ) with slideOutHorizontally(
+                            targetOffsetX = {
+                                it
+                            }
+                        )
+                    }
+                ) { naoSeiOqEhIsso ->
+                    if (naoSeiOqEhIsso) {
+                        IconButton(
+                            onClick = {
+                                onTrailingIconClick()
+                                isVisible = !isVisible
+                            },
+                            modifier = Modifier
+                                .testTag(dayNightIconTestTag)
+                        ) {
+                            Icon(
+                                imageVector = when (playerDetails.wonderSide) {
+                                    WonderSide.Day -> Icons.Filled.WbSunny
+                                    WonderSide.Night -> Icons.Filled.Bedtime
+                                },
+                                tint = when (playerDetails.wonderSide) {
+                                    WonderSide.Day -> Color(0xFFFF8C00)
+                                    WonderSide.Night -> if(isSystemInDarkTheme()) Color(0xFFFAE52D) else Color.Blue
+                                },
+                                contentDescription = null,
+                            )
+                        }
+                    } else {
+                        IconButton(
+                            onClick = {
+                                onTrailingIconClick()
+                                isVisible = !isVisible
+                            },
+                            modifier = Modifier
+                                .testTag(dayNightIconTestTag)
+                        ) {
+                            Icon(
+                                imageVector = when (playerDetails.wonderSide) {
+                                    WonderSide.Day -> Icons.Filled.WbSunny
+                                    WonderSide.Night -> Icons.Filled.Bedtime
+                                },
+                                tint = when (playerDetails.wonderSide) {
+                                    WonderSide.Day -> Color(0xFFFF8C00)
+                                    WonderSide.Night -> if(isSystemInDarkTheme()) Color(0xFFFAE52D) else Color.Blue
+                                },
+                                contentDescription = null,
+                            )
+                        }
+                    }
                 }
+//                IconButton(
+//                    onClick = onTrailingIconClick,
+//                    modifier = Modifier
+//                        .testTag(dayNightIconTestTag)
+//                ) {
+//                    Icon(
+//                        imageVector = when (playerDetails.wonderSide) {
+//                            WonderSide.Day -> Icons.Filled.WbSunny
+//                            WonderSide.Night -> Icons.Filled.Bedtime
+//                        },
+//                        tint = when (playerDetails.wonderSide) {
+//                            WonderSide.Day -> Color(0xFFFF8C00)
+//                            WonderSide.Night -> if(isSystemInDarkTheme()) Color(0xFFFAE52D) else Color.Blue
+//                        },
+//                        contentDescription = null,
+//                    )
+//                }
             }
         }
     }
