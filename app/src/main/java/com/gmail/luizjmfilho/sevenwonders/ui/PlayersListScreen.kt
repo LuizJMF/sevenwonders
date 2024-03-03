@@ -593,8 +593,6 @@ fun SevenWondersAppBar(
             color = Color.Black
         )
     }
-
-
 }
 
 @Composable

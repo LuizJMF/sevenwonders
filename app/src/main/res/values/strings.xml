@@ -125,6 +125,7 @@
     <string name="show_all_info">Show totals</string>
     <plurals name="num_victories">
         <item quantity="one">(%d victory)</item>
+        <item quantity="other">(%d victories)</item>
         <item quantity="many">(%d victories)</item>
     </plurals>
 </resources>
