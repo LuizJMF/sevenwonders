@@ -84,7 +84,7 @@
     <string name="number_of_absolute_victories">Number of wins per player</string>
     <string name="relative_ratio_victories">Relative percentage of wins</string>
     <string name="About">About</string>
-    <string name="new_game_screen_subtitle">Choose the players by name:</string>
+    <string name="new_game_screen_subtitle">Choose the person by name:</string>
     <string name="info_column_nickname">Player: %s</string>
     <string name="info_column_wonder">Wonder: %s</string>
     <string name="info_column_wonder_side">Side: %s</string>

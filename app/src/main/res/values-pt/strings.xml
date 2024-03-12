@@ -27,7 +27,7 @@
     <string name="generic_advance_button">Avançar</string>
     <string name="new_game_topbar">Nova partida</string>
     <string name="new_game_alert_dialog_error">Você precisa selecionar um jogador</string>
-    <string name="new_game_text_field_label">Jogador %d</string>
+    <string name="new_game_text_field_label">Participante %d</string>
     <string name="generic_positions">Posições:</string>
     <string name="generic_raffle">Sortear</string>
     <string name="generic_choose">Escolher</string>
@@ -76,7 +76,7 @@
     <string name="number_of_absolute_victories">Número de vitórias por jogador</string>
     <string name="relative_ratio_victories">Porcetagem relativa de vitórias</string>
     <string name="About">Sobre</string>
-    <string name="new_game_screen_subtitle">Escolha os jogadores pelo nome:</string>
+    <string name="new_game_screen_subtitle">Escolha as pessoas pelo nome:</string>
     <string name="info_column_nickname">Jogador: %s</string>
     <string name="info_column_wonder">Maravilha: %s</string>
     <string name="info_column_wonder_side">Lado: %s</string>
