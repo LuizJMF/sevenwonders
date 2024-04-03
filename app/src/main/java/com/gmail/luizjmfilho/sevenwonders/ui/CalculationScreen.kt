@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -617,7 +618,6 @@ fun ScoringGrid(
                                     )
                                 }
                             } else {
-                                Spacer(modifier = Modifier.weight(0.5f))
                                 Text(
                                     text = when (currentCategory) {
                                         PointCategory.GreenCard -> calculationUiState.greenCardScoreList[nicknameList.indexOf(
@@ -630,9 +630,11 @@ fun ScoringGrid(
 
                                         else -> "" // esse caso em teoria nunca vai acontecer
                                     },
-                                    color = Color.Black
+                                    color = Color.Black,
+                                    modifier = Modifier
+                                        .padding(start = 20.dp)
+                                        .wrapContentWidth()
                                 )
-                                Spacer(modifier = Modifier.weight(0.5f))
                                 TextButton(
                                     onClick = {
                                         when (currentCategory) {
@@ -652,7 +654,10 @@ fun ScoringGrid(
 
                                             else -> {} // em teoria esse casso nunca vai acontecer
                                         }
-                                    }
+                                    },
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .wrapContentWidth()
                                 ) {
                                     Text(
                                         text = stringResource(R.string.generic_calculate),
