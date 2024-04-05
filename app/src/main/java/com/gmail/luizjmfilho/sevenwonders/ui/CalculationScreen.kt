@@ -296,7 +296,9 @@ fun CategoryCard(
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(1f),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
             )
             Image(
                 painter = identifyIconOfCategory(category, false),
@@ -1271,7 +1273,7 @@ fun CalculationScreenParcialGridSecundariaPreview() {
                     "Anninha",
                     "Deivinho",
                 ),
-                currentCategory = PointCategory.Coin
+                currentCategory = PointCategory.GreenCard
             ),
             onPreviousCategory = { },
             onNextCategory = { },
