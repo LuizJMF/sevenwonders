@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -22,24 +21,18 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.PersonRemove
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
@@ -49,12 +42,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
-import com.gmail.luizjmfilho.sevenwonders.model.Person
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
 const val choosePlayerTrailingIconTestTag: String = "botão escolher jogador"
@@ -65,15 +56,25 @@ const val newGameScreenTestTag: String = "NewGame Screen"
 fun NewGameScreenPrimaria(
     onBackClick: () -> Unit,
     onNextClick: (List<String>) -> Unit,
+    onChoosePlayerClick: (Int, List<String>) -> Unit,
     modifier: Modifier = Modifier,
+    activePlayersListGambiarra: List<String> = emptyList(),
     newGameViewModel: NewGameViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(activePlayersListGambiarra) {
+        newGameViewModel.setActivePlayersList(activePlayersListGambiarra)
+    }
+
     val newGameUiState by newGameViewModel.uiState.collectAsState()
     NewGameScreenSecundaria(
         onBackClick = onBackClick,
         onAdvanceClick = onNextClick,
-        onPlayerChange = newGameViewModel::updatePlayer,
-        onChoosePlayerClick = newGameViewModel::updateAvailablePlayersList,
+        onChoosePlayerClick = { playerIndexBeingSelected, activePlayersList ->
+            onChoosePlayerClick(
+                playerIndexBeingSelected,
+                activePlayersList
+            )
+        },
         onAddPlayerTextButtonClick = newGameViewModel::newGameAddPlayer,
         onRemovePlayerTextButtonClick = newGameViewModel::newGameRemovePlayer,
         newGameUiState = newGameUiState,
@@ -85,8 +86,7 @@ fun NewGameScreenPrimaria(
 fun NewGameScreenSecundaria(
     onBackClick: () -> Unit,
     onAdvanceClick: (List<String>) -> Unit,
-    onPlayerChange: (Int, String) -> Unit,
-    onChoosePlayerClick: () -> Unit,
+    onChoosePlayerClick: (Int, List<String>) -> Unit,
     onAddPlayerTextButtonClick: () -> Unit,
     onRemovePlayerTextButtonClick: () -> Unit,
     newGameUiState: NewGameUiState,
@@ -138,9 +138,9 @@ fun NewGameScreenSecundaria(
                     NewGameTextFieldGroup(
                         activePlayersList = newGameUiState.activePlayersList,
                         activePlayersNumber = newGameUiState.activePlayersNumber,
-                        availablePlayersList = newGameUiState.availablePlayersList,
-                        onPlayerChange = onPlayerChange,
-                        onChoosePlayerClick = onChoosePlayerClick,
+                        onChoosePlayerClick = { playerIndexBeingSelected ->
+                            onChoosePlayerClick(playerIndexBeingSelected, newGameUiState.activePlayersList)
+                        },
                     )
                     Row {
                         AnimatedVisibility(
@@ -214,16 +214,13 @@ fun NewGameScreenSecundaria(
 fun NewGameTextFieldGroup(
     activePlayersList: List<String>,
     activePlayersNumber: ActivePlayersNumber,
-    availablePlayersList: List<Person>,
-    onChoosePlayerClick: () -> Unit,
-    onPlayerChange: (Int, String) -> Unit,
+    onChoosePlayerClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val focusManager = LocalFocusManager.current
     Column(
         modifier = modifier
     ) {
-        var playerIndexBeingSelected: Int? by rememberSaveable { mutableStateOf(null) }
         for (i in 0 .. 6) {
             AnimatedVisibility(
                 visible = (i < activePlayersNumber.numValue)
@@ -242,21 +239,10 @@ fun NewGameTextFieldGroup(
                         KeyboardActions(onDone = { focusManager.clearFocus() })
                     },
                     onTrailingIconClick = {
-                        playerIndexBeingSelected = i
-                        onChoosePlayerClick()
+                        onChoosePlayerClick(i)
                     },
                 )
             }
-        }
-        if (playerIndexBeingSelected != null) {
-            PlayersListDialog(
-                list = availablePlayersList,
-                onDismissRequest = { playerIndexBeingSelected = null },
-                onConfirmClick = { selectedPersonNickname ->
-                    onPlayerChange(playerIndexBeingSelected!!, selectedPersonNickname)
-                    playerIndexBeingSelected = null
-                }
-            )
         }
     }
 }
@@ -275,7 +261,14 @@ fun NewGameTextField(
     TextField(
         value = value,
         onValueChange = {},
-        label = { Text(text = stringResource(id = R.string.new_game_text_field_label, playerNumber + 1 )) },
+        label = {
+            Text(
+                text = stringResource(
+                    id = R.string.new_game_text_field_label,
+                    playerNumber + 1
+                )
+            )
+        },
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
@@ -286,7 +279,7 @@ fun NewGameTextField(
             focusedTextColor = textColor,
             unfocusedTextColor = textColor,
 
-        ),
+            ),
         readOnly = true,
         leadingIcon = { Icon(imageVector = Icons.Outlined.Person, contentDescription = null) },
         trailingIcon = {
@@ -309,69 +302,6 @@ fun NewGameTextField(
     )
 }
 
-@Composable
-fun PlayersListDialog(
-    list: List<Person>,
-    onDismissRequest: () -> Unit,
-    onConfirmClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    var selectedNickname: String? by rememberSaveable { mutableStateOf(null) }
-
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        title = { Text(text = stringResource(R.string.alert_dialog_new_game_player_selection_title)) },
-        text = {
-            if (list.isEmpty()) {
-                Text(
-                    text = stringResource(R.string.alert_dialog_new_game_text_when_list_is_empty),
-                    textAlign = TextAlign.Justify
-                )
-            } else {
-                Column {
-                    Column(
-                        modifier = Modifier
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        list.forEach { person ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .selectable(
-                                        selected = (person.nickname == selectedNickname),
-                                        onClick = {
-                                            selectedNickname = person.nickname
-                                            onConfirmClick(selectedNickname!!)
-                                        }
-                                    )
-                                    .padding(horizontal = 16.dp),
-                                verticalAlignment = CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = (person.nickname == selectedNickname),
-                                    onClick = {
-                                        selectedNickname = person.nickname
-                                        onConfirmClick(selectedNickname!!)
-                                    },
-                                    colors = RadioButtonDefaults.colors(
-                                        unselectedColor = MaterialTheme.colorScheme.onBackground
-                                    )
-                                )
-                                PlayersListNameAndNicknameItem(
-                                    nickname = person.nickname,
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        dismissButton = {},
-        confirmButton = {},
-        modifier = modifier,
-    )
-}
-
 @Preview
 @Composable
 fun NewGamePreview() {
@@ -379,25 +309,10 @@ fun NewGamePreview() {
         NewGameScreenSecundaria(
             onBackClick = {},
             onAdvanceClick = {},
-            onPlayerChange = {_ , _ -> },
-            onChoosePlayerClick = {},
+            onChoosePlayerClick = {_, _ ->},
             onAddPlayerTextButtonClick = {},
             onRemovePlayerTextButtonClick = {},
             newGameUiState = NewGameUiState()
         )
     }
-}
-
-@Preview
-@Composable
-fun AlertDialogPreview() {
-    PlayersListDialog(
-        list = listOf(
-            /*Pessoa("Luiz","Zinho"),
-            Pessoa("Deives", "Deivinho"),
-            Pessoa("Anna Luisa", "Anninha")*/
-        ),
-        onDismissRequest = {},
-        onConfirmClick = {}
-    )
 }

@@ -17,12 +17,12 @@
     <string name="add_player_label_name_text_field">Full name</string>
     <string name="add_player_label_nickname_text_field">Nickname</string>
     <string name="empty_error_message">This field is required</string>
-    <string name="name_exists_erros_message">This name is already on the list</string>
+    <string name="name_exists_erros_message">This name already exists</string>
     <string name="nickname_exists_erros_message">This nickname is already on the list</string>
     <string name="alert_dialog_new_game_player_selection_title">Select player</string>
     <string name="generic_cancel_text">Cancel</string>
     <string name="generic_confirm_text">Confirm</string>
-    <string name="alert_dialog_new_game_text_when_list_is_empty">You don\'t have any players registered in the player list, or you\'ve already used up all the available players. Go back to the Player List screen to register more names.</string>
+    <string name="alert_dialog_new_game_text_when_list_is_empty">You don\'t have any players registered in the player list, or you\'ve already used up all the available players. Register new players using the button in the corner of the screen.</string>
     <string name="new_game_add_player_button">Add</string>
     <string name="new_game_remove_player_button">Remove</string>
     <string name="generic_advance_button">Next</string>
@@ -123,6 +123,8 @@
     <string name="side">Side</string>
     <string name="show_details">Show details</string>
     <string name="show_all_info">Show totals</string>
+    <string name="new_player">New player</string>
+    <string name="empty_name">Empty name</string>
     <plurals name="num_victories">
         <item quantity="one">(%d victory)</item>
         <item quantity="other">(%d victories)</item>

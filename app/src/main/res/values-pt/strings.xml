@@ -16,12 +16,12 @@
     <string name="add_player_label_name_text_field">Nome completo</string>
     <string name="add_player_label_nickname_text_field">Apelido</string>
     <string name="empty_error_message">Este campo é obrigatório</string>
-    <string name="name_exists_erros_message">Este nome já está cadastrado na lista</string>
+    <string name="name_exists_erros_message">Este nome já existe</string>
     <string name="nickname_exists_erros_message">Este apelido já está cadastrado na lista</string>
     <string name="alert_dialog_new_game_player_selection_title">Selecionar jogador</string>
     <string name="generic_cancel_text">Cancelar</string>
     <string name="generic_confirm_text">Confirmar</string>
-    <string name="alert_dialog_new_game_text_when_list_is_empty">Você não tem nenhum jogador cadastrado na lista de jogadores ou então já usou todos os jogadores disponíveis. Volte para a tela Lista de Jogadores para cadastrar mais nomes.</string>
+    <string name="alert_dialog_new_game_text_when_list_is_empty">Você não tem nenhum jogador cadastrado na lista de jogadores ou então já usou todos os jogadores disponíveis. Cadastre novos jogadores no botão no canto da tela.</string>
     <string name="new_game_add_player_button">Adicionar</string>
     <string name="new_game_remove_player_button">Remover</string>
     <string name="generic_advance_button">Avançar</string>
@@ -116,6 +116,8 @@
     <string name="side">Lado</string>
     <string name="show_details">Ver detalhes</string>
     <string name="show_all_info">Ver gerais</string>
+    <string name="new_player">Novo jogador</string>
+    <string name="empty_name">Nome vazio</string>
     <plurals name="num_victories">
         <item quantity="one">(%d vitória)</item>
         <item quantity="other">(%d vitórias)</item>

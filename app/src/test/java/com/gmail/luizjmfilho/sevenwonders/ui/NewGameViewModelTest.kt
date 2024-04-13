@@ -45,17 +45,17 @@ class NewGameViewModelTest {
 
     @Test
     fun onUpdatePlayer_WhenChooseSomeone_ThenTheyGoToTheRightPlace() {
-        viewModel.updatePlayer(2, anna.nickname)
+        viewModel.updatePlayer(2, anna.name)
 
         val state = viewModel.uiState.value
-        assertEquals(anna.nickname, state.activePlayersList[2])
+        assertEquals(anna.name, state.activePlayersList[2])
     }
 
     @Test
     fun onNewGameAddPlayer_WhenAddSomeone_ThenAnEmptyPlaceComes() {
-        viewModel.updatePlayer(0, luiz.nickname)
-        viewModel.updatePlayer(1, anna.nickname)
-        viewModel.updatePlayer(2, cristian.nickname)
+        viewModel.updatePlayer(0, luiz.name)
+        viewModel.updatePlayer(1, anna.name)
+        viewModel.updatePlayer(2, cristian.name)
         viewModel.newGameAddPlayer()
 
         val state = viewModel.uiState.value
@@ -65,11 +65,11 @@ class NewGameViewModelTest {
 
     @Test
     fun onNewGameRemovePlayer_WhenRemoveSomeone_ThenAPlaceIsExcluded() {
-        viewModel.updatePlayer(0, luiz.nickname)
-        viewModel.updatePlayer(1, anna.nickname)
-        viewModel.updatePlayer(2, cristian.nickname)
+        viewModel.updatePlayer(0, luiz.name)
+        viewModel.updatePlayer(1, anna.name)
+        viewModel.updatePlayer(2, cristian.name)
         viewModel.newGameAddPlayer()
-        viewModel.updatePlayer(3, gian.nickname)
+        viewModel.updatePlayer(3, gian.name)
         viewModel.newGameRemovePlayer()
 
         val state = viewModel.uiState.value
@@ -79,9 +79,9 @@ class NewGameViewModelTest {
 
     @Test
     fun whenAll3AvailablePlacesWithNickname_ThenAddAndAdvanceButtonAreClickable() {
-        viewModel.updatePlayer(0, luiz.nickname)
-        viewModel.updatePlayer(1, anna.nickname)
-        viewModel.updatePlayer(2, cristian.nickname)
+        viewModel.updatePlayer(0, luiz.name)
+        viewModel.updatePlayer(1, anna.name)
+        viewModel.updatePlayer(2, cristian.name)
 
         val state = viewModel.uiState.value
         assertTrue(state.isAdvanceAndAddPlayerButtonsEnable)
@@ -90,13 +90,13 @@ class NewGameViewModelTest {
 
     @Test
     fun whenAll5AvailablePlacesWithNickname_ThenAddAndAdvanceButtonAreClickable() {
-        viewModel.updatePlayer(0, luiz.nickname)
-        viewModel.updatePlayer(1, anna.nickname)
-        viewModel.updatePlayer(2, cristian.nickname)
+        viewModel.updatePlayer(0, luiz.name)
+        viewModel.updatePlayer(1, anna.name)
+        viewModel.updatePlayer(2, cristian.name)
         viewModel.newGameAddPlayer()
-        viewModel.updatePlayer(3, gian.nickname)
+        viewModel.updatePlayer(3, gian.name)
         viewModel.newGameAddPlayer()
-        viewModel.updatePlayer(4, ivana.nickname)
+        viewModel.updatePlayer(4, ivana.name)
 
         val state = viewModel.uiState.value
         assertTrue(state.isAdvanceAndAddPlayerButtonsEnable)
@@ -105,8 +105,8 @@ class NewGameViewModelTest {
 
     @Test
     fun whenNotAll3AvailablePlacesAreFilled_ThenAddAndAdvanceButtonAreNotClickable() {
-        viewModel.updatePlayer(0, luiz.nickname)
-        viewModel.updatePlayer(1, anna.nickname)
+        viewModel.updatePlayer(0, luiz.name)
+        viewModel.updatePlayer(1, anna.name)
 
         val state = viewModel.uiState.value
         assertFalse(state.isAdvanceAndAddPlayerButtonsEnable)
@@ -114,11 +114,11 @@ class NewGameViewModelTest {
 
     @Test
     fun whenNotAll5AvailablePlacesAreFilled_ThenAddAndAdvanceButtonAreNotClickable() {
-        viewModel.updatePlayer(0, luiz.nickname)
-        viewModel.updatePlayer(1, anna.nickname)
-        viewModel.updatePlayer(2, cristian.nickname)
+        viewModel.updatePlayer(0, luiz.name)
+        viewModel.updatePlayer(1, anna.name)
+        viewModel.updatePlayer(2, cristian.name)
         viewModel.newGameAddPlayer()
-        viewModel.updatePlayer(3, gian.nickname)
+        viewModel.updatePlayer(3, gian.name)
         viewModel.newGameAddPlayer()
 
         val state = viewModel.uiState.value
@@ -127,10 +127,10 @@ class NewGameViewModelTest {
 
     @Test
     fun onUpdateAvailablePlayersList_ThenItCallTheCorrectFunction() = runTest {
-        whenever(repository.readPlayerWithoutActivePlayers(listOf(cristian.nickname)))
+        whenever(repository.readPlayerWithoutActivePlayers(listOf(cristian.name)))
             .thenReturn(listOf(luiz, anna))
 
-        viewModel.updatePlayer(0, cristian.nickname)
+        viewModel.updatePlayer(0, cristian.name)
         viewModel.updateAvailablePlayersList()
 
         val state = viewModel.uiState.value

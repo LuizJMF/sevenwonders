@@ -88,7 +88,7 @@ class PlayersListViewModelTest {
                 Person("Oi")
             )
         )
-        viewModel.deletePlayer("Luiz")
+        viewModel.onDeletePlayer("Luiz")
 
         val state = viewModel.uiState.value
 

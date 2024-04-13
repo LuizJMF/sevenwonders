@@ -30,7 +30,7 @@ class MatchDetailsScreenIntegrationTest {
                 matchDetailsViewModel = viewModel(
                     factory = viewModelFactory {
                         initializer {
-                            MatchDetailsViewModel(SavedStateHandle(mapOf("playerNicknames" to "${luiz.nickname},${anna.nickname},${cristian.nickname},${gian.nickname}")))
+                            MatchDetailsViewModel(SavedStateHandle(mapOf("playerNicknames" to "${luiz.name},${anna.name},${cristian.name},${gian.name}")))
                         }
                     }
                 )
@@ -51,11 +51,11 @@ class MatchDetailsScreenIntegrationTest {
             assertConfirmButtonIsEnabled()
             clickConfirmButton()
             assertAdvanceButtonIsEnabled()
-            assertThereIsPlayerWhoseNicknameIs(luiz.nickname)
-            assertThereIsPlayerWhoseNicknameIs(anna.nickname)
-            assertThereIsPlayerWhoseNicknameIs(cristian.nickname)
-            assertThereIsPlayerWhoseNicknameIs(gian.nickname)
-            assertThereIsNoPlayerWhoseNicknameIs(ivana.nickname)
+            assertThereIsPlayerWhoseNicknameIs(luiz.name)
+            assertThereIsPlayerWhoseNicknameIs(anna.name)
+            assertThereIsPlayerWhoseNicknameIs(cristian.name)
+            assertThereIsPlayerWhoseNicknameIs(gian.name)
+            assertThereIsNoPlayerWhoseNicknameIs(ivana.name)
             assertThereIsDayNightIconOnTheScreen()
             assertMoveDownCardIconDoesNotExists()
 //            assertDayNightIconInIndexIs(WonderSide.Day, 0)

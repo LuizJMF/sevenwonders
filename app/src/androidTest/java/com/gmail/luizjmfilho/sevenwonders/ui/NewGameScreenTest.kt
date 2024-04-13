@@ -72,7 +72,7 @@ class NewGameScreenTest {
 
     @Test
     fun onAdvanceButtonClick() {
-        val testList = listOf(luiz.nickname, cristian.nickname, anna.nickname)
+        val testList = listOf(luiz.name, cristian.name, anna.name)
         var activePlayersList: List<String>? = null
         launchScreen(
             onAdvanceClick = { listaDeNicknames ->
@@ -117,11 +117,11 @@ class NewGameScreenTest {
 
         with(robot) {
             clickChoosePlayerButton(1)
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.name)
             clickGenericConfirmButton()
         }
 
-        assertEquals(luiz.nickname, expectedNickname)
+        assertEquals(luiz.name, expectedNickname)
         assertEquals(1, expectedPosition)
 
 
@@ -161,13 +161,13 @@ class NewGameScreenTest {
     fun whenActivePlayersListHasStrings_ThenRelatedTextFieldsShowIt() {
         launchScreen(
             newGameUiState = NewGameUiState(
-                activePlayersList = listOf(luiz.nickname, anna.nickname, "", "", "", "", "")
+                activePlayersList = listOf(luiz.name, anna.name, "", "", "", "", "")
             )
         )
 
         with(robot) {
-            assertTextFieldInThePositionHasNickname(0, luiz.nickname)
-            assertTextFieldInThePositionHasNickname(1, anna.nickname)
+            assertTextFieldInThePositionHasNickname(0, luiz.name)
+            assertTextFieldInThePositionHasNickname(1, anna.name)
             assertTextFieldInThePositionHasNickname(2, "")
         }
     }
@@ -230,11 +230,11 @@ class NewGameScreenTest {
         robot.clickChoosePlayerButton(0)
 
         with(robot) {
-            assertThereIsAPlayerInTheScreenWithThisNickname(luiz.nickname)
-            assertThereIsAPlayerInTheScreenWithThisNickname(anna.nickname)
-            assertThereIsAPlayerInTheScreenWithThisNickname(cristian.nickname)
-            assertThereIsAPlayerInTheScreenWithThisNickname(ivana.nickname)
-            assertThereIsNoPlayerInTheScreenWithThisNickname(gian.nickname)
+            assertThereIsAPlayerInTheScreenWithThisNickname(luiz.name)
+            assertThereIsAPlayerInTheScreenWithThisNickname(anna.name)
+            assertThereIsAPlayerInTheScreenWithThisNickname(cristian.name)
+            assertThereIsAPlayerInTheScreenWithThisNickname(ivana.name)
+            assertThereIsNoPlayerInTheScreenWithThisNickname(gian.name)
         }
 
     }
@@ -291,11 +291,11 @@ class NewGameScreenTest {
 
         with(robot) {
             clickChoosePlayerButton(0)
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.name)
         }
         stateRestorationTester.emulateSavedInstanceStateRestore()
 
-        robot.assertPlayerIsSelected(luiz.nickname)
+        robot.assertPlayerIsSelected(luiz.name)
     }
 
 

@@ -25,7 +25,7 @@ class MatchDetailsViewModelTest {
 
     @Before
     fun beforeTests() {
-        viewModel = MatchDetailsViewModel(SavedStateHandle(mapOf("playerNicknames" to "${luiz.nickname},${anna.nickname},${cristian.nickname},${gian.nickname},${ivana.nickname}")))
+        viewModel = MatchDetailsViewModel(SavedStateHandle(mapOf("playerNicknames" to "${luiz.name},${anna.name},${cristian.name},${gian.name},${ivana.name}")))
         
     }
 

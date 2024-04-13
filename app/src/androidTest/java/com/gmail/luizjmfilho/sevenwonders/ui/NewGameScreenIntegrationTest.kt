@@ -66,20 +66,20 @@ class NewGameScreenIntegrationTest {
 
         with(robot) {
             clickChoosePlayerButton(0)
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.name)
             clickGenericConfirmButton()
             clickChoosePlayerButton(2)
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(anna.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(anna.name)
             clickGenericConfirmButton()
             clickChoosePlayerButton(1)
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(cristian.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(cristian.name)
             clickGenericConfirmButton()
         }
 
         with(robot) {
-            assertTextFieldInThePositionHasNickname(0,luiz.nickname)
-            assertTextFieldInThePositionHasNickname(1, cristian.nickname)
-            assertTextFieldInThePositionHasNickname(2, anna.nickname)
+            assertTextFieldInThePositionHasNickname(0,luiz.name)
+            assertTextFieldInThePositionHasNickname(1, cristian.name)
+            assertTextFieldInThePositionHasNickname(2, anna.name)
         }
     }
 
@@ -113,16 +113,16 @@ class NewGameScreenIntegrationTest {
 
         with(robot) {
             clickChoosePlayerButton(2)
-            assertThereIsAPlayerInTheScreenWithThisNickname(luiz.nickname)
+            assertThereIsAPlayerInTheScreenWithThisNickname(luiz.name)
         }
 
         with(robot) {
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.name)
             clickGenericConfirmButton()
             clickChoosePlayerButton(0)
         }
 
-        robot.assertThereIsNoPlayerInTheScreenWithThisNickname(luiz.nickname)
+        robot.assertThereIsNoPlayerInTheScreenWithThisNickname(luiz.name)
         // esse teste tá dando errado, pq agora eu não tenho mais o "nome" pra procurar
         // na playersListDialog, aí tenho que procurar pelo apelido. Sendo que o apelido,
         // mesmo que eu o escolha, o teste ainda vai achá-lo, já que ele saiu do Dialog,
@@ -144,13 +144,13 @@ class NewGameScreenIntegrationTest {
 
         with(robot) {
             clickChoosePlayerButton(0)
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.name)
             clickGenericConfirmButton()
             clickChoosePlayerButton(1)
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(anna.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(anna.name)
             clickGenericConfirmButton()
             clickChoosePlayerButton(2)
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(cristian.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(cristian.name)
             clickGenericConfirmButton()
         }
 
@@ -171,21 +171,21 @@ class NewGameScreenIntegrationTest {
 
         with(robot) {
             clickChoosePlayerButton(0)
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(luiz.name)
             clickGenericConfirmButton()
             clickChoosePlayerButton(1)
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(anna.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(anna.name)
             clickGenericConfirmButton()
             clickChoosePlayerButton(2)
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(cristian.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(cristian.name)
             clickGenericConfirmButton()
             clickAddPlayerButton()
             clickChoosePlayerButton(3)
-            clickOnAvailablePlayersListInPlayerThatNicknameIs(gian.nickname)
+            clickOnAvailablePlayersListInPlayerThatNicknameIs(gian.name)
             clickGenericConfirmButton()
         }
 
-        robot.assertTextFieldInThePositionHasNickname(3,gian.nickname)
+        robot.assertTextFieldInThePositionHasNickname(3,gian.name)
 
         with(robot) {
             clickRemovePlayerButton()

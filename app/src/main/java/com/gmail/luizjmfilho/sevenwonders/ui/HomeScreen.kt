@@ -97,12 +97,6 @@ fun HomeScreen(
                             .fillMaxWidth()
                     )
                     HomeScreenButton(
-                        onClick = onListaDeJogadoresClick,
-                        textinho = stringResource(R.string.players_list_button),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                    HomeScreenButton(
                         onClick = onStatsClick,
                         textinho = stringResource(R.string.estatisticas_button),
                         modifier = Modifier

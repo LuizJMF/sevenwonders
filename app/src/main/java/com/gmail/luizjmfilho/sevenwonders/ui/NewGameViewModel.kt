@@ -1,5 +1,6 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.luizjmfilho.sevenwonders.data.NewGameRepository
@@ -13,36 +14,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewGameViewModel @Inject constructor(
-    private val newGameRepository: NewGameRepository
+    private val newGameRepository: NewGameRepository,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(NewGameUiState())
     val uiState: StateFlow<NewGameUiState> = _uiState.asStateFlow()
 
-    fun updateAvailablePlayersList() {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    availablePlayersList = newGameRepository.readPlayerWithoutActivePlayers(currentState.activePlayersList - listOf(""))
-                )
-            }
-        }
-    }
-
-    fun updatePlayer(playerPosition: Int, playerNickname: String) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                val newActivePlayersList = currentState.activePlayersList.toMutableList()
-                newActivePlayersList[playerPosition] = playerNickname
-                val isAdvanceAndAddPlayerButtonsEnable =
-                    newActivePlayersList.take(currentState.activePlayersNumber.numValue).all {
-                        it != ""
-                    }
-                currentState.copy(
-                    activePlayersList = newActivePlayersList,
-                    isAdvanceAndAddPlayerButtonsEnable = isAdvanceAndAddPlayerButtonsEnable,
-                )
-            }
+    fun setActivePlayersList(activePlayersListFromPlayersListScreen: List<String>) {
+        _uiState.update { currentState ->
+            val isAdvanceAndAddPlayerButtonsEnable =
+                activePlayersListFromPlayersListScreen.take(currentState.activePlayersNumber.numValue).all {
+                    it != ""
+                }
+            currentState.copy(
+                activePlayersList = activePlayersListFromPlayersListScreen,
+                isAdvanceAndAddPlayerButtonsEnable = isAdvanceAndAddPlayerButtonsEnable,
+            )
         }
     }
 

@@ -29,9 +29,9 @@ class NewGameRepositoryTest {
 
     @Test
     fun onReadPlayerWithoutActivePlayers_ThenItForwardsTheParameter() = runTest {
-        mockReadPlayerExcept(listOf(cristian.nickname), listOf(luiz, anna))
+        mockReadPlayerExcept(listOf(cristian.name), listOf(luiz, anna))
 
-        val listReturned = repository.readPlayerWithoutActivePlayers(listOf(cristian.nickname))
+        val listReturned = repository.readPlayerWithoutActivePlayers(listOf(cristian.name))
 
         assertEquals(listOf(luiz, anna), listReturned)
     }

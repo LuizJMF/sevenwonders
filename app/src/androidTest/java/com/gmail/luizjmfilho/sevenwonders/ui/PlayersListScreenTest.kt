@@ -66,15 +66,15 @@ class PlayersListScreenTest {
         launchScreen(
             playersListUiState = PlayersListUiState(
                 playersList = listOf(
-                    Person(luiz.nickname),
-                    Person(cristian.nickname)
+                    Person(luiz.name),
+                    Person(cristian.name)
                 )
             ),
         )
 
         with(robot) {
-            assertPlayerNicknameInTheListIs(luiz.nickname, 0)
-            assertPlayerNicknameInTheListIs(cristian.nickname, 1)
+            assertPlayerNicknameInTheListIs(luiz.name, 0)
+            assertPlayerNicknameInTheListIs(cristian.name, 1)
         }
     }
 
@@ -85,10 +85,10 @@ class PlayersListScreenTest {
 
         with(robot) {
             clickAddPlayerButton()
-            typeNickname(luiz.nickname)
+            typeNickname(luiz.name)
         }
 
-        assertEquals(luiz.nickname, expectedNickname)
+        assertEquals(luiz.name, expectedNickname)
     }
 
     @Test
@@ -100,8 +100,8 @@ class PlayersListScreenTest {
             },
             playersListUiState = PlayersListUiState(
                 playersList = listOf(
-                    Person(luiz.nickname),
-                    Person(cristian.nickname)
+                    Person(luiz.name),
+                    Person(cristian.name)
                 )
             )
         )
@@ -111,7 +111,7 @@ class PlayersListScreenTest {
             clickIconDelete(1)
         }
 
-        assertEquals(cristian.nickname, expectedName)
+        assertEquals(cristian.name, expectedName)
     }
 
     @Test
@@ -174,7 +174,7 @@ class PlayersListScreenTest {
         launchScreen(
             playersListUiState = PlayersListUiState(
                 playersList = listOf(
-                    Person(luiz.nickname)
+                    Person(luiz.name)
                 )
             )
         )
@@ -194,7 +194,7 @@ class PlayersListScreenTest {
         launchScreen(
             playersListUiState = PlayersListUiState(
                 playersList = listOf(
-                    Person(luiz.nickname)
+                    Person(luiz.name)
                 )
             )
         )
@@ -224,13 +224,13 @@ class PlayersListScreenTest {
     fun whenNicknameHasAString_thenNicknameFieldShowsIt() {
         launchScreen(
             playersListUiState = PlayersListUiState(
-                nickname = luiz.nickname
+                nickname = luiz.name
             )
         )
 
         robot.clickAddPlayerButton()
 
-        robot.assertNicknameTextFieldHasNickname(luiz.nickname)
+        robot.assertNicknameTextFieldHasNickname(luiz.name)
     }
 
     @Test

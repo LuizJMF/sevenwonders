@@ -3,7 +3,6 @@ package com.gmail.luizjmfilho.sevenwonders.data
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.gmail.luizjmfilho.sevenwonders.TestData
 import com.gmail.luizjmfilho.sevenwonders.TestData.anna
 import com.gmail.luizjmfilho.sevenwonders.TestData.cristian
 import com.gmail.luizjmfilho.sevenwonders.TestData.luiz
@@ -31,7 +30,7 @@ class PersonDaoTest {
     fun onAddPlayer_WhenInsertAPerson_HappyPath() = runTest {
         dao.addPlayer(luiz)
 
-        val currentList = dao.readPlayer()
+        val currentList = dao.selectAllPlayer()
 
         assertTrue(listOf(luiz) == currentList)
     }
@@ -39,9 +38,9 @@ class PersonDaoTest {
     @Test
     fun onDeletePlayer_WhenDeleteAPerson_HappyPath() = runTest {
         dao.addPlayer(luiz)
-        dao.deletePlayer(luiz.nickname)
+        dao.deletePlayer(luiz.name)
 
-        val currentList = dao.readPlayer()
+        val currentList = dao.selectAllPlayer()
 
         assertEquals(emptyList<Person>(), currentList)
     }
@@ -52,21 +51,21 @@ class PersonDaoTest {
         dao.addPlayer(anna)
         dao.addPlayer(cristian)
 
-        val currentList = dao.readPlayer()
+        val currentList = dao.selectAllPlayer()
         assertTrue(listOf(anna, cristian, luiz) == currentList)
     }
 
     @Test
     fun onNumberOfPlayersWithThisNickname_WhenNicknameHaveDifferentCases_ThenItCountsJustOne() = runTest {
         dao.addPlayer(luiz)
-        val numberOfPlayers = dao.numberOfPlayersWithThisNickname(luiz.nickname.uppercase())
+        val numberOfPlayers = dao.numberOfPlayersWithThisName(luiz.name.uppercase())
 
         assertEquals(1, numberOfPlayers)
     }
 
     @Test
     fun onNumberOfPlayersWithThisNickname_WhenNoPlayers_ThenReturnZero() = runTest {
-        val numberOfPlayers = dao.numberOfPlayersWithThisNickname(luiz.nickname)
+        val numberOfPlayers = dao.numberOfPlayersWithThisName(luiz.name)
         assertEquals(0, numberOfPlayers)
     }
 
@@ -74,7 +73,7 @@ class PersonDaoTest {
     fun onNumberOfPlayersWithThisNickname_WhenOnePlayerWithThatNickname_ThenReturnsOne() = runTest {
         dao.addPlayer(luiz)
         dao.addPlayer(cristian)
-        val numberOfPlayers = dao.numberOfPlayersWithThisNickname(luiz.nickname)
+        val numberOfPlayers = dao.numberOfPlayersWithThisName(luiz.name)
         assertEquals(1, numberOfPlayers)
     }
 
@@ -83,7 +82,7 @@ class PersonDaoTest {
         dao.addPlayer(anna)
         dao.addPlayer(anna.copy(id = 5))
         dao.addPlayer(cristian)
-        val numberOfPlayers = dao.numberOfPlayersWithThisNickname(anna.nickname)
+        val numberOfPlayers = dao.numberOfPlayersWithThisName(anna.name)
         assertEquals(2, numberOfPlayers)
     }
 
@@ -93,7 +92,7 @@ class PersonDaoTest {
         dao.addPlayer(anna)
         dao.addPlayer(luiz)
 
-        val filteredList = dao.readPlayerExcept(listOf(luiz.nickname))
+        val filteredList = dao.readPlayerExcept(listOf(luiz.name))
 
         assertTrue(listOf(anna, cristian) == filteredList)
     }
@@ -115,7 +114,7 @@ class PersonDaoTest {
         dao.addPlayer(anna)
         dao.addPlayer(luiz)
 
-        val filteredList = dao.readPlayerExcept(listOf(luiz.nickname, anna.nickname, cristian.nickname))
+        val filteredList = dao.readPlayerExcept(listOf(luiz.name, anna.name, cristian.name))
 
         assertTrue(filteredList.isEmpty())
     }

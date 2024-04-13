@@ -46,17 +46,19 @@ fun SevenWondersNavHost(
         }
 
         composable(
-            route = ScreenNames.PlayersListScreen.name,
+            route = "${ScreenNames.PlayersListScreen.name}/{info}",
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
                     animationSpec = tween(500)
                 )
             },
-        ) {
+        ) { backStack ->
             PlayersListScreenPrimaria(
-                windowWidthSizeClass = windowWidthSizeClass,
-                onBackClick = { navController.navigateUp() }
+                onSelectPlayer = { activePlayersList ->
+                    navController.previousBackStackEntry?.savedStateHandle?.set("xxx", activePlayersList)
+                    navController.navigateUp()
+                }
             )
         }
 
@@ -74,14 +76,18 @@ fun SevenWondersNavHost(
                     animationSpec = tween(500)
                 )
             },
-        ) {
+        ) { backStack ->
             NewGameScreenPrimaria(
                 onBackClick = {
                     navController.navigateUp()
                 },
                 onNextClick = { playerNicknames ->
                     navController.navigate("${ScreenNames.MatchDetailsScreen.name}/${playerNicknames.joinToString(",")}")
-                }
+                },
+                onChoosePlayerClick = { playerIndexBeingSelected, activePlayersList ->
+                    navController.navigate("${ScreenNames.PlayersListScreen.name}/${listOf(playerIndexBeingSelected.toString(), activePlayersList.joinToString(",")).joinToString(",")}")
+                },
+                activePlayersListGambiarra = backStack.savedStateHandle.get<List<String>>("xxx") ?: List(7) { "" }
             )
         }
 

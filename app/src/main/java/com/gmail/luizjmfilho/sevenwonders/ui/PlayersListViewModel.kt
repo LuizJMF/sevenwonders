@@ -1,5 +1,8 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.toLowerCase
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.luizjmfilho.sevenwonders.data.PlayersListRepository
@@ -13,78 +16,93 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayersListViewModel @Inject constructor(
-    private val playersListRepository: PlayersListRepository
-) : ViewModel() {
+    private val playersListRepository: PlayersListRepository,
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel()  {
 
-
+    private val originalInfo = savedStateHandle.get<String>("info")!!.split(",")
+    private val playerIndexBeingSelected = originalInfo[0]
+    private val activePlayersList = if (originalInfo.size == 1) emptyList() else originalInfo.subList(1,originalInfo.size)
     private val _uiState = MutableStateFlow(PlayersListUiState())
     val uiState: StateFlow<PlayersListUiState> = _uiState.asStateFlow()
-
 
     init {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
-                    playersList = playersListRepository.readPlayer(),
+                    playersList = playersListRepository.readPlayer() - activePlayersList.filter { it != "" },
                 )
             }
         }
     }
 
-    fun updateNickname(novoApelido: String){
-        _uiState.update { currentState ->
-            val previousNickname = currentState.nickname
-            val nickname = if (novoApelido.length <= 10) novoApelido else previousNickname
-            currentState.copy(
-                nickname = nickname,
-            )
-        }
-    }
-
-    fun cancelAddPlayer(){
-        _uiState.update { currentState ->
-            currentState.copy(
-                nickname = "",
-                nicknameError = null,
-            )
-        }
-    }
-
-
-    fun onConfirmAddPlayerClick () {
+    fun onAddPlayer() {
         viewModelScope.launch {
             _uiState.update { currentState ->
-                val addPlayerResult = playersListRepository.addPlayer(currentState.nickname)
+                val addPlayerResult = playersListRepository.addPlayer(currentState.playerBeingAdded.toLowerCase().capitalize())
                 if (addPlayerResult == null) {
                     currentState.copy(
-                        nickname = "",
-                        playersList = playersListRepository.readPlayer(),
-                        nicknameError = null,
+                        playerBeingAdded = "",
+                        playersList = playersListRepository.readPlayer() - activePlayersList.filter { it != "" },
+                        nameError = null,
+                        isDialogShown = false
                     )
                 } else {
                     currentState.copy(
-                        nicknameError = addPlayerResult.nicknameError
+                        nameError = addPlayerResult.nameError,
+                        isDialogShown = true
                     )
                 }
             }
         }
     }
 
-    fun deletePlayer (nickname: String) {
+    fun onTypeNewPlayer(playerName: String) {
         viewModelScope.launch {
             _uiState.update { currentState ->
-                try {
-                    playersListRepository.deletePlayer(nickname)
-                    val x = playersListRepository.readPlayer()
-                    currentState.copy(
-                        playersList = x,
-                    )
-                } catch (e: Exception) {
-                    println("Deu erro: ${e.message}")
-                    currentState
-                }
+                val newName = if (playerName.length <= 10) playerName else currentState.playerBeingAdded
+                currentState.copy(
+                    playerBeingAdded = newName,
+                )
             }
         }
     }
+
+    fun getPlayerIndexBeingSelected() : String {
+        return playerIndexBeingSelected
+    }
+
+    fun getActivePlayersList() : List<String> {
+        return activePlayersList
+    }
+
+    fun onFloatingButtonClick() {
+        _uiState.update {  currentState ->
+            currentState.copy(
+                isDialogShown = true,
+                playerBeingAdded = ""
+            )
+        }
+    }
+
+    fun onDismissDialog() {
+        _uiState.update {  currentState ->
+            currentState.copy(
+                isDialogShown = false
+            )
+        }
+    }
+
+    fun onDeletePlayer(name: String) {
+        viewModelScope.launch {
+            playersListRepository.deletePlayer(name)
+            _uiState.update { currentState ->
+                currentState.copy(
+                    playersList = playersListRepository.readPlayer() - activePlayersList.filter { it != "" },
+                )
+            }
+        }
+    }
+
 }
 

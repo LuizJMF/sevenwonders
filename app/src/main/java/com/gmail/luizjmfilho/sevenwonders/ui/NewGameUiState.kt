@@ -6,7 +6,6 @@ data class NewGameUiState(
     val activePlayersList: List<String> = List(7) {
         ""
     },
-    val availablePlayersList: List<Person> = listOf(),
     val activePlayersNumber: ActivePlayersNumber = ActivePlayersNumber.Three,
     val isAdvanceAndAddPlayerButtonsEnable: Boolean = false,
 )

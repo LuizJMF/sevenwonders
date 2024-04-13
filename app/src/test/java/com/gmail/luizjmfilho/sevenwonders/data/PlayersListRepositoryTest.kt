@@ -22,7 +22,7 @@ class PlayersListRepositoryTest {
     }
 
     private suspend fun mockNumberOfPlayersWithThisNickname(searchedNickname: String, result: Int) {
-        whenever(dao.numberOfPlayersWithThisNickname(searchedNickname))
+        whenever(dao.numberOfPlayersWithThisName(searchedNickname))
             .thenReturn(result)
     }
 
@@ -43,18 +43,18 @@ class PlayersListRepositoryTest {
 
     @Test
     fun onAddPlayer_whenNicknameExists_thenIsNicknameErrorExist() = runTest {
-        mockNumberOfPlayersWithThisNickname(luiz.nickname, 1)
+        mockNumberOfPlayersWithThisNickname(luiz.name, 1)
 
-        val addPlayerResult = repository.addPlayer(luiz.nickname)
+        val addPlayerResult = repository.addPlayer(luiz.name)
 
         assertEquals(AddPlayerResult(NameOrNicknameError.Exists), addPlayerResult)
     }
 
     @Test
     fun onAddPlayer_happyPath() = runTest {
-        mockNumberOfPlayersWithThisNickname(luiz.nickname, 0)
+        mockNumberOfPlayersWithThisNickname(luiz.name, 0)
 
-        val addPlayerResult = repository.addPlayer(luiz.nickname)
+        val addPlayerResult = repository.addPlayer(luiz.name)
 
         assertNull(addPlayerResult)
     }
