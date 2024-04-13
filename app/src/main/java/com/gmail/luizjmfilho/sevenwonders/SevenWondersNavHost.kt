@@ -14,6 +14,7 @@ import com.gmail.luizjmfilho.sevenwonders.ui.MatchDetailsScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.MatchesHistoryPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.NewGameScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.PlayersListScreenPrimaria
+import com.gmail.luizjmfilho.sevenwonders.ui.ScienceSimulatorScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.StatsScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.SummaryScreenPrimaria
 
@@ -41,7 +42,8 @@ fun SevenWondersNavHost(
                 onListaDeJogadoresClick = { navController.navigate(ScreenNames.PlayersListScreen.name) },
                 onMatchesHistoryClick = { navController.navigate(ScreenNames.MatchesHistoryScreen.name) },
                 onStatsClick = { navController.navigate(ScreenNames.StatsScreen.name) },
-                onAboutClick = { navController.navigate(ScreenNames.AboutScreen.name) }
+                onAboutClick = { navController.navigate(ScreenNames.AboutScreen.name) },
+                onScienceSimulatorClick = { navController.navigate(ScreenNames.ScienceSimulatorScreen.name) }
             )
         }
 
@@ -192,6 +194,21 @@ fun SevenWondersNavHost(
         ) {
             AboutScreen(
                 onBackClick = {navController.navigateUp()}
+            )
+        }
+
+        composable(
+            route = ScreenNames.ScienceSimulatorScreen.name,
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+                    animationSpec = tween(500),
+
+                    )
+            },
+        ) {
+            ScienceSimulatorScreenPrimaria(
+                onBackClick = {navController.navigateUp()},
             )
         }
     }

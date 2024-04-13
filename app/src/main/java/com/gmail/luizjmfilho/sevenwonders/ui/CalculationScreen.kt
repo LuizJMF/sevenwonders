@@ -1153,7 +1153,9 @@ fun ScienceIconCard(
                     ScienceSymbol.Stone -> painterResource(id = R.drawable.science_2)
                     ScienceSymbol.Gear -> painterResource(id = R.drawable.science_3)
                 },
-                contentDescription = null
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
             )
         }
     }

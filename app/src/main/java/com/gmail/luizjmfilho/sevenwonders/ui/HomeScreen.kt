@@ -48,6 +48,7 @@ fun HomeScreen(
     onMatchesHistoryClick: () -> Unit,
     onStatsClick: () -> Unit,
     onAboutClick: () -> Unit,
+    onScienceSimulatorClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -108,6 +109,12 @@ fun HomeScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                     )
+                    HomeScreenButton(
+                        onClick = onScienceSimulatorClick,
+                        textinho = stringResource(R.string.science_points_simulator),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
                 }
                 Spacer(Modifier.weight(0.60f))
                 Row(
@@ -156,7 +163,8 @@ fun HomeScreenPreview() {
             onListaDeJogadoresClick = {},
             onMatchesHistoryClick = {},
             onStatsClick = {},
-            onAboutClick = {}
+            onAboutClick = {},
+            onScienceSimulatorClick = {}
         )
     }
 }

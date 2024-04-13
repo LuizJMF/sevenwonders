@@ -125,6 +125,8 @@
     <string name="show_all_info">Show totals</string>
     <string name="new_player">New player</string>
     <string name="empty_name">Empty name</string>
+    <string name="science_points_simulator">Science points simulator</string>
+    <string name="simulator">Simulator</string>
     <plurals name="num_victories">
         <item quantity="one">(%d victory)</item>
         <item quantity="other">(%d victories)</item>

@@ -118,6 +118,8 @@
     <string name="show_all_info">Ver gerais</string>
     <string name="new_player">Novo jogador</string>
     <string name="empty_name">Nome vazio</string>
+    <string name="science_points_simulator">Simulador de pontos de ciência</string>
+    <string name="simulator">Simulador</string>
     <plurals name="num_victories">
         <item quantity="one">(%d vitória)</item>
         <item quantity="other">(%d vitórias)</item>

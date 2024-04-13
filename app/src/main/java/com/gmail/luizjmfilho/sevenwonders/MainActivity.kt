@@ -20,6 +20,7 @@ enum class ScreenNames {
     MatchesHistoryScreen,
     StatsScreen,
     AboutScreen,
+    ScienceSimulatorScreen,
 }
 
 @AndroidEntryPoint
