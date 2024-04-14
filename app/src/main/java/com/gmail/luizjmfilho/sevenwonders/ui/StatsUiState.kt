@@ -3,6 +3,7 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 import com.gmail.luizjmfilho.sevenwonders.model.Match
 
 data class StatsUiState(
+    val isLoading: Boolean = true,
     val isDatabaseEmpty: Boolean = true,
     val bestScoresList: List<Match> = emptyList(),
     val worstScoresList: List<Match> = emptyList(),

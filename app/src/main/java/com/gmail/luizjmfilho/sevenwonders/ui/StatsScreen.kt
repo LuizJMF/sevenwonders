@@ -79,12 +79,6 @@ fun StatsScreenSecundaria(
         },
     ) { scaffoldPadding ->
 
-        var loading by rememberSaveable { mutableStateOf(true) }
-        LaunchedEffect(true) {
-            delay(2000)
-            loading = false
-        }
-
         Box(
             modifier = modifier
                 .padding(scaffoldPadding)
@@ -102,7 +96,7 @@ fun StatsScreenSecundaria(
                 modifier = Modifier
                     .fillMaxSize()
             )
-            if (loading) {
+            if (statsUiState.isLoading) {
                 Column(
                     horizontalAlignment = CenterHorizontally
                 ) {
