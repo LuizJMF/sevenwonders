@@ -1,10 +1,14 @@
 package com.gmail.luizjmfilho.sevenwonders.data
 
 import com.gmail.luizjmfilho.sevenwonders.model.Match
+import com.gmail.luizjmfilho.sevenwonders.model.Person
 import com.gmail.luizjmfilho.sevenwonders.ui.ResultadoDaConsultaSQLBestWonder
 import javax.inject.Inject
 
-class StatsRepository @Inject constructor(private val matchDao: MatchDao) {
+class StatsRepository @Inject constructor(
+    private val matchDao: MatchDao,
+    private val personDao: PersonDao,
+) {
 
     suspend fun getBestScoreList(): List<Match>? {
         return matchDao.getBestScoreList()
@@ -54,6 +58,10 @@ class StatsRepository @Inject constructor(private val matchDao: MatchDao) {
 
     suspend fun getBestWondersList(): List<ResultadoDaConsultaSQLBestWonder>? {
         return matchDao.getBestWonder()
+    }
+
+    suspend fun readPlayer(): List<String> {
+        return personDao.readPlayer()
     }
 
 }

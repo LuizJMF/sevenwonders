@@ -1,39 +1,55 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Bedtime
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.WbSunny
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
@@ -48,7 +64,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.model.Match
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
-import kotlinx.coroutines.delay
 
 @Composable
 fun StatsScreenPrimaria(
@@ -60,14 +75,25 @@ fun StatsScreenPrimaria(
     StatsScreenSecundaria(
         onBackClick = onBackClick,
         statsUiState = statsUiState,
+        onChooseClick = statsViewModel::onChooseClick,
+        onDismissDropdownFilter = statsViewModel::onDismissDropdownFilter,
+        onFilterPlayer = statsViewModel::onFilterPlayer,
+        onEraseAllFilters = statsViewModel::onEraseAllFilters,
+        onRemoveAFilteredPlayer = statsViewModel::onRemoveAFilteredPlayer,
         modifier = modifier,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatsScreenSecundaria(
     onBackClick: () -> Unit,
+    onChooseClick: () -> Unit,
     statsUiState: StatsUiState,
+    onFilterPlayer: (String) -> Unit,
+    onRemoveAFilteredPlayer: (String) -> Unit,
+    onDismissDropdownFilter: () -> Unit,
+    onEraseAllFilters: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold (
@@ -78,89 +104,203 @@ fun StatsScreenSecundaria(
             )
         },
     ) { scaffoldPadding ->
-
-        Box(
-            modifier = modifier
+        Column(
+            modifier = Modifier
                 .padding(scaffoldPadding)
-                .fillMaxSize(),
-            contentAlignment = Center
         ) {
-            Image(
-                painter = if (isSystemInDarkTheme()) {
-                    painterResource(id = R.drawable.fundo_desenho_dark)
-                }  else {
-                    painterResource(id = R.drawable.fundo_principal_claro_desenho)
-                },
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .fillMaxSize()
-            )
-            if (statsUiState.isLoading) {
-                Column(
-                    horizontalAlignment = CenterHorizontally
+                    .padding(start = 10.dp, end = 10.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.filter_by_players)
+                )
+                TextButton(
+                    onClick = onChooseClick
                 ) {
-                    CircularProgressIndicator()
-                    Text(text = stringResource(R.string.loading))
+                    Text(
+                        text = stringResource(id = R.string.generic_choose)
+                    )
+                    val degree by animateFloatAsState(
+                        targetValue = if (statsUiState.isDropdownFilterShown) 180f else 0f,
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.ArrowDropDown,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .rotate(degree)
+                    )
+                    DropdownMenu(
+                        expanded = statsUiState.isDropdownFilterShown,
+                        onDismissRequest = onDismissDropdownFilter
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(R.string.all_players)
+                                )
+                            },
+                            onClick = onEraseAllFilters
+                        )
+                        for (player in statsUiState.playersToBeFiltered) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = player
+                                    )
+                                },
+                                onClick = {
+                                    onFilterPlayer(player)
+                                }
+                            )
+                        }
+                    }
                 }
-            } else {
-                Column(
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = { /*TODO*/ }
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null
+                    )
+                }
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(3.dp)
+            ) {
+                val fontSize = 15.sp
+                if (statsUiState.playersFiltered.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.all_players),
+                        color = Color(0xFF7A7A7A),
+                        fontStyle = FontStyle.Italic,
+                        fontSize = fontSize
+                    )
+                } else {
+                    for (player in statsUiState.playersFiltered) {
+                        SuggestionChip(
+                            onClick = { onRemoveAFilteredPlayer(player) },
+                            label = {
+                                Text(
+                                    text = player,
+                                    color = Color(0xFF7A7A7A),
+                                    fontStyle = FontStyle.Italic,
+                                    fontSize = fontSize,
+                                )
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = null,
+                                    tint = Color.Red,
+                                    modifier = Modifier
+                                        .size(17.dp)
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+            Divider(
+                thickness = 3.dp
+            )
+            Box(
+                modifier = modifier
+                    .fillMaxSize(),
+                contentAlignment = Center
+            ) {
+                Image(
+                    painter = if (isSystemInDarkTheme()) {
+                        painterResource(id = R.drawable.fundo_desenho_dark)
+                    }  else {
+                        painterResource(id = R.drawable.fundo_principal_claro_desenho)
+                    },
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(start = 10.dp, end = 10.dp)
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    if (statsUiState.isDatabaseEmpty) {
-                        Text(
-                            text = stringResource(R.string.stats_screen_empty_database),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentWidth()
-                                .padding(top = 10.dp),
-                            color = Color.Red,
-                            fontStyle = FontStyle.Italic,
-                            textAlign = TextAlign.Center
-                        )
-                    } else {
-                        BestOrWorstScore(
-                            matchList = statsUiState.bestScoresList,
-                            true,
-                            modifier = Modifier.padding(top = 10.dp)
-                        )
-                        Divider()
-                        BestOrWorstScore(matchList = statsUiState.worstScoresList, false)
-                        Divider()
-                        AverageWinnerScore(averageScore = statsUiState.averageWinnerScore)
-                        Divider()
-                        BestWonder(wonderList = statsUiState.bestWondersList)
-                        Divider()
-                        CardsRecord(
-                            blueList = statsUiState.blueList.distinct(),
-                            yellowList = statsUiState.yellowList.distinct(),
-                            greenList = statsUiState.greenList.distinct(),
-                            purpleList = statsUiState.purpleList.distinct(),
-                        )
-                        Divider()
-                        MostChampion(
-                            absoluteList = statsUiState.mostAbsoluteChampionList,
-                            relativeList = statsUiState.mostRelativeChampionList,
-                        )
-                        Divider()
-                        BestOrWorstScorePerPlayer(matchList = statsUiState.bestScoresPerPlayerList, true)
-                        Divider()
-                        BestOrWorstScorePerPlayer(matchList = statsUiState.worstScoresPerPlayerList, false)
-                        Divider()
-                        AverageScorePerPlayer(playerAndScoreList = statsUiState.averageScorePerPlayer)
-                        Divider()
-                        VictoriesAbsoluteOrRelativePerPlayer(playerAndVictoriesList = statsUiState.allAbsoluteVictoriesList, true)
-                        Divider()
-                        VictoriesAbsoluteOrRelativePerPlayer(
-                            playerAndVictoriesList = statsUiState.allRelativeVictoriesList,
-                            false,
-                            modifier = Modifier
-                                .padding(bottom = 10.dp)
-                        )
+                )
+                if (statsUiState.isLoading) {
+                    Column(
+                        horizontalAlignment = CenterHorizontally
+                    ) {
+                        CircularProgressIndicator()
+                        Text(text = stringResource(R.string.loading))
+                    }
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = 10.dp, end = 10.dp)
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        if (statsUiState.isDatabaseEmpty) {
+                            Text(
+                                text = stringResource(R.string.stats_screen_empty_database),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentWidth()
+                                    .padding(top = 10.dp),
+                                color = Color.Red,
+                                fontStyle = FontStyle.Italic,
+                                textAlign = TextAlign.Center
+                            )
+                        } else {
+                            BestOrWorstScore(
+                                matchList = statsUiState.bestScoresList,
+                                true,
+                                modifier = Modifier.padding(top = 10.dp)
+                            )
+                            Divider()
+                            BestOrWorstScore(matchList = statsUiState.worstScoresList, false)
+                            Divider()
+                            AverageWinnerScore(averageScore = statsUiState.averageWinnerScore)
+                            Divider()
+                            BestWonder(wonderList = statsUiState.bestWondersList)
+                            Divider()
+                            CardsRecord(
+                                blueList = statsUiState.blueList.distinct(),
+                                yellowList = statsUiState.yellowList.distinct(),
+                                greenList = statsUiState.greenList.distinct(),
+                                purpleList = statsUiState.purpleList.distinct(),
+                            )
+                            Divider()
+                            MostChampion(
+                                absoluteList = statsUiState.mostAbsoluteChampionList,
+                                relativeList = statsUiState.mostRelativeChampionList,
+                            )
+                            Divider()
+                            BestOrWorstScorePerPlayer(
+                                matchList = statsUiState.bestScoresPerPlayerList,
+                                true
+                            )
+                            Divider()
+                            BestOrWorstScorePerPlayer(
+                                matchList = statsUiState.worstScoresPerPlayerList,
+                                false
+                            )
+                            Divider()
+                            AverageScorePerPlayer(playerAndScoreList = statsUiState.averageScorePerPlayer)
+                            Divider()
+                            VictoriesAbsoluteOrRelativePerPlayer(
+                                playerAndVictoriesList = statsUiState.allAbsoluteVictoriesList,
+                                true
+                            )
+                            Divider()
+                            VictoriesAbsoluteOrRelativePerPlayer(
+                                playerAndVictoriesList = statsUiState.allRelativeVictoriesList,
+                                false,
+                                modifier = Modifier
+                                    .padding(bottom = 10.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -784,8 +924,22 @@ fun StatsScreenSecundariaPreview() {
                     Pair("Gian", 39),
                     Pair("Anninha", 31),
                 ),
-                isDatabaseEmpty = false
-            )
+                isDatabaseEmpty = false,
+                isLoading = false,
+                mostAbsoluteChampionList = listOf(
+                    "Luiz" to 3,
+                    "Anna" to 2
+                ),
+                playersFiltered = listOf(
+                    "Luiz",
+                    "Anna"
+                )
+            ),
+            onChooseClick = {},
+            onDismissDropdownFilter = {},
+            onFilterPlayer = {},
+            onEraseAllFilters = {},
+            onRemoveAFilteredPlayer = {}
         )
     }
 }

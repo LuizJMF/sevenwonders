@@ -1,8 +1,5 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.luizjmfilho.sevenwonders.data.StatsRepository
@@ -23,18 +20,80 @@ class StatsViewModel @Inject constructor(
     val uiState: StateFlow<StatsUiState> = _uiState.asStateFlow()
 
     init {
+        refreshAllStats()
+    }
+
+    fun onChooseClick() {
+        viewModelScope.launch {
+            _uiState.update {  currentState ->
+                currentState.copy(
+                    isDropdownFilterShown = true,
+                    playersToBeFiltered = statsRepository.readPlayer() - currentState.playersFiltered.toSet()
+                )
+            }
+        }
+    }
+
+    fun onDismissDropdownFilter() {
+        _uiState.update {  currentState ->
+            currentState.copy(
+                isDropdownFilterShown = false,
+            )
+        }
+    }
+
+    fun onFilterPlayer(player: String) {
+        _uiState.update {  currentState ->
+            val newList = currentState.playersFiltered.toMutableList()
+            newList.add(player)
+            currentState.copy(
+                isDropdownFilterShown = false,
+                playersFiltered = newList
+            )
+        }
+    }
+
+    fun onEraseAllFilters() {
+        viewModelScope.launch {
+            _uiState.update {  currentState ->
+                currentState.copy(
+                    isDropdownFilterShown = false,
+                    playersFiltered = emptyList(),
+                    playersToBeFiltered = statsRepository.readPlayer()
+                )
+            }
+        }
+    }
+
+    fun onRemoveAFilteredPlayer(player: String) {
+        viewModelScope.launch {
+            _uiState.update {  currentState ->
+                val newFilteredList = currentState.playersFiltered.filter { it != player }
+                currentState.copy(
+                    playersFiltered = newFilteredList,
+                    playersToBeFiltered = statsRepository.readPlayer() - newFilteredList.toSet()
+                )
+            }
+        }
+    }
+
+    fun refreshAllStats() {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 val isDatabaseEmpty = (statsRepository.getAverageWinnerScore() == null)
                 val bestScoreList = if(isDatabaseEmpty) emptyList() else statsRepository.getBestScoreList()
                 val worstScoreList = if(isDatabaseEmpty) emptyList() else statsRepository.getWorstScoreList()
-                val bestScoresPerPlayerList = if(isDatabaseEmpty) emptyList() else statsRepository.getBestScoresPerPlayerList()?.sortedByDescending { it.totalScore }
-                val worstScoresPerPlayerList = if(isDatabaseEmpty) emptyList() else statsRepository.getWorstScoresPerPlayerList()?.sortedBy{ it.totalScore }
                 val averageWinnerScore = if(isDatabaseEmpty) 0 else statsRepository.getAverageWinnerScore()
-                val averageScorePerPlayer = if(isDatabaseEmpty) emptyList() else statsRepository.getAverageScorePerPlayer()?.sortedByDescending { it.second }
-
+                val bestWondersList = if(isDatabaseEmpty) emptyList() else statsRepository.getBestWondersList()
+                val blueList = if(isDatabaseEmpty) emptyList() else statsRepository.getBlueRecordsList()?.map{ it.nickname to it.blueCardScore }
+                val yellowList = if(isDatabaseEmpty) emptyList() else statsRepository.getYellowRecordsList()?.map{ it.nickname to it.yellowCardScore }
+                val greenList = if(isDatabaseEmpty) emptyList() else statsRepository.getGreenRecordsList()?.map{ it.nickname to it.greenCardScore }
+                val purpleList = if(isDatabaseEmpty) emptyList() else statsRepository.getPurpleRecordsList()?.map{ it.nickname to it.purpleCardScore }
                 val numberOfVictoriesPerPlayer = if(isDatabaseEmpty) mapOf() else statsRepository.selectAllMatches()?.filter { it.position == 1 }?.groupingBy { it.nickname }?.eachCount()
                 val mostAbsoluteChampionList = if(isDatabaseEmpty) emptyList() else numberOfVictoriesPerPlayer?.filter { it.value == numberOfVictoriesPerPlayer.values.maxOrNull() }?.toList()
+                val bestScoresPerPlayerList = if(isDatabaseEmpty) emptyList() else statsRepository.getBestScoresPerPlayerList()?.sortedByDescending { it.totalScore }
+                val worstScoresPerPlayerList = if(isDatabaseEmpty) emptyList() else statsRepository.getWorstScoresPerPlayerList()?.sortedBy{ it.totalScore }
+                val averageScorePerPlayer = if(isDatabaseEmpty) emptyList() else statsRepository.getAverageScorePerPlayer()?.sortedByDescending { it.second }
                 val numberOfMatchesPerPlayer = if(isDatabaseEmpty) mapOf() else statsRepository.selectAllMatches()?.groupingBy { it.nickname }?.eachCount()
                 val ratioOfVictoriesPerPlayer = if(isDatabaseEmpty) mapOf() else numberOfVictoriesPerPlayer?.mapValues { (nickname, contagem) ->
                     val totalMatches = numberOfMatchesPerPlayer?.get(nickname) ?: 0
@@ -45,12 +104,6 @@ class StatsViewModel @Inject constructor(
                     }
                 }?.mapValues { it.value.toInt() }
 
-                val blueList = if(isDatabaseEmpty) emptyList() else statsRepository.getBlueRecordsList()?.map{ it.nickname to it.blueCardScore }
-                val yellowList = if(isDatabaseEmpty) emptyList() else statsRepository.getYellowRecordsList()?.map{ it.nickname to it.yellowCardScore }
-                val greenList = if(isDatabaseEmpty) emptyList() else statsRepository.getGreenRecordsList()?.map{ it.nickname to it.greenCardScore }
-                val purpleList = if(isDatabaseEmpty) emptyList() else statsRepository.getPurpleRecordsList()?.map{ it.nickname to it.purpleCardScore }
-
-                val bestWondersList = if(isDatabaseEmpty) emptyList() else statsRepository.getBestWondersList()
 
                 currentState.copy(
                     isDatabaseEmpty = isDatabaseEmpty,
@@ -69,9 +122,10 @@ class StatsViewModel @Inject constructor(
                     greenList = greenList!!,
                     purpleList = purpleList!!,
                     bestWondersList = bestWondersList!!,
-                    isLoading = false
+                    isLoading = false,
                 )
             }
         }
     }
+
 }

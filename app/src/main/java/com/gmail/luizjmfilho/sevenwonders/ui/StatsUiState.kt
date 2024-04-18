@@ -4,6 +4,9 @@ import com.gmail.luizjmfilho.sevenwonders.model.Match
 
 data class StatsUiState(
     val isLoading: Boolean = true,
+    val playersToBeFiltered: List<String> = emptyList(),
+    val playersFiltered: List<String> = emptyList(),
+    val isDropdownFilterShown: Boolean = false,
     val isDatabaseEmpty: Boolean = true,
     val bestScoresList: List<Match> = emptyList(),
     val worstScoresList: List<Match> = emptyList(),

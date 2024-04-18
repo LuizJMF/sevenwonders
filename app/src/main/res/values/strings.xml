@@ -127,6 +127,8 @@
     <string name="empty_name">Empty name</string>
     <string name="science_points_simulator">Science points simulator</string>
     <string name="simulator">Simulator</string>
+    <string name="filter_by_players">Filter by players:</string>
+    <string name="all_players">All players</string>
     <plurals name="num_victories">
         <item quantity="one">(%d victory)</item>
         <item quantity="other">(%d victories)</item>
