@@ -784,7 +784,12 @@ fun StatsScreenSecundariaPreview() {
                     Pair("Gian", 39),
                     Pair("Anninha", 31),
                 ),
-                isDatabaseEmpty = false
+                isDatabaseEmpty = false,
+                isLoading = false,
+                mostAbsoluteChampionList = listOf(
+                    "Luiz" to 3,
+                    "Anna" to 3
+                )
             )
         )
     }
