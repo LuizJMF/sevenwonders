@@ -169,6 +169,9 @@ fun MatchDetailsScreenSecundaria(
                                 text = stringResource(R.string.match_details_choose_methods),
                                 modifier = Modifier
                                     .padding(bottom = 15.dp)
+                                    .weight(1f),
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1,
                             )
                             IconButton(
                                 onClick = {
