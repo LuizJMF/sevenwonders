@@ -1,8 +1,6 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,17 +18,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -40,11 +34,10 @@ import androidx.compose.ui.unit.dp
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
-val homeScreenTestTag: String = "Home Screen"
+const val homeScreenTestTag: String = "Home Screen"
 @Composable
 fun HomeScreen(
     onCriarPartidaClick: () -> Unit,
-    onListaDeJogadoresClick: () -> Unit,
     onMatchesHistoryClick: () -> Unit,
     onStatsClick: () -> Unit,
     onAboutClick: () -> Unit,
@@ -154,13 +147,12 @@ fun HomeScreenButton(
     }
 }
 
-@Preview()
+@Preview
 @Composable
 fun HomeScreenPreview() {
     SevenWondersTheme {
         HomeScreen(
             onCriarPartidaClick = {},
-            onListaDeJogadoresClick = {},
             onMatchesHistoryClick = {},
             onStatsClick = {},
             onAboutClick = {},
