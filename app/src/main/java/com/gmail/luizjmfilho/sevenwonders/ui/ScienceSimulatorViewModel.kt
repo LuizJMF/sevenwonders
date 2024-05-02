@@ -10,96 +10,49 @@ class ScienceSimulatorViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(ScienceSimulatorUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun onDecreaseSymbol(symbol: ScienceSymbol) {
-        _uiState.update {  currentState ->
-            var value = 0
-            when(symbol) {
-                ScienceSymbol.Compass -> {
-                    value = currentState.compassQuantity
-                    if (currentState.compassQuantity != 0) --value
-                    currentState.copy(
-                        compassQuantity = value,
-                        totalScore = calculateTotalPoints(
-                            compassQuantity = value,
-                            stoneQuantity = currentState.stoneQuantity,
-                            gearQuantity = currentState.gearQuantity
-                        )
-                    )
-                }
-                ScienceSymbol.Stone -> {
-                    value = currentState.stoneQuantity
-                    if (currentState.stoneQuantity != 0) --value
-                    currentState.copy(
-                        stoneQuantity = value,
-                        totalScore = calculateTotalPoints(
-                            compassQuantity = currentState.compassQuantity,
-                            stoneQuantity = value,
-                            gearQuantity = currentState.gearQuantity
-                        )
-                    )
-                }
-                ScienceSymbol.Gear -> {
-                    value = currentState.gearQuantity
-                    if (currentState.gearQuantity != 0) --value
-                    currentState.copy(
-                        gearQuantity = value,
-                        totalScore = calculateTotalPoints(
-                            compassQuantity = currentState.compassQuantity,
-                            stoneQuantity = currentState.stoneQuantity,
-                            gearQuantity = value
-                        )
-                    )
-                }
-            }
+    fun onQuantityChange(symbol: ScienceSymbol, quantity: Int) {
+        if (quantity < 0) {
+            return
+        }
+
+        when (symbol) {
+            ScienceSymbol.Compass -> onCompassQuantityChange(quantity)
+            ScienceSymbol.Stone -> onStoneQuantityChange(quantity)
+            ScienceSymbol.Gear -> onGearQuantityChange(quantity)
         }
     }
 
-    fun onIncreaseSymbol(symbol: ScienceSymbol) {
-
-        _uiState.update {  currentState ->
-            var value = 0
-            when(symbol) {
-                ScienceSymbol.Compass -> {
-                    value = currentState.compassQuantity
-                    currentState.copy(
-                        compassQuantity = ++value,
-                        totalScore = calculateTotalPoints(
-                            compassQuantity = value,
-                            stoneQuantity = currentState.stoneQuantity,
-                            gearQuantity = currentState.gearQuantity
-                        )
-                    )
-                }
-                ScienceSymbol.Stone -> {
-                    value = currentState.stoneQuantity
-                    currentState.copy(
-                        stoneQuantity = ++value,
-                        totalScore = calculateTotalPoints(
-                            compassQuantity = currentState.compassQuantity,
-                            stoneQuantity = value,
-                            gearQuantity = currentState.gearQuantity
-                        )
-                    )
-                }
-                ScienceSymbol.Gear -> {
-                    value = currentState.gearQuantity
-                    currentState.copy(
-                        gearQuantity = ++value,
-                        totalScore = calculateTotalPoints(
-                            compassQuantity = currentState.compassQuantity,
-                            stoneQuantity = currentState.stoneQuantity,
-                            gearQuantity = value
-                        )
-                    )
-                }
-            }
+    private fun onCompassQuantityChange(quantity: Int) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                compassQuantity = quantity,
+                totalScore = calculateTotalScore(compassQuantity = quantity),
+            )
         }
     }
 
-    fun calculateTotalPoints(
-        compassQuantity: Int,
-        stoneQuantity: Int,
-        gearQuantity: Int,
+    private fun onStoneQuantityChange(quantity: Int) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                stoneQuantity = quantity,
+                totalScore = calculateTotalScore(stoneQuantity = quantity),
+            )
+        }
+    }
+
+    private fun onGearQuantityChange(quantity: Int) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                gearQuantity = quantity,
+                totalScore = calculateTotalScore(gearQuantity = quantity),
+            )
+        }
+    }
+
+    private fun calculateTotalScore(
+        compassQuantity: Int = _uiState.value.compassQuantity,
+        stoneQuantity: Int = _uiState.value.stoneQuantity,
+        gearQuantity: Int = _uiState.value.gearQuantity,
     ): Int {
         val compassQuantityPoints = compassQuantity * compassQuantity
         val stoneQuantityPoints = stoneQuantity * stoneQuantity
