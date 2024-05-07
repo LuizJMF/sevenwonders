@@ -39,7 +39,6 @@ fun SevenWondersNavHost(
         ) {
             HomeScreen(
                 onCriarPartidaClick = { navController.navigate(ScreenNames.NewGameScreen.name) },
-                onListaDeJogadoresClick = { navController.navigate(ScreenNames.PlayersListScreen.name) },
                 onMatchesHistoryClick = { navController.navigate(ScreenNames.MatchesHistoryScreen.name) },
                 onStatsClick = { navController.navigate(ScreenNames.StatsScreen.name) },
                 onAboutClick = { navController.navigate(ScreenNames.AboutScreen.name) },
