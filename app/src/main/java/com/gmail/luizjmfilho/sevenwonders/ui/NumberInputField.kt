@@ -2,6 +2,7 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -73,8 +77,18 @@ fun NumberInputField(
                 .fillMaxHeight()
                 .align(Alignment.CenterHorizontally),
         ) {
+            val updatedNumber by rememberUpdatedState(number)
+
+            val decreaseNumberButtonInteractionSource = remember { MutableInteractionSource() }
+            val onDecreaseNumberButtonClick = { onNumberChange(updatedNumber - 1) }
+
             IconButton(
-                onClick = { onNumberChange(number - 1) },
+                onClick = onDecreaseNumberButtonClick,
+                interactionSource = decreaseNumberButtonInteractionSource,
+                modifier = Modifier.onLongClickRepeat(
+                    interactionSource = decreaseNumberButtonInteractionSource,
+                    action = onDecreaseNumberButtonClick,
+                ),
             ) {
                 Icon(
                     imageVector = Icons.Filled.Remove,
@@ -89,8 +103,16 @@ fun NumberInputField(
                 modifier = Modifier.testTag(NumberInputFieldNumberTestTag),
             )
 
+            val increaseNumberButtonInteractionSource = remember { MutableInteractionSource() }
+            val onIncreaseNumberButtonClick = { onNumberChange(updatedNumber + 1) }
+
             IconButton(
-                onClick = { onNumberChange(number + 1) },
+                onClick = onIncreaseNumberButtonClick,
+                interactionSource = increaseNumberButtonInteractionSource,
+                modifier = Modifier.onLongClickRepeat(
+                    interactionSource = increaseNumberButtonInteractionSource,
+                    action = onIncreaseNumberButtonClick,
+                ),
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
