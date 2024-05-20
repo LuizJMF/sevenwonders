@@ -1,11 +1,11 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.luizjmfilho.sevenwonders.data.CalculationRepository
 import com.gmail.luizjmfilho.sevenwonders.model.Match
 import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetails
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,11 +16,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CalculationViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val calculationRepository: CalculationRepository,
-) : ViewModel() {
-
-
+    firebaseAnalytics: FirebaseAnalytics,
+) : TrackedScreenViewModel(firebaseAnalytics, "Calculation") {
 
     private val _playerDetailsOfPreviousScreen: List<PlayerDetails> = savedStateHandle.get<String>("playerDetailsList")!!.split(";").map {
         val list = it.split(",")
@@ -56,7 +55,7 @@ class CalculationViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { currentState ->
                 val previousCategoryValue = currentState.currentCategory.ordinal - 1
-                val enumList = PointCategory.values()
+                val enumList = PointCategory.entries
                 currentState.copy(
                     currentCategory = enumList[previousCategoryValue]
                 )
@@ -68,7 +67,7 @@ class CalculationViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { currentState ->
                 val nextCategoryValue = currentState.currentCategory.ordinal + 1
-                val enumList = PointCategory.values()
+                val enumList = PointCategory.entries
                 currentState.copy(
                     currentCategory = enumList[nextCategoryValue]
                 )
@@ -103,38 +102,6 @@ class CalculationViewModel @Inject constructor(
                 }
 
 
-
-                when(currentState.currentCategory) {
-                    PointCategory.WonderBoard -> { currentState.copy(wonderBoardScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.Coin -> { currentState.copy(coinScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.War -> { currentState.copy(warScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.BlueCard -> { currentState.copy(blueCardScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.YellowCard -> { currentState.copy(yellowCardScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.GreenCard -> { currentState.copy(greenCardScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.PurpleCard -> { currentState.copy(purpleCardScoreList = searchedList, totalScoreList = totalScoreList)}
-
-                }
-
-            }
-        }
-    }
-
-    fun onPlusTwoPointsClick(index: Int) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                val searchedList = when(currentState.currentCategory) {
-                    PointCategory.WonderBoard -> currentState.wonderBoardScoreList.toMutableList()
-                    PointCategory.Coin -> currentState.coinScoreList.toMutableList()
-                    PointCategory.War -> currentState.warScoreList.toMutableList()
-                    PointCategory.BlueCard -> currentState.blueCardScoreList.toMutableList()
-                    PointCategory.YellowCard -> currentState.yellowCardScoreList.toMutableList()
-                    PointCategory.GreenCard -> currentState.greenCardScoreList.toMutableList()
-                    PointCategory.PurpleCard -> currentState.purpleCardScoreList.toMutableList()
-                }
-                val totalScoreList = currentState.totalScoreList.toMutableList()
-
-                searchedList[index] += 2
-                totalScoreList[index] += 2
 
                 when(currentState.currentCategory) {
                     PointCategory.WonderBoard -> { currentState.copy(wonderBoardScoreList = searchedList, totalScoreList = totalScoreList)}
@@ -311,18 +278,6 @@ class CalculationViewModel @Inject constructor(
         }
     }
 
-    fun onPlusTwoCoinsQuantity(index: Int) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                val newList = currentState.coinQuantityList.toMutableList()
-                newList[index] += 2
-                currentState.copy(
-                    coinQuantityList = newList
-                )
-            }
-        }
-    }
-
     fun onCoinGridConfirm(playerNickname: String) {
         viewModelScope.launch {
             _uiState.update { currentState ->
@@ -387,7 +342,7 @@ class CalculationViewModel @Inject constructor(
         }
     }
 
-    fun addPlayerMatchInfo(dateAndTime: String,) {
+    fun addPlayerMatchInfo(dateAndTime: String) {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 val matchId = if (calculationRepository.getLastMatchId() == null) 1 else calculationRepository.getLastMatchId()!! + 1

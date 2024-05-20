@@ -23,12 +23,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -48,7 +44,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.model.Match
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
-import kotlinx.coroutines.delay
 
 @Composable
 fun StatsScreenPrimaria(
@@ -56,6 +51,8 @@ fun StatsScreenPrimaria(
     modifier: Modifier = Modifier,
     statsViewModel: StatsViewModel = hiltViewModel()
 ) {
+    WithLifecycleOwner(statsViewModel)
+
     val statsUiState by statsViewModel.uiState.collectAsState()
     StatsScreenSecundaria(
         onBackClick = onBackClick,

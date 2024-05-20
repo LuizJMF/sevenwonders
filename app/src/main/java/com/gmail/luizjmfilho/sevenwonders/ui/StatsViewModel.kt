@@ -1,11 +1,8 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.luizjmfilho.sevenwonders.data.StatsRepository
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +13,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StatsViewModel @Inject constructor(
-    private val statsRepository: StatsRepository
-): ViewModel() {
+    private val statsRepository: StatsRepository,
+    firebaseAnalytics: FirebaseAnalytics,
+): TrackedScreenViewModel(firebaseAnalytics, "Stats") {
 
     private val _uiState = MutableStateFlow(StatsUiState())
     val uiState: StateFlow<StatsUiState> = _uiState.asStateFlow()

@@ -1,9 +1,8 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.luizjmfilho.sevenwonders.data.MatchesHistoryRepository
-import com.gmail.luizjmfilho.sevenwonders.model.Match
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +14,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MatchesHistoryViewModel @Inject constructor(
     private val matchesHistoryRepository: MatchesHistoryRepository,
-) : ViewModel() {
+    firebaseAnalytics: FirebaseAnalytics,
+) : TrackedScreenViewModel(firebaseAnalytics, "MatchesHistory") {
 
     private val _uiState = MutableStateFlow(MatchesHistoryUiState())
     val uiState: StateFlow<MatchesHistoryUiState> = _uiState.asStateFlow()

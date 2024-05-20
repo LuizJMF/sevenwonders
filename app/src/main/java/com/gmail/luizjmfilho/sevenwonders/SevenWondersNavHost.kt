@@ -2,8 +2,8 @@ package com.gmail.luizjmfilho.sevenwonders
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,9 +19,7 @@ import com.gmail.luizjmfilho.sevenwonders.ui.StatsScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.SummaryScreenPrimaria
 
 @Composable
-fun SevenWondersNavHost(
-    windowWidthSizeClass: WindowWidthSizeClass,
-) {
+fun SevenWondersNavHost() {
     val navController = rememberNavController()
 
     NavHost(
@@ -42,7 +40,8 @@ fun SevenWondersNavHost(
                 onMatchesHistoryClick = { navController.navigate(ScreenNames.MatchesHistoryScreen.name) },
                 onStatsClick = { navController.navigate(ScreenNames.StatsScreen.name) },
                 onAboutClick = { navController.navigate(ScreenNames.AboutScreen.name) },
-                onScienceSimulatorClick = { navController.navigate(ScreenNames.ScienceSimulatorScreen.name) }
+                onScienceSimulatorClick = { navController.navigate(ScreenNames.ScienceSimulatorScreen.name) },
+                homeViewModel = hiltViewModel(),
             )
         }
 
@@ -54,7 +53,7 @@ fun SevenWondersNavHost(
                     animationSpec = tween(500)
                 )
             },
-        ) { backStack ->
+        ) {
             PlayersListScreenPrimaria(
                 onSelectPlayer = { activePlayersList ->
                     navController.previousBackStackEntry?.savedStateHandle?.set("xxx", activePlayersList)
@@ -192,7 +191,8 @@ fun SevenWondersNavHost(
             },
         ) {
             AboutScreen(
-                onBackClick = {navController.navigateUp()}
+                onBackClick = {navController.navigateUp()},
+                aboutViewModel = hiltViewModel(),
             )
         }
 

@@ -1,9 +1,9 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetails
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,8 +14,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MatchDetailsViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+    savedStateHandle: SavedStateHandle,
+    firebaseAnalytics: FirebaseAnalytics,
+) : TrackedScreenViewModel(firebaseAnalytics, "MatchDetails") {
 
     private val _playerNicknamesInThePassedOrder: List<String> = savedStateHandle.get<String>("playerNicknames")!!.split(",") - listOf("")
     val playerNicknamesInThePassedOrder = _playerNicknamesInThePassedOrder
@@ -48,7 +49,7 @@ class MatchDetailsViewModel @Inject constructor(
 
                 val playersWonders = when (wonderMethod) {
                     RaffleOrChoose.Choose -> List(_playerNicknamesInThePassedOrder.size) { null }
-                    RaffleOrChoose.Raffle -> Wonders.values().toList().shuffled().take(_playerNicknamesInThePassedOrder.size)
+                    RaffleOrChoose.Raffle -> Wonders.entries.toList().shuffled().take(_playerNicknamesInThePassedOrder.size)
                 }
 
                 val matchPlayerDetails = List(_playerNicknamesInThePassedOrder.size) { index ->
@@ -99,9 +100,9 @@ class MatchDetailsViewModel @Inject constructor(
 
                 currentUsedWonders = currentUsedWonders - listOf(null)
 
-                val allWonders = Wonders.values().toList()
+                val allWonders = Wonders.entries
 
-                val availableWondersList = allWonders - currentUsedWonders
+                val availableWondersList = allWonders - currentUsedWonders.toSet()
 
                 currentState.copy(
                     availableWondersList = availableWondersList

@@ -1,11 +1,9 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.luizjmfilho.sevenwonders.data.PlayersListRepository
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +15,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayersListViewModel @Inject constructor(
     private val playersListRepository: PlayersListRepository,
-    private val savedStateHandle: SavedStateHandle,
-) : ViewModel()  {
+    savedStateHandle: SavedStateHandle,
+    firebaseAnalytics: FirebaseAnalytics,
+) : TrackedScreenViewModel(firebaseAnalytics, "PlayersList")  {
 
     private val originalInfo = savedStateHandle.get<String>("info")!!.split(",")
     private val playerIndexBeingSelected = originalInfo[0]
@@ -30,7 +29,7 @@ class PlayersListViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
-                    playersList = playersListRepository.readPlayer() - activePlayersList.filter { it != "" },
+                    playersList = playersListRepository.readPlayer() - activePlayersList.filter { it != "" }.toSet(),
                 )
             }
         }
@@ -39,11 +38,11 @@ class PlayersListViewModel @Inject constructor(
     fun onAddPlayer() {
         viewModelScope.launch {
             _uiState.update { currentState ->
-                val addPlayerResult = playersListRepository.addPlayer(currentState.playerBeingAdded.toLowerCase().capitalize())
+                val addPlayerResult = playersListRepository.addPlayer(currentState.playerBeingAdded.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
                 if (addPlayerResult == null) {
                     currentState.copy(
                         playerBeingAdded = "",
-                        playersList = playersListRepository.readPlayer() - activePlayersList.filter { it != "" },
+                        playersList = playersListRepository.readPlayer() - activePlayersList.filter { it != "" }.toSet(),
                         nameError = null,
                         isDialogShown = false
                     )
@@ -98,7 +97,7 @@ class PlayersListViewModel @Inject constructor(
             playersListRepository.deletePlayer(name)
             _uiState.update { currentState ->
                 currentState.copy(
-                    playersList = playersListRepository.readPlayer() - activePlayersList.filter { it != "" },
+                    playersList = playersListRepository.readPlayer() - activePlayersList.filter { it != "" }.toSet(),
                 )
             }
         }

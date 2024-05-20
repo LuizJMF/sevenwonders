@@ -72,6 +72,8 @@ fun CalculationScreenPrimaria(
     modifier: Modifier = Modifier,
     calculationViewModel: CalculationViewModel = hiltViewModel(),
 ) {
+    WithLifecycleOwner(calculationViewModel)
+
     val calculationUiState by calculationViewModel.uiState.collectAsState()
     CalculationScreenSecundaria(
         onBackClick = onBackClick,

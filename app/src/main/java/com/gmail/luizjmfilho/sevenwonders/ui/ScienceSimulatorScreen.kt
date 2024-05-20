@@ -40,7 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
@@ -48,8 +48,9 @@ import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 fun ScienceSimulatorScreenPrimaria(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    scienceSimulatorViewModel: ScienceSimulatorViewModel = viewModel()
+    scienceSimulatorViewModel: ScienceSimulatorViewModel = hiltViewModel()
 ) {
+    WithLifecycleOwner(scienceSimulatorViewModel)
 
     val scienceSimulatorUiState by scienceSimulatorViewModel.uiState.collectAsState()
 

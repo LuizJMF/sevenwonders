@@ -24,6 +24,12 @@
 
         <activity android:name="com.gmail.luizjmfilho.sevenwonders.TestActivity" />
 
+        <!-- Disable automatic screen logging for Firebase Analytics.
+         Screen logging is performed manually by "TrackedScreenViewModel". -->
+        <meta-data
+            android:name="google_analytics_automatic_screen_reporting_enabled"
+            android:value="false" />
+
     </application>
 
 </manifest>

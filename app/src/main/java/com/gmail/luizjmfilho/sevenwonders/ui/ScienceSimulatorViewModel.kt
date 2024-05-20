@@ -1,18 +1,23 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import androidx.lifecycle.ViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class ScienceSimulatorViewModel: ViewModel() {
+@HiltViewModel
+class ScienceSimulatorViewModel @Inject constructor(
+    firebaseAnalytics: FirebaseAnalytics,
+): TrackedScreenViewModel(firebaseAnalytics, "ScienceSimulator") {
 
     private val _uiState = MutableStateFlow(ScienceSimulatorUiState())
     val uiState = _uiState.asStateFlow()
 
     fun onDecreaseSymbol(symbol: ScienceSymbol) {
         _uiState.update {  currentState ->
-            var value = 0
+            var value: Int
             when(symbol) {
                 ScienceSymbol.Compass -> {
                     value = currentState.compassQuantity
@@ -57,7 +62,7 @@ class ScienceSimulatorViewModel: ViewModel() {
     fun onIncreaseSymbol(symbol: ScienceSymbol) {
 
         _uiState.update {  currentState ->
-            var value = 0
+            var value: Int
             when(symbol) {
                 ScienceSymbol.Compass -> {
                     value = currentState.compassQuantity
@@ -96,7 +101,7 @@ class ScienceSimulatorViewModel: ViewModel() {
         }
     }
 
-    fun calculateTotalPoints(
+    private fun calculateTotalPoints(
         compassQuantity: Int,
         stoneQuantity: Int,
         gearQuantity: Int,
@@ -121,5 +126,4 @@ class ScienceSimulatorViewModel: ViewModel() {
 
         return compassQuantityPoints + stoneQuantityPoints + gearQuantityPoints + combinationPoints
     }
-
 }

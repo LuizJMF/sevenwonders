@@ -61,6 +61,8 @@ fun NewGameScreenPrimaria(
     activePlayersListGambiarra: List<String> = emptyList(),
     newGameViewModel: NewGameViewModel = hiltViewModel()
 ) {
+    WithLifecycleOwner(newGameViewModel)
+
     LaunchedEffect(activePlayersListGambiarra) {
         newGameViewModel.setActivePlayersList(activePlayersListGambiarra)
     }
