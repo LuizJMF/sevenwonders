@@ -4,6 +4,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -56,6 +57,28 @@ class NumberInputFieldTest {
         }
 
         assertEquals(number - 1, changedNumber)
+    }
+
+    @Test
+    fun whenDecreaseButtonIsLongClicked_thenNumberIsChangedMultipleTimes() {
+        var onNumberChangeCallCount = 0
+
+        launchNumberInputField(number = 42, onNumberChange = { onNumberChangeCallCount++ })
+
+        robot.longClickDecreaseButton()
+
+        assertTrue("'onNumberChange' was called $onNumberChangeCallCount time(s) after long clicking the decrease button", onNumberChangeCallCount > 1)
+    }
+
+    @Test
+    fun whenIncreaseButtonIsLongClicked_thenNumberIsChangedMultipleTimes() {
+        var onNumberChangeCallCount = 0
+
+        launchNumberInputField(number = 42, onNumberChange = { onNumberChangeCallCount++ })
+
+        robot.longClickIncreaseButton()
+
+        assertTrue("'onNumberChange' was called $onNumberChangeCallCount time(s) after long clicking the increase button", onNumberChangeCallCount > 1)
     }
 
     private fun launchNumberInputField(
