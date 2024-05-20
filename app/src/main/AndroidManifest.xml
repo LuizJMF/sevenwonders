@@ -30,6 +30,24 @@
             android:name="google_analytics_automatic_screen_reporting_enabled"
             android:value="false" />
 
+        <!-- Disable Firebase Analytics for debug builds.
+         The variable "firebaseAnalyticsCollectionEnabled" is set to "false" only for the debug variant in "app/build.gradle". -->
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="${firebaseAnalyticsCollectionEnabled}" />
+
+        <!-- Disable Firebase Crashlytics for debug builds.
+         The variable "firebaseAnalyticsCollectionEnabled" is set to "false" only for the debug variant in "app/build.gradle". -->
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="${firebaseAnalyticsCollectionEnabled}" />
+
+        <!-- Disable Firebase Performance Monitoring for debug builds.
+         The variable "firebaseAnalyticsCollectionEnabled" is set to "false" only for the debug variant in "app/build.gradle". -->
+        <meta-data
+            android:name="firebase_performance_collection_enabled"
+            android:value="${firebaseAnalyticsCollectionEnabled}" />
+
     </application>
 
 </manifest>
