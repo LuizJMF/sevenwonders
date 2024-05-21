@@ -4,7 +4,8 @@ plugins {
     id "com.google.devtools.ksp" version "1.9.0-1.0.13"
     id "com.google.dagger.hilt.android"
     id 'com.google.gms.google-services' // adicionei isso por conta do Firebase
-    id 'com.google.firebase.crashlytics' // adicionei isso por conta do Firebase crashlytics
+    id 'com.google.firebase.crashlytics' // adicionei isso por conta do Firebase Crashlytics
+    id 'com.google.firebase.firebase-perf' // adicionei isso por conta do Firebase Performance Monitoring
 }
 
 android {
@@ -22,6 +23,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            manifestPlaceholders.firebaseAnalyticsCollectionEnabled = false
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -99,7 +104,8 @@ dependencies {
     // esses imports é pelo Firebase
     implementation platform('com.google.firebase:firebase-bom:32.7.0')
     implementation 'com.google.firebase:firebase-analytics'
-    implementation("com.google.firebase:firebase-crashlytics")
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-perf'
 
     // as bibliotecas abaixo serão para usar a Google Play In-App Reviews Library
     implementation 'com.google.android.play:review:2.0.1'

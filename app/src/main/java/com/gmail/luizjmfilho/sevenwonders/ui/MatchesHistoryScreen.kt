@@ -82,6 +82,8 @@ fun MatchesHistoryPrimaria(
     modifier: Modifier = Modifier,
     matchesHistoryViewModel: MatchesHistoryViewModel = hiltViewModel()
 ) {
+    WithLifecycleOwner(matchesHistoryViewModel)
+
     val matchesHistoryUiState by matchesHistoryViewModel.uiState.collectAsState()
     MatchesHistorySecundaria(
         onBackClick = onBackClick,
@@ -303,6 +305,7 @@ fun MatchCard(
                         ) {
                             val degree by animateFloatAsState(
                                 targetValue = if (expanded) 0f else 180f,
+                                label = "Match card arrow",
                             )
                             Icon(
                                 imageVector = Icons.Filled.ExpandLess,

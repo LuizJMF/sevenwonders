@@ -1,11 +1,11 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmail.luizjmfilho.sevenwonders.data.CalculationRepository
 import com.gmail.luizjmfilho.sevenwonders.model.Match
 import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetails
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +18,8 @@ import javax.inject.Inject
 class CalculationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val calculationRepository: CalculationRepository,
-) : ViewModel() {
+    firebaseAnalytics: FirebaseAnalytics,
+) : TrackedScreenViewModel(firebaseAnalytics, "Calculation") {
 
     private val _playerDetailsOfPreviousScreen: List<PlayerDetails> = savedStateHandle.get<String>("playerDetailsList")!!.split(";").map {
         val list = it.split(",")

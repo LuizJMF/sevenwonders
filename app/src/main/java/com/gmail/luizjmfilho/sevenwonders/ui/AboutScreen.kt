@@ -27,6 +27,20 @@ import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 @Composable
 fun AboutScreen(
     onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    aboutViewModel: AboutViewModel,
+) {
+    WithLifecycleOwner(aboutViewModel)
+
+    AboutScreen(
+        onBackClick = onBackClick,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun AboutScreen(
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(

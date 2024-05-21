@@ -1,10 +1,6 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -58,9 +54,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -74,6 +68,8 @@ fun PlayersListScreenPrimaria(
     modifier: Modifier = Modifier,
     playersListViewModel: PlayersListViewModel = hiltViewModel()
 ) {
+    WithLifecycleOwner(playersListViewModel)
+
     val playersListUiState by playersListViewModel.uiState.collectAsState()
 
     PlayersListScreenSecundaria(
@@ -243,22 +239,6 @@ fun PlayersListScreenSecundaria(
     }
 }
 
-@Composable
-fun PlayersListNameAndNicknameItem(
-    nickname: String,
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        text = nickname,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        color = MaterialTheme.colorScheme.primary,
-        fontStyle = FontStyle.Italic,
-        modifier = modifier
-            .animateContentSize()
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SevenWondersAppBar(
@@ -296,7 +276,6 @@ fun SevenWondersAppBar(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddPlayerDialog(
     value: String,
@@ -329,10 +308,11 @@ fun AddPlayerDialog(
                         )
                     },
                     label = { Text(text = stringResource(R.string.new_player))},
-                    colors = TextFieldDefaults.textFieldColors(
+                    colors = TextFieldDefaults.colors(
                         unfocusedLabelColor = labelAndIconSchoolTextFieldColor,
                         focusedLabelColor = labelAndIconSchoolTextFieldColor,
-                        containerColor = containerTextFieldColor,
+                        focusedContainerColor = containerTextFieldColor,
+                        unfocusedContainerColor = containerTextFieldColor,
                         unfocusedTrailingIconColor = labelAndIconSchoolTextFieldColor,
                         focusedTrailingIconColor = labelAndIconSchoolTextFieldColor,
                         unfocusedIndicatorColor = labelAndIconSchoolTextFieldColor,

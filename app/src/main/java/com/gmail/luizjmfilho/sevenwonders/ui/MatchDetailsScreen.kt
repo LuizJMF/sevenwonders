@@ -3,12 +3,10 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 import android.content.Context
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOut
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -32,7 +30,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowRightAlt
-import androidx.compose.material.icons.filled.Bed
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.MoveDown
@@ -91,6 +88,8 @@ fun MatchDetailsScreenPrimaria(
     modifier: Modifier = Modifier,
     matchDetailsViewModel: MatchDetailsViewModel = hiltViewModel()
 ) {
+    WithLifecycleOwner(matchDetailsViewModel)
+
     val matchDetailsUiState by matchDetailsViewModel.uiState.collectAsState()
     MatchDetailsScreenSecundaria(
         onBackClick = onBackClick,
@@ -184,6 +183,7 @@ fun MatchDetailsScreenSecundaria(
                             ) {
                                 val degree by animateFloatAsState(
                                     targetValue = if (raffleAndChooseBoxesExpanded) 0f else 180f,
+                                    label = "Match creation method arrow",
                                 )
                                 Icon(
                                     imageVector = Icons.Filled.ExpandLess,
@@ -351,7 +351,6 @@ fun RaffleAndChooseBox(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PersonAndWonderCard(
     playerDetails: PlayerDetails,
@@ -448,7 +447,7 @@ fun PersonAndWonderCard(
                             initialOffsetX = {
                                 -it
                             }
-                        ) with slideOutHorizontally(
+                        ) togetherWith slideOutHorizontally(
                             targetOffsetX = {
                                 it
                             }

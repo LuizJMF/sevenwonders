@@ -35,6 +35,29 @@ import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
 const val homeScreenTestTag: String = "Home Screen"
+
+@Composable
+fun HomeScreen(
+    onCriarPartidaClick: () -> Unit,
+    onMatchesHistoryClick: () -> Unit,
+    onStatsClick: () -> Unit,
+    onAboutClick: () -> Unit,
+    onScienceSimulatorClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel,
+) {
+    WithLifecycleOwner(homeViewModel)
+
+    HomeScreen(
+        onCriarPartidaClick = onCriarPartidaClick,
+        onMatchesHistoryClick = onMatchesHistoryClick,
+        onStatsClick = onStatsClick,
+        onAboutClick = onAboutClick,
+        onScienceSimulatorClick = onScienceSimulatorClick,
+        modifier = modifier,
+    )
+}
+
 @Composable
 fun HomeScreen(
     onCriarPartidaClick: () -> Unit,
