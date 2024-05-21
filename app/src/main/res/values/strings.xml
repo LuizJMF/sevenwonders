@@ -127,6 +127,9 @@
     <string name="empty_name">Empty name</string>
     <string name="science_points_simulator">Science points simulator</string>
     <string name="simulator">Simulator</string>
+    <string name="decrease_number_button_content_description">Decrease number by 1</string>
+    <string name="increase_number_button_content_description">Increase number by 1</string>
+
     <plurals name="num_victories">
         <item quantity="one">(%d victory)</item>
         <item quantity="other">(%d victories)</item>

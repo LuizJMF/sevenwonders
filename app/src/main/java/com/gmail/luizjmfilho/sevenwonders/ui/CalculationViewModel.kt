@@ -75,87 +75,64 @@ class CalculationViewModel @Inject constructor(
         }
     }
 
-    fun onMinusOnePointClick(index: Int) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                val searchedList = when(currentState.currentCategory) {
-                    PointCategory.WonderBoard -> currentState.wonderBoardScoreList.toMutableList()
-                    PointCategory.Coin -> currentState.coinScoreList.toMutableList() // em teoria esse caso ñ ocorrerá, pois na Coin não tem esse botão, e sim o "calcular".
-                    PointCategory.War -> currentState.warScoreList.toMutableList()
-                    PointCategory.BlueCard -> currentState.blueCardScoreList.toMutableList()
-                    PointCategory.YellowCard -> currentState.yellowCardScoreList.toMutableList()
-                    PointCategory.GreenCard -> currentState.greenCardScoreList.toMutableList() // em teoria esse caso ñ ocorrerá, pois na GreenCard não tem esse botão, e sim o "calcular".
-                    PointCategory.PurpleCard -> currentState.purpleCardScoreList.toMutableList()
-                }
-                val totalScoreList = currentState.totalScoreList.toMutableList()
+    fun onScoreChange(playerIndex: Int, score: Int) {
+        if (!isScoreChangeAllowed(score)) {
+            return
+        }
 
-                if (currentState.currentCategory != PointCategory.War) {
-                    if (searchedList[index] > 0) {
-                        searchedList[index]--
-                        totalScoreList[index]--
-                    }
-                } else {
-                    if (searchedList[index] > -6) {
-                        searchedList[index]--
-                        totalScoreList[index]--
-                    }
-                }
+        _uiState.update { currentState ->
+            val currentScores = when(currentState.currentCategory) {
+                PointCategory.WonderBoard -> currentState.wonderBoardScoreList
+                PointCategory.Coin -> currentState.coinScoreList // em teoria esse caso ñ ocorrerá, pois na Coin não tem esse botão, e sim o "calcular".
+                PointCategory.War -> currentState.warScoreList
+                PointCategory.BlueCard -> currentState.blueCardScoreList
+                PointCategory.YellowCard -> currentState.yellowCardScoreList
+                PointCategory.GreenCard -> currentState.greenCardScoreList // em teoria esse caso ñ ocorrerá, pois na GreenCard não tem esse botão, e sim o "calcular".
+                PointCategory.PurpleCard -> currentState.purpleCardScoreList
+            }
 
+            val newScores = currentScores.toMutableList().apply {
+                set(playerIndex, score)
+            }
 
+            val newTotalScores = currentState.totalScoreList.toMutableList().apply {
+                set(playerIndex, calculateScore(playerIndex, score))
+            }
 
-                when(currentState.currentCategory) {
-                    PointCategory.WonderBoard -> { currentState.copy(wonderBoardScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.Coin -> { currentState.copy(coinScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.War -> { currentState.copy(warScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.BlueCard -> { currentState.copy(blueCardScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.YellowCard -> { currentState.copy(yellowCardScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.GreenCard -> { currentState.copy(greenCardScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.PurpleCard -> { currentState.copy(purpleCardScoreList = searchedList, totalScoreList = totalScoreList)}
-
-                }
-
+            when(currentState.currentCategory) {
+                PointCategory.WonderBoard -> currentState.copy(wonderBoardScoreList = newScores, totalScoreList = newTotalScores)
+                PointCategory.Coin -> currentState.copy(coinScoreList = newScores, totalScoreList = newTotalScores)
+                PointCategory.War -> currentState.copy(warScoreList = newScores, totalScoreList = newTotalScores)
+                PointCategory.BlueCard -> currentState.copy(blueCardScoreList = newScores, totalScoreList = newTotalScores)
+                PointCategory.YellowCard -> currentState.copy(yellowCardScoreList = newScores, totalScoreList = newTotalScores)
+                PointCategory.GreenCard -> currentState.copy(greenCardScoreList = newScores, totalScoreList = newTotalScores)
+                PointCategory.PurpleCard -> currentState.copy(purpleCardScoreList = newScores, totalScoreList = newTotalScores)
             }
         }
     }
 
-    fun onPlusOnePointsClick(index: Int) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                val searchedList = when(currentState.currentCategory) {
-                    PointCategory.WonderBoard -> currentState.wonderBoardScoreList.toMutableList()
-                    PointCategory.Coin -> currentState.coinScoreList.toMutableList() // em teoria esse caso ñ ocorrerá, pois na Coin não tem esse botão, e sim o "calcular".
-                    PointCategory.War -> currentState.warScoreList.toMutableList()
-                    PointCategory.BlueCard -> currentState.blueCardScoreList.toMutableList()
-                    PointCategory.YellowCard -> currentState.yellowCardScoreList.toMutableList()
-                    PointCategory.GreenCard -> currentState.greenCardScoreList.toMutableList() // em teoria esse caso ñ ocorrerá, pois na GreenCard não tem esse botão, e sim o "calcular".
-                    PointCategory.PurpleCard -> currentState.purpleCardScoreList.toMutableList()
-                }
-                val totalScoreList = currentState.totalScoreList.toMutableList()
+    private fun isScoreChangeAllowed(newScore: Int): Boolean {
+        val currentState = _uiState.value
 
-                if (currentState.currentCategory != PointCategory.War) {
-                    searchedList[index] += 1
-                    totalScoreList[index] += 1
-                } else {
-                    if (searchedList[index] < 18) {
-                        searchedList[index] += 1
-                        totalScoreList[index] += 1
-                    }
-                }
-
-
-                when(currentState.currentCategory) {
-                    PointCategory.WonderBoard -> { currentState.copy(wonderBoardScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.Coin -> { currentState.copy(coinScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.War -> { currentState.copy(warScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.BlueCard -> { currentState.copy(blueCardScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.YellowCard -> { currentState.copy(yellowCardScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.GreenCard -> { currentState.copy(greenCardScoreList = searchedList, totalScoreList = totalScoreList)}
-                    PointCategory.PurpleCard -> { currentState.copy(purpleCardScoreList = searchedList, totalScoreList = totalScoreList)}
-
-                }
-
-            }
+        return if (currentState.currentCategory == PointCategory.War) {
+            newScore in (-6..18)
+        } else {
+            newScore >= 0
         }
+    }
+
+    private fun calculateScore(playerIndex: Int, newScore: Int): Int {
+        val currentState = _uiState.value
+
+        val wonderScore = if (currentState.currentCategory == PointCategory.WonderBoard) newScore else currentState.wonderBoardScoreList[playerIndex]
+        val coinScore = if (currentState.currentCategory == PointCategory.Coin) newScore else currentState.coinScoreList[playerIndex]
+        val warScore = if (currentState.currentCategory == PointCategory.War) newScore else currentState.warScoreList[playerIndex]
+        val blueCardScore = if (currentState.currentCategory == PointCategory.BlueCard) newScore else currentState.blueCardScoreList[playerIndex]
+        val yellowCardScore = if (currentState.currentCategory == PointCategory.YellowCard) newScore else currentState.yellowCardScoreList[playerIndex]
+        val greenCardScore = if (currentState.currentCategory == PointCategory.GreenCard) newScore else currentState.greenCardScoreList[playerIndex]
+        val purpleCardScore = if (currentState.currentCategory == PointCategory.PurpleCard) newScore else currentState.purpleCardScoreList[playerIndex]
+
+        return wonderScore + coinScore + warScore + blueCardScore + yellowCardScore + greenCardScore + purpleCardScore
     }
 
     fun onShowTotalGrid() {
@@ -222,59 +199,39 @@ class CalculationViewModel @Inject constructor(
         }
     }
 
-    fun onMinusOneScienceCard(index: Int) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                val newList = currentState.scienceSymbolsCurrentQuantityList.toMutableList()
-                newList[index] = if (newList[index] > 0) {
-                    newList[index] - 1
-                } else {
-                    newList[index]
-                }
-                currentState.copy(
-                    scienceSymbolsCurrentQuantityList = newList
-                )
+    fun onScienceQuantityChange(playerIndex: Int, quantity: Int) {
+        // For Science, the quantity range is [0..∞].
+        // If the new quantity doesn't match the rule above, the UI state isn't updated.
+        if (quantity < 0) {
+            return
+        }
+
+        _uiState.update { currentState ->
+            val newScienceSymbolQuantities = currentState.scienceSymbolsCurrentQuantityList.toMutableList().apply {
+                set(playerIndex, quantity)
             }
+
+            currentState.copy(
+                scienceSymbolsCurrentQuantityList = newScienceSymbolQuantities,
+            )
         }
     }
 
-    fun onPlusOneScienceCard(index: Int) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                val newList = currentState.scienceSymbolsCurrentQuantityList.toMutableList()
-                newList[index]++
-
-                currentState.copy(
-                    scienceSymbolsCurrentQuantityList = newList
-                )
-            }
+    fun onCoinQuantityChange(playerIndex: Int, quantity: Int) {
+        // For Coin, the quantity range is [0..∞].
+        // If the new quantity doesn't match the rule above, the UI state isn't updated.
+        if (quantity < 0) {
+            return
         }
-    }
 
-    fun onMinusOneCoinQuantity(index: Int) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                val newList = currentState.coinQuantityList.toMutableList()
-                if (newList[index] > 0) {
-                    newList[index]--
-                }
-
-                currentState.copy(
-                    coinQuantityList = newList
-                )
+        _uiState.update { currentState ->
+            val newCoinQuantities = currentState.coinQuantityList.toMutableList().apply {
+                set(playerIndex, quantity)
             }
-        }
-    }
 
-    fun onPlusOneCoinQuantity(index: Int) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                val newList = currentState.coinQuantityList.toMutableList()
-                newList[index]++
-                currentState.copy(
-                    coinQuantityList = newList
-                )
-            }
+            currentState.copy(
+                coinQuantityList = newCoinQuantities,
+            )
         }
     }
 
