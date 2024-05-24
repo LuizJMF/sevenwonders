@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -143,7 +144,10 @@ fun ScienceSimulatorScreenSecundaria(
                                 number = currentScore,
                                 textColor = Color(0xFF1E9923),
                                 onNumberChange = { number -> onQuantityChange(symbol, number) },
-                                modifier = Modifier.width(150.dp),
+                                modifier = Modifier
+                                    .width(150.dp)
+                                    .fillMaxHeight()
+                                    .weight(1f),
                             )
                         }
                     }

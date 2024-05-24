@@ -986,7 +986,10 @@ fun ScienceGrid(
                         number = calculationUiState.scienceSymbolsCurrentQuantityList[i],
                         textColor = Color(0xFF1E9923),
                         onNumberChange = { score -> onQuantityChange(i, score) },
-                        modifier = Modifier.width(150.dp),
+                        modifier = Modifier
+                            .width(150.dp)
+                            .fillMaxHeight()
+                            .weight(1f),
                     )
                 }
             }

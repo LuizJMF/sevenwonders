@@ -66,15 +66,13 @@ fun NumberInputField(
         ),
         border = BorderStroke(1.dp, Color.Black),
         modifier = modifier
-            .width(IntrinsicSize.Min)
-            .height(IntrinsicSize.Min),
+            .width(IntrinsicSize.Min),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight()
                 .align(Alignment.CenterHorizontally),
         ) {
             val updatedNumber by rememberUpdatedState(number)
