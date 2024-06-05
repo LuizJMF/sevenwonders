@@ -31,11 +31,11 @@ class PlayersListRepository @Inject constructor (private val personDao: PersonDa
         }
     }
 
-    suspend fun readPlayer(): List<String> {
+    suspend fun readPlayer(): List<Person> {
         return personDao.readPlayer()
     }
 
-    suspend fun deletePlayer(playerName: String) {
-        personDao.deletePlayer(playerName)
+    suspend fun deletePlayer(playerId: Int) {
+        personDao.deletePlayer(playerId)
     }
 }

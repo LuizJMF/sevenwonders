@@ -8,4 +8,8 @@ class NewGameRepository @Inject constructor(private val personDao: PersonDao) {
     suspend fun readPlayerWithoutActivePlayers(activePlayersList: List<String>): List<Person> {
         return personDao.readPlayerExcept(activePlayersList)
     }
+
+    suspend fun getPlayerFromId(playerId: Int): Person {
+        return personDao.getPlayerNameFromId(playerId)
+    }
 }

@@ -28,7 +28,7 @@ class PlayersListScreenTest {
         rule.setContent {
             PlayersListScreenSecundaria(
                 onBackClick = onBackClick,
-                playersListUiState = playersListUiState,
+                uiState = playersListUiState,
                 onNicknameChange = onNicknameChange,
                 deletePlayer = deletePlayer,
                 cancelAddPlayer = cancelAddPlayer,
@@ -65,7 +65,7 @@ class PlayersListScreenTest {
     fun whenPlayerListIsNotEmpty_thenPlayersAreDisplayed() {
         launchScreen(
             playersListUiState = PlayersListUiState(
-                playersList = listOf(
+                playerNames = listOf(
                     Person(luiz.name),
                     Person(cristian.name)
                 )
@@ -99,7 +99,7 @@ class PlayersListScreenTest {
                 expectedName = name
             },
             playersListUiState = PlayersListUiState(
-                playersList = listOf(
+                playerNames = listOf(
                     Person(luiz.name),
                     Person(cristian.name)
                 )
@@ -173,7 +173,7 @@ class PlayersListScreenTest {
     fun whenIClickDeletePlayerButtonAndDeleteIconsAreAlreadyShown_thenDeleteIconsDisappear() {
         launchScreen(
             playersListUiState = PlayersListUiState(
-                playersList = listOf(
+                playerNames = listOf(
                     Person(luiz.name)
                 )
             )
@@ -193,7 +193,7 @@ class PlayersListScreenTest {
     fun whenIClickDeletePlayerButtonAndDeleteIconsAreNotShown_thenDeleteIconsAppear() {
         launchScreen(
             playersListUiState = PlayersListUiState(
-                playersList = listOf(
+                playerNames = listOf(
                     Person(luiz.name)
                 )
             )

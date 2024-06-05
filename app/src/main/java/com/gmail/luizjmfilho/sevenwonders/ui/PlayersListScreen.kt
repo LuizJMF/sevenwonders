@@ -64,47 +64,44 @@ import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
 @Composable
 fun PlayersListScreenPrimaria(
-    onSelectPlayer: (List<String>) -> Unit,
+    onSelectPlayer: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    playersListViewModel: PlayersListViewModel = hiltViewModel()
+    viewModel: PlayersListViewModel = hiltViewModel()
 ) {
-    WithLifecycleOwner(playersListViewModel)
+    WithLifecycleOwner(viewModel)
 
-    val playersListUiState by playersListViewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     PlayersListScreenSecundaria(
-        playersListUiState = playersListUiState,
-        onAddPlayer = playersListViewModel::onAddPlayer,
-        onTypeNewPlayer = playersListViewModel::onTypeNewPlayer,
-        onSelectPlayer = { playerName ->
-            val index = playersListViewModel.getPlayerIndexBeingSelected().toInt()
-            val activePlayersList = playersListViewModel.getActivePlayersList().toMutableList()
-            activePlayersList[index] = playerName
-            onSelectPlayer(activePlayersList)
+        uiState = uiState,
+        onNewPlayerConfirmClick = viewModel::onNewPlayerConfirmClick,
+        onTypeNewPlayer = viewModel::onTypeNewPlayer,
+        onSelectPlayer = { index ->
+            onSelectPlayer(viewModel.getPlayerIdFromIndex(index))
         },
-        onFloatingButtonClick = playersListViewModel::onFloatingButtonClick,
-        onDismissDialog = playersListViewModel::onDismissDialog,
-        onDeletePlayer = playersListViewModel::onDeletePlayer,
+        onNewPlayerFloatingButtonClick = viewModel::onNewPlayerFloatingButtonClick,
+        onNewPlayerDismiss = viewModel::onNewPlayerDismiss,
+        onDeletePlayer = viewModel::onDeletePlayer,
         modifier = modifier,
     )
 }
 
 @Composable
 fun PlayersListScreenSecundaria(
-    playersListUiState: PlayersListUiState,
-    onAddPlayer: () -> Unit,
+    uiState: PlayersListUiState,
+    onNewPlayerConfirmClick: () -> Unit,
     onTypeNewPlayer: (String) -> Unit,
-    onSelectPlayer: (String) -> Unit,
-    onDeletePlayer: (String) -> Unit,
-    onFloatingButtonClick: () -> Unit,
-    onDismissDialog: () -> Unit,
+    onSelectPlayer: (Int) -> Unit,
+    onDeletePlayer: (Int) -> Unit,
+    onNewPlayerFloatingButtonClick: () -> Unit,
+    onNewPlayerDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onFloatingButtonClick,
+                onClick = onNewPlayerFloatingButtonClick,
                 containerColor = Color(0xFF021CC5),
                 contentColor = Color.White
             ) {
@@ -120,7 +117,7 @@ fun PlayersListScreenSecundaria(
                 .padding(scaffoldPaddings)
                 .fillMaxSize()
         ) {
-            if (playersListUiState.playersList.isEmpty()) {
+            if (uiState.playerNames.isEmpty()) {
                 Text(
                     text = stringResource(id = R.string.alert_dialog_new_game_text_when_list_is_empty),
                     modifier = Modifier
@@ -137,32 +134,32 @@ fun PlayersListScreenSecundaria(
                         .padding(10.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    for (player in playersListUiState.playersList) {
+                    for ((index, playerName) in uiState.playerNames.withIndex()) {
                         var pressOffset by remember { mutableStateOf(DpOffset.Zero) }
                         var itemHeight by remember { mutableStateOf(0.dp) }
                         val density = LocalDensity.current
                         val interactionSource = remember { MutableInteractionSource() }
                         var isDropMenuExpanded by rememberSaveable { mutableStateOf(false) }
                         Text(
-                            text = player,
+                            text = playerName,
                             modifier = Modifier
                                 .height(48.dp)
                                 .fillMaxHeight()
                                 .fillMaxWidth()
                                 .indication(interactionSource, LocalIndication.current)
-                                .pointerInput(playersListUiState.playersList) {
+                                .pointerInput(uiState.playerNames) {
                                     detectTapGestures(
                                         onLongPress = {
                                             isDropMenuExpanded = true
                                             pressOffset = DpOffset(
                                                 it.x.toDp(),
-                                                it.y.toDp() - (48.dp * (playersListUiState.playersList.indices.max() - playersListUiState.playersList.indexOf(
-                                                    player
+                                                it.y.toDp() - (48.dp * (uiState.playerNames.indices.max() - uiState.playerNames.indexOf(
+                                                    playerName
                                                 )))
                                             )
                                         },
                                         onTap = {
-                                            onSelectPlayer(player)
+                                            onSelectPlayer(index)
                                         },
                                         onPress = {
                                             val press = PressInteraction.Press(it)
@@ -207,7 +204,7 @@ fun PlayersListScreenSecundaria(
                                 },
                                 onClick = {
                                     isDropMenuExpanded = false
-                                    onDeletePlayer(player)
+                                    onDeletePlayer(index)
                                 },
                             )
                         }
@@ -215,19 +212,15 @@ fun PlayersListScreenSecundaria(
                     }
                 }
             }
-            if (playersListUiState.isDialogShown) {
+            if (uiState.isNewPlayerDialogShown) {
                 AddPlayerDialog(
-                    onDismissRequest = onDismissDialog,
-                    value = playersListUiState.playerBeingAdded,
-                    onValueChange = {
-                        onTypeNewPlayer(it)
-                    },
-                    onAddPlayer = {
-                        onAddPlayer()
-                    },
-                    isError = (playersListUiState.nameError != null),
+                    onDismissRequest = onNewPlayerDismiss,
+                    playerName = uiState.newPlayerName,
+                    onPlayerNameChange = onTypeNewPlayer,
+                    onConfirm = onNewPlayerConfirmClick,
+                    isError = (uiState.newPlayerNameError != null),
                     supportingText = {
-                        when (playersListUiState.nameError) {
+                        when (uiState.newPlayerNameError) {
                             NameOrNicknameError.Empty -> Text(text = stringResource(R.string.empty_name))
                             NameOrNicknameError.Exists -> Text(text = stringResource(R.string.name_exists_erros_message))
                             else -> {}
@@ -278,10 +271,10 @@ fun SevenWondersAppBar(
 
 @Composable
 fun AddPlayerDialog(
-    value: String,
-    onValueChange: (String) -> Unit,
+    playerName: String,
+    onPlayerNameChange: (String) -> Unit,
     onDismissRequest: () -> Unit,
-    onAddPlayer: () -> Unit,
+    onConfirm: () -> Unit,
     isError: Boolean,
     supportingText: @Composable () -> Unit,
     modifier: Modifier = Modifier,
@@ -298,8 +291,8 @@ fun AddPlayerDialog(
                     .width(IntrinsicSize.Max)
             ) {
                 TextField(
-                    value = value,
-                    onValueChange = onValueChange,
+                    value = playerName,
+                    onValueChange = onPlayerNameChange,
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Filled.Person,
@@ -324,7 +317,7 @@ fun AddPlayerDialog(
                     supportingText = supportingText
                 )
                 Text(
-                    text = "${value.length}/10",
+                    text = "${playerName.length}/10",
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentWidth(Alignment.End)
@@ -344,7 +337,7 @@ fun AddPlayerDialog(
         },
         confirmButton = {
             TextButton(
-                onClick = onAddPlayer
+                onClick = onConfirm
             ) {
                 Text(
                     text = stringResource(R.string.new_game_add_player_button),
@@ -361,15 +354,15 @@ fun AddPlayerDialog(
 fun PlayersListScreenPreview() {
     SevenWondersTheme {
         PlayersListScreenSecundaria(
-            playersListUiState = PlayersListUiState(
-                playersList = listOf("Zinho", "Gian", "Luiz (pai)", "Minesa"),
-                playerBeingAdded = "Bonitão"
+            uiState = PlayersListUiState(
+                playerNames = listOf("Zinho", "Gian", "Luiz (pai)", "Minesa"),
+                newPlayerName = "Bonitão"
             ),
-            onAddPlayer = {},
+            onNewPlayerConfirmClick = {},
             onTypeNewPlayer = {},
             onSelectPlayer = {},
-            onDismissDialog = {},
-            onFloatingButtonClick = {},
+            onNewPlayerDismiss = {},
+            onNewPlayerFloatingButtonClick = {},
             onDeletePlayer = {}
         )
     }

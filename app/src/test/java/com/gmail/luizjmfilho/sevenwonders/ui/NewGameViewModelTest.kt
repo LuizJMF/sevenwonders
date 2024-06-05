@@ -37,7 +37,7 @@ class NewGameViewModelTest {
     fun initialState() {
         val state = viewModel.uiState.value
 
-        assertEquals(listOf("","","","","","",""), state.activePlayersList)
+        assertEquals(listOf("","","","","","",""), state.playerNames)
         assertEquals(ActivePlayersNumber.Three, state.activePlayersNumber)
         assertEquals(emptyList<Person>(), state.availablePlayersList)
         assertFalse(state.isAdvanceAndAddPlayerButtonsEnable)
@@ -48,7 +48,7 @@ class NewGameViewModelTest {
         viewModel.updatePlayer(2, anna.name)
 
         val state = viewModel.uiState.value
-        assertEquals(anna.name, state.activePlayersList[2])
+        assertEquals(anna.name, state.playerNames[2])
     }
 
     @Test
@@ -60,7 +60,7 @@ class NewGameViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(ActivePlayersNumber.Four, state.activePlayersNumber)
-        assertEquals("", state.activePlayersList[3])
+        assertEquals("", state.playerNames[3])
     }
 
     @Test
@@ -74,7 +74,7 @@ class NewGameViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(ActivePlayersNumber.Three, state.activePlayersNumber)
-        assertEquals("", state.activePlayersList[3])
+        assertEquals("", state.playerNames[3])
     }
 
     @Test

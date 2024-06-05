@@ -56,30 +56,33 @@ const val newGameScreenTestTag: String = "NewGame Screen"
 fun NewGameScreenPrimaria(
     onBackClick: () -> Unit,
     onNextClick: (List<String>) -> Unit,
-    onChoosePlayerClick: (Int, List<String>) -> Unit,
+    onChoosePlayerClick: (List<Int>) -> Unit,
+    selectedIdFromPlayerListScreen: Int?,
     modifier: Modifier = Modifier,
-    activePlayersListGambiarra: List<String> = emptyList(),
-    newGameViewModel: NewGameViewModel = hiltViewModel()
+    viewModel: NewGameViewModel = hiltViewModel()
 ) {
-    WithLifecycleOwner(newGameViewModel)
+    WithLifecycleOwner(viewModel)
 
-    LaunchedEffect(activePlayersListGambiarra) {
-        newGameViewModel.setActivePlayersList(activePlayersListGambiarra)
-    }
 
-    val newGameUiState by newGameViewModel.uiState.collectAsState()
+        LaunchedEffect(selectedIdFromPlayerListScreen) {
+            if (selectedIdFromPlayerListScreen != null) {
+                viewModel.setPlayerNames(selectedIdFromPlayerListScreen)
+            }
+        }
+
+
+    val uiState by viewModel.uiState.collectAsState()
     NewGameScreenSecundaria(
         onBackClick = onBackClick,
         onAdvanceClick = onNextClick,
-        onChoosePlayerClick = { playerIndexBeingSelected, activePlayersList ->
+        onChoosePlayerClick = { playerIndexBeingSelected ->
             onChoosePlayerClick(
-                playerIndexBeingSelected,
-                activePlayersList
+                viewModel.getPlayerIds(playerIndexBeingSelected)
             )
         },
-        onAddPlayerTextButtonClick = newGameViewModel::newGameAddPlayer,
-        onRemovePlayerTextButtonClick = newGameViewModel::newGameRemovePlayer,
-        newGameUiState = newGameUiState,
+        onAddPlayerTextButtonClick = viewModel::newGameAddPlayer,
+        onRemovePlayerTextButtonClick = viewModel::newGameRemovePlayer,
+        uiState = uiState,
         modifier = modifier,
     )
 }
@@ -88,10 +91,10 @@ fun NewGameScreenPrimaria(
 fun NewGameScreenSecundaria(
     onBackClick: () -> Unit,
     onAdvanceClick: (List<String>) -> Unit,
-    onChoosePlayerClick: (Int, List<String>) -> Unit,
+    onChoosePlayerClick: (Int) -> Unit,
     onAddPlayerTextButtonClick: () -> Unit,
     onRemovePlayerTextButtonClick: () -> Unit,
-    newGameUiState: NewGameUiState,
+    uiState: NewGameUiState,
     modifier: Modifier = Modifier,
 ) {
     Scaffold (
@@ -138,19 +141,19 @@ fun NewGameScreenSecundaria(
                         color = MaterialTheme.colorScheme.primary
                     )
                     NewGameTextFieldGroup(
-                        activePlayersList = newGameUiState.activePlayersList,
-                        activePlayersNumber = newGameUiState.activePlayersNumber,
+                        playerNames = uiState.playerNames,
+                        activePlayersNumber = uiState.activePlayersNumber,
                         onChoosePlayerClick = { playerIndexBeingSelected ->
-                            onChoosePlayerClick(playerIndexBeingSelected, newGameUiState.activePlayersList)
+                            onChoosePlayerClick(playerIndexBeingSelected)
                         },
                     )
                     Row {
                         AnimatedVisibility(
-                            visible = newGameUiState.activePlayersNumber < ActivePlayersNumber.Seven
+                            visible = uiState.activePlayersNumber < ActivePlayersNumber.Seven
                         ) {
                             TextButton(
                                 onClick = onAddPlayerTextButtonClick,
-                                enabled = newGameUiState.isAdvanceAndAddPlayerButtonsEnable
+                                enabled = uiState.isAdvanceAndAddPlayerButtonsEnable
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -166,7 +169,7 @@ fun NewGameScreenSecundaria(
                         }
                         Spacer(Modifier.weight(1f))
                         AnimatedVisibility(
-                            visible = newGameUiState.activePlayersNumber > ActivePlayersNumber.Three
+                            visible = uiState.activePlayersNumber > ActivePlayersNumber.Three
                         ) {
                             TextButton(
                                 onClick = onRemovePlayerTextButtonClick
@@ -189,8 +192,8 @@ fun NewGameScreenSecundaria(
                     Row {
                         Spacer(Modifier.weight(1f))
                         TextButton(
-                            onClick = { onAdvanceClick(newGameUiState.activePlayersList) },
-                            enabled = newGameUiState.isAdvanceAndAddPlayerButtonsEnable
+                            onClick = { onAdvanceClick(uiState.playerNames) },
+                            enabled = uiState.isAdvanceAndAddPlayerButtonsEnable
                         ) {
                             Row (
                                 verticalAlignment = Alignment.CenterVertically,
@@ -214,7 +217,7 @@ fun NewGameScreenSecundaria(
 
 @Composable
 fun NewGameTextFieldGroup(
-    activePlayersList: List<String>,
+    playerNames: List<String>,
     activePlayersNumber: ActivePlayersNumber,
     onChoosePlayerClick: (Int) -> Unit,
     modifier: Modifier = Modifier
@@ -228,7 +231,7 @@ fun NewGameTextFieldGroup(
                 visible = (i < activePlayersNumber.numValue)
             ) {
                 NewGameTextField(
-                    value = activePlayersList[i],
+                    value = playerNames[i],
                     playerNumber = i,
                     keyboardOptions = if (i < activePlayersNumber.numValue - 1) {
                         KeyboardOptions(imeAction = ImeAction.Next)
@@ -311,10 +314,10 @@ fun NewGamePreview() {
         NewGameScreenSecundaria(
             onBackClick = {},
             onAdvanceClick = {},
-            onChoosePlayerClick = {_, _ ->},
+            onChoosePlayerClick = {},
             onAddPlayerTextButtonClick = {},
             onRemovePlayerTextButtonClick = {},
-            newGameUiState = NewGameUiState()
+            uiState = NewGameUiState()
         )
     }
 }

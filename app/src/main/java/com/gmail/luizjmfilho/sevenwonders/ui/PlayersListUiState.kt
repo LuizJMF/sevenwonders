@@ -1,12 +1,10 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import com.gmail.luizjmfilho.sevenwonders.model.Person
-
 data class PlayersListUiState(
-    val playersList: List<String> = emptyList(),
-    val playerBeingAdded: String = "",
-    val nameError: NameOrNicknameError? = null,
-    val isDialogShown: Boolean = false,
+    val playerNames: List<String> = emptyList(),
+    val newPlayerName: String = "",
+    val newPlayerNameError: NameOrNicknameError? = null,
+    val isNewPlayerDialogShown: Boolean = false,
 )
 
 enum class NameOrNicknameError {

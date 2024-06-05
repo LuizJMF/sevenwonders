@@ -11,8 +11,8 @@ interface PersonDao {
     @Insert
     suspend fun addPlayer(person: Person)
 
-    @Query("DELETE FROM Person WHERE name = :nickname")
-    suspend fun deletePlayer(nickname: String)
+    @Query("DELETE FROM Person WHERE id = :playerId")
+    suspend fun deletePlayer(playerId: Int)
 
     @Query("SELECT * FROM Person ORDER BY name")
     suspend fun selectAllPlayer(): List<Person>
@@ -23,6 +23,9 @@ interface PersonDao {
     @Query("SELECT * FROM Person WHERE name NOT IN (:excludedNicknames) ORDER BY name")
     suspend fun readPlayerExcept(excludedNicknames: List<String>): List<Person>
 
-    @Query("SELECT name FROM Person ORDER BY name")
-    suspend fun readPlayer(): List<String>
+    @Query("SELECT * FROM Person ORDER BY name")
+    suspend fun readPlayer(): List<Person>
+
+    @Query("SELECT * FROM Person WHERE id = :playerId")
+    suspend fun getPlayerNameFromId(playerId: Int): Person
 }

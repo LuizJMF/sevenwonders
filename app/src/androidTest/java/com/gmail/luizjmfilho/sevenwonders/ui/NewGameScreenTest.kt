@@ -38,7 +38,7 @@ class NewGameScreenTest {
                 onChoosePlayerClick = onChoosePlayerClick,
                 onAddPlayerTextButtonClick = onAddPlayerTextButtonClick,
                 onRemovePlayerTextButtonClick = onRemovePlayerTextButtonClick,
-                newGameUiState = newGameUiState,
+                uiState = newGameUiState,
             )
         }
 
@@ -80,7 +80,7 @@ class NewGameScreenTest {
             },
             newGameUiState = NewGameUiState(
                 isAdvanceAndAddPlayerButtonsEnable = true,
-                activePlayersList = testList
+                playerNames = testList
             ),
         )
 
@@ -161,7 +161,7 @@ class NewGameScreenTest {
     fun whenActivePlayersListHasStrings_ThenRelatedTextFieldsShowIt() {
         launchScreen(
             newGameUiState = NewGameUiState(
-                activePlayersList = listOf(luiz.name, anna.name, "", "", "", "", "")
+                playerNames = listOf(luiz.name, anna.name, "", "", "", "", "")
             )
         )
 

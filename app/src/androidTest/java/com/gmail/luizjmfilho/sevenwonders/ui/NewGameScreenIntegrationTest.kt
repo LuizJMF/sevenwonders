@@ -44,7 +44,7 @@ class NewGameScreenIntegrationTest {
             NewGameScreenPrimaria(
                 onBackClick = { /* TODO */ },
                 onNextClick = { /* TODO */ },
-                newGameViewModel = viewModel(
+                viewModel = viewModel(
                     factory = viewModelFactory {
                         initializer {
                             val repository = NewGameRepository(dao)

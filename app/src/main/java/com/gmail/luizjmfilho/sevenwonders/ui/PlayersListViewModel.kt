@@ -3,6 +3,7 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.luizjmfilho.sevenwonders.data.PlayersListRepository
+import com.gmail.luizjmfilho.sevenwonders.model.Person
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,37 +20,44 @@ class PlayersListViewModel @Inject constructor(
     firebaseAnalytics: FirebaseAnalytics,
 ) : TrackedScreenViewModel(firebaseAnalytics, "PlayersList")  {
 
-    private val originalInfo = savedStateHandle.get<String>("info")!!.split(",")
-    private val playerIndexBeingSelected = originalInfo[0]
-    private val activePlayersList = if (originalInfo.size == 1) emptyList() else originalInfo.subList(1,originalInfo.size)
+
+    private val alreadySelectedPlayerIds = savedStateHandle.get<String>("alreadySelectedPlayerIds")?.split(",")?.map { it.toInt() } ?: emptyList()
     private val _uiState = MutableStateFlow(PlayersListUiState())
     val uiState: StateFlow<PlayersListUiState> = _uiState.asStateFlow()
+
+    private var persons = emptyList<Person>()
 
     init {
         viewModelScope.launch {
             _uiState.update { currentState ->
+                filterPersonsByAlreadySelectedPlayerIds()
                 currentState.copy(
-                    playersList = playersListRepository.readPlayer() - activePlayersList.filter { it != "" }.toSet(),
+                    playerNames = persons.map { it.name },
                 )
             }
         }
     }
 
-    fun onAddPlayer() {
+    private suspend fun filterPersonsByAlreadySelectedPlayerIds() {
+        persons = playersListRepository.readPlayer().filter { it.id !in alreadySelectedPlayerIds }
+    }
+
+    fun onNewPlayerConfirmClick() {
         viewModelScope.launch {
             _uiState.update { currentState ->
-                val addPlayerResult = playersListRepository.addPlayer(currentState.playerBeingAdded.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                val addPlayerResult = playersListRepository.addPlayer(currentState.newPlayerName.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
                 if (addPlayerResult == null) {
+                    filterPersonsByAlreadySelectedPlayerIds()
                     currentState.copy(
-                        playerBeingAdded = "",
-                        playersList = playersListRepository.readPlayer() - activePlayersList.filter { it != "" }.toSet(),
-                        nameError = null,
-                        isDialogShown = false
+                        newPlayerName = "",
+                        playerNames = persons.map { it.name },
+                        newPlayerNameError = null,
+                        isNewPlayerDialogShown = false
                     )
                 } else {
                     currentState.copy(
-                        nameError = addPlayerResult.nameError,
-                        isDialogShown = true
+                        newPlayerNameError = addPlayerResult.nameError,
+                        isNewPlayerDialogShown = true
                     )
                 }
             }
@@ -59,48 +67,45 @@ class PlayersListViewModel @Inject constructor(
     fun onTypeNewPlayer(playerName: String) {
         viewModelScope.launch {
             _uiState.update { currentState ->
-                val newName = if (playerName.length <= 10) playerName else currentState.playerBeingAdded
+                val newName = if (playerName.length <= 10) playerName else currentState.newPlayerName
                 currentState.copy(
-                    playerBeingAdded = newName,
+                    newPlayerName = newName,
                 )
             }
         }
     }
 
-    fun getPlayerIndexBeingSelected() : String {
-        return playerIndexBeingSelected
-    }
-
-    fun getActivePlayersList() : List<String> {
-        return activePlayersList
-    }
-
-    fun onFloatingButtonClick() {
+    fun onNewPlayerFloatingButtonClick() {
         _uiState.update {  currentState ->
             currentState.copy(
-                isDialogShown = true,
-                playerBeingAdded = ""
+                isNewPlayerDialogShown = true,
+                newPlayerName = ""
             )
         }
     }
 
-    fun onDismissDialog() {
+    fun onNewPlayerDismiss() {
         _uiState.update {  currentState ->
             currentState.copy(
-                isDialogShown = false
+                isNewPlayerDialogShown = false
             )
         }
     }
 
-    fun onDeletePlayer(name: String) {
+    fun onDeletePlayer(playerIndex: Int) {
         viewModelScope.launch {
-            playersListRepository.deletePlayer(name)
             _uiState.update { currentState ->
+                playersListRepository.deletePlayer(persons[playerIndex].id)
+                filterPersonsByAlreadySelectedPlayerIds()
                 currentState.copy(
-                    playersList = playersListRepository.readPlayer() - activePlayersList.filter { it != "" }.toSet(),
+                    playerNames = persons.map { it.name },
                 )
             }
         }
+    }
+
+    fun getPlayerIdFromIndex(index: Int): Int {
+        return persons[index].id
     }
 
 }

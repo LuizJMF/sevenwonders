@@ -1,9 +1,7 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import com.gmail.luizjmfilho.sevenwonders.model.Person
-
 data class NewGameUiState(
-    val activePlayersList: List<String> = List(7) {
+    val playerNames: List<String> = List(7) {
         ""
     },
     val activePlayersNumber: ActivePlayersNumber = ActivePlayersNumber.Three,

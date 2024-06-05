@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.gmail.luizjmfilho.sevenwonders.ui.AboutScreen
 import com.gmail.luizjmfilho.sevenwonders.ui.CalculationScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.HomeScreen
@@ -46,7 +47,10 @@ fun SevenWondersNavHost() {
         }
 
         composable(
-            route = "${ScreenNames.PlayersListScreen.name}/{info}",
+            route = "${ScreenNames.PlayersListScreen.name}?alreadySelectedPlayerIds={alreadySelectedPlayerIds}",
+            arguments = listOf(
+                navArgument("alreadySelectedPlayerIds") { nullable = true },
+            ),
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
@@ -55,8 +59,8 @@ fun SevenWondersNavHost() {
             },
         ) {
             PlayersListScreenPrimaria(
-                onSelectPlayer = { activePlayersList ->
-                    navController.previousBackStackEntry?.savedStateHandle?.set("xxx", activePlayersList)
+                onSelectPlayer = { selectedPlayerId ->
+                    navController.previousBackStackEntry?.savedStateHandle?.set("selectedPlayerId", selectedPlayerId)
                     navController.navigateUp()
                 }
             )
@@ -84,10 +88,17 @@ fun SevenWondersNavHost() {
                 onNextClick = { playerNicknames ->
                     navController.navigate("${ScreenNames.MatchDetailsScreen.name}/${playerNicknames.joinToString(",")}")
                 },
-                onChoosePlayerClick = { playerIndexBeingSelected, activePlayersList ->
-                    navController.navigate("${ScreenNames.PlayersListScreen.name}/${listOf(playerIndexBeingSelected.toString(), activePlayersList.joinToString(",")).joinToString(",")}")
+                onChoosePlayerClick = { alreadySelectedPlayerIds ->
+                    navController.currentBackStackEntry?.savedStateHandle?.remove<Int>("selectedPlayerId")
+                    if (alreadySelectedPlayerIds.isEmpty()) {
+                        navController.navigate(ScreenNames.PlayersListScreen.name)
+                    } else {
+                        navController.navigate(
+                            "${ScreenNames.PlayersListScreen.name}?alreadySelectedPlayerIds=${alreadySelectedPlayerIds.joinToString(",")}"
+                        )
+                    }
                 },
-                activePlayersListGambiarra = backStack.savedStateHandle.get<List<String>>("xxx") ?: List(7) { "" }
+                selectedIdFromPlayerListScreen = backStack.savedStateHandle["selectedPlayerId"]
             )
         }
 

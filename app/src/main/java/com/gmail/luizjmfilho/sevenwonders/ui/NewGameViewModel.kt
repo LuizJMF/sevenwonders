@@ -1,31 +1,53 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
+import androidx.lifecycle.viewModelScope
+import com.gmail.luizjmfilho.sevenwonders.data.NewGameRepository
+import com.gmail.luizjmfilho.sevenwonders.model.Person
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NewGameViewModel @Inject constructor(
+    private val newGameRepository: NewGameRepository,
     firebaseAnalytics: FirebaseAnalytics,
 ) : TrackedScreenViewModel(firebaseAnalytics, "NewGame") {
 
     private val _uiState = MutableStateFlow(NewGameUiState())
     val uiState: StateFlow<NewGameUiState> = _uiState.asStateFlow()
 
-    fun setActivePlayersList(activePlayersListFromPlayersListScreen: List<String>) {
-        _uiState.update { currentState ->
-            val isAdvanceAndAddPlayerButtonsEnable =
-                activePlayersListFromPlayersListScreen.take(currentState.activePlayersNumber.numValue).all {
-                    it != ""
+    private val persons = MutableList<Person?>( 7 ) { null }
+    private var playerIndexThatGoesToPlayerListScreen: Int? = null
+
+    fun setPlayerNames(selectedIdFromPlayerListScreen: Int) {
+        val fixedPlayerIndex = playerIndexThatGoesToPlayerListScreen
+        if (fixedPlayerIndex != null) {
+            viewModelScope.launch {
+                val playerSelected =
+                    newGameRepository.getPlayerFromId(selectedIdFromPlayerListScreen)
+                persons[fixedPlayerIndex] = playerSelected
+                val newPlayerNames = persons.map { it?.name.orEmpty() }.toMutableList()
+                newPlayerNames[fixedPlayerIndex] = playerSelected.name
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        playerNames = newPlayerNames,
+                        isAdvanceAndAddPlayerButtonsEnable = newPlayerNames.take(currentState.activePlayersNumber.numValue)
+                            .all { it != "" },
+                    )
                 }
-            currentState.copy(
-                activePlayersList = activePlayersListFromPlayersListScreen,
-                isAdvanceAndAddPlayerButtonsEnable = isAdvanceAndAddPlayerButtonsEnable,
-            )
+            }
+        }
+    }
+
+    fun getPlayerIds(playerIndexBeingSelected: Int): List<Int> {
+        playerIndexThatGoesToPlayerListScreen = playerIndexBeingSelected
+        return persons.mapNotNull{
+            it?.id
         }
     }
 
@@ -42,10 +64,10 @@ class NewGameViewModel @Inject constructor(
     fun newGameRemovePlayer() {
         _uiState.update { currentState ->
             val newPlayersQuantity = ActivePlayersNumber.entries[currentState.activePlayersNumber.ordinal - 1]
-            val newActivePlayersList = currentState.activePlayersList.toMutableList()
+            val newActivePlayersList = currentState.playerNames.toMutableList()
             newActivePlayersList[currentState.activePlayersNumber.numValue - 1] = ""
             currentState.copy(
-                activePlayersList = newActivePlayersList,
+                playerNames = newActivePlayersList,
                 activePlayersNumber = newPlayersQuantity,
                 isAdvanceAndAddPlayerButtonsEnable = true,
             )

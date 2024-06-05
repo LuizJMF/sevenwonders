@@ -48,7 +48,7 @@ class PlayersListViewModelTest {
     fun initialState() = runTest {
         val initialState = viewModel.uiState.value
         assertEquals("", initialState.nickname)
-        assertEquals(listOf<Person>(), initialState.playersList)
+        assertEquals(listOf<Person>(), initialState.playerNames)
         assertNull(initialState.nicknameError)
     }
 
@@ -61,7 +61,7 @@ class PlayersListViewModelTest {
         verifyAddPlayer()
         val state = viewModel.uiState.value
         assertEquals(NameOrNicknameError.Empty ,state.nicknameError)
-        assertEquals(listOf<Person>(), state.playersList)
+        assertEquals(listOf<Person>(), state.playerNames)
     }
 
     @Test
@@ -94,7 +94,7 @@ class PlayersListViewModelTest {
 
         verify(repository, times(1)).deletePlayer("Luiz")
         verify(repository, times(2)).readPlayer()
-        assertEquals(listOf(Person("Oi")), state.playersList)
+        assertEquals(listOf(Person("Oi")), state.playerNames)
     }
 
     @Test
@@ -107,7 +107,7 @@ class PlayersListViewModelTest {
         val state = viewModel.uiState.value
 
         assertEquals("" ,state.nickname)
-        assertEquals(listOf(Person("Luiz")) ,state.playersList)
+        assertEquals(listOf(Person("Luiz")) ,state.playerNames)
         assertNull(state.nicknameError)
     }
 }
