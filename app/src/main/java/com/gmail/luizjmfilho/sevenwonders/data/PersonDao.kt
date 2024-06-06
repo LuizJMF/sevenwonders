@@ -28,4 +28,7 @@ interface PersonDao {
 
     @Query("SELECT * FROM Person WHERE id = :playerId")
     suspend fun getPlayerNameFromId(playerId: Int): Person
+
+    @Query("SELECT * FROM Person WHERE id IN (:playerIds)")
+    suspend fun getPersonsFromIds(playerIds: List<Int>): List<Person>
 }

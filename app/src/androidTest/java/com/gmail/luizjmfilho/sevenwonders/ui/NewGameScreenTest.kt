@@ -33,7 +33,7 @@ class NewGameScreenTest {
         stateRestorationTester.setContent{
             NewGameScreenSecundaria(
                 onBackClick = onBackClick,
-                onAdvanceClick = onAdvanceClick,
+                onNextClick = onAdvanceClick,
                 onPlayerChange = onPlayerChange,
                 onChoosePlayerClick = onChoosePlayerClick,
                 onAddPlayerTextButtonClick = onAddPlayerTextButtonClick,

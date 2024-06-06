@@ -2,6 +2,7 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.gmail.luizjmfilho.sevenwonders.data.MatchDetailsRepository
 import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetails
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,54 +15,50 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MatchDetailsViewModel @Inject constructor(
+    private val matchDetailsRepository: MatchDetailsRepository,
     savedStateHandle: SavedStateHandle,
     firebaseAnalytics: FirebaseAnalytics,
 ) : TrackedScreenViewModel(firebaseAnalytics, "MatchDetails") {
 
-    private val _playerNicknamesInThePassedOrder: List<String> = savedStateHandle.get<String>("playerNicknames")!!.split(",") - listOf("")
-    val playerNicknamesInThePassedOrder = _playerNicknamesInThePassedOrder
+    private val playerIdsInThePassedOrder: List<Int> = savedStateHandle.get<String>("playerIds")!!.split(",").map{ it.toInt() }
     private val _uiState = MutableStateFlow(MatchDetailsUiState())
     val uiState: StateFlow<MatchDetailsUiState> = _uiState.asStateFlow()
 
 
     fun onConfirmMethod(positionMethod: RaffleOrChoose, wonderMethod: RaffleOrChoose) {
+        val creationMethod = when (positionMethod) {
+            RaffleOrChoose.Raffle -> {
+                when (wonderMethod) {
+                    RaffleOrChoose.Raffle -> CreationMethod.AllRaffle
+                    RaffleOrChoose.Choose -> CreationMethod.RafflePositionChooseWonder
+                }
+            }
+            RaffleOrChoose.Choose -> {
+                when (wonderMethod) {
+                    RaffleOrChoose.Raffle -> CreationMethod.ChoosePositionRaffleWonder
+                    RaffleOrChoose.Choose -> CreationMethod.AllChoose
+                }
+            }
+        }
         viewModelScope.launch {
+            val persons = matchDetailsRepository.getPersonsFromIds(playerIdsInThePassedOrder).sortedBy { playerIdsInThePassedOrder.indexOf(it.id) }
+            val playersNicknames = when (positionMethod) {
+                RaffleOrChoose.Choose -> persons.map{ it.name }
+                RaffleOrChoose.Raffle -> persons.map{ it.name }.shuffled()
+            }
+            val playersWonders = when (wonderMethod) {
+                RaffleOrChoose.Choose -> List(playerIdsInThePassedOrder.size) { null }
+                RaffleOrChoose.Raffle -> Wonders.entries.toList().shuffled().take(playerIdsInThePassedOrder.size)
+            }
+            val matchPlayerDetails = List(playerIdsInThePassedOrder.size) { index ->
+                val wonderSide = when (wonderMethod) {
+                    RaffleOrChoose.Choose -> null
+                    RaffleOrChoose.Raffle -> WonderSide.Day
+                }
+                PlayerDetails(playersNicknames[index], playersWonders[index], wonderSide)
+            }
+            val isAdvanceButtonEnabled = (wonderMethod == RaffleOrChoose.Raffle)
             _uiState.update { currentState ->
-                val creationMethod = when (positionMethod) {
-                    RaffleOrChoose.Raffle -> {
-                        when (wonderMethod) {
-                            RaffleOrChoose.Raffle -> CreationMethod.AllRaffle
-                            RaffleOrChoose.Choose -> CreationMethod.RafflePositionChooseWonder
-                        }
-                    }
-                    RaffleOrChoose.Choose -> {
-                        when (wonderMethod) {
-                            RaffleOrChoose.Raffle -> CreationMethod.ChoosePositionRaffleWonder
-                            RaffleOrChoose.Choose -> CreationMethod.AllChoose
-                        }
-                    }
-                }
-
-                val playersNicknames = when (positionMethod) {
-                    RaffleOrChoose.Choose -> _playerNicknamesInThePassedOrder
-                    RaffleOrChoose.Raffle -> _playerNicknamesInThePassedOrder.shuffled()
-                }
-
-                val playersWonders = when (wonderMethod) {
-                    RaffleOrChoose.Choose -> List(_playerNicknamesInThePassedOrder.size) { null }
-                    RaffleOrChoose.Raffle -> Wonders.entries.toList().shuffled().take(_playerNicknamesInThePassedOrder.size)
-                }
-
-                val matchPlayerDetails = List(_playerNicknamesInThePassedOrder.size) { index ->
-                    val wonderSide = when (wonderMethod) {
-                        RaffleOrChoose.Choose -> null
-                        RaffleOrChoose.Raffle -> WonderSide.Day
-                    }
-                    PlayerDetails(playersNicknames[index], playersWonders[index], wonderSide)
-                }
-
-                val isAdvanceButtonEnabled = (wonderMethod == RaffleOrChoose.Raffle)
-
                 currentState.copy(
                     creationMethod = creationMethod,
                     matchPlayersDetails = matchPlayerDetails,

@@ -55,7 +55,7 @@ const val newGameScreenTestTag: String = "NewGame Screen"
 @Composable
 fun NewGameScreenPrimaria(
     onBackClick: () -> Unit,
-    onNextClick: (List<String>) -> Unit,
+    onNextClick: (List<Int>) -> Unit,
     onChoosePlayerClick: (List<Int>) -> Unit,
     selectedIdFromPlayerListScreen: Int?,
     modifier: Modifier = Modifier,
@@ -64,20 +64,22 @@ fun NewGameScreenPrimaria(
     WithLifecycleOwner(viewModel)
 
 
-        LaunchedEffect(selectedIdFromPlayerListScreen) {
-            if (selectedIdFromPlayerListScreen != null) {
-                viewModel.setPlayerNames(selectedIdFromPlayerListScreen)
-            }
+    LaunchedEffect(selectedIdFromPlayerListScreen) {
+        if (selectedIdFromPlayerListScreen != null) {
+            viewModel.setPlayerNames(selectedIdFromPlayerListScreen)
         }
+    }
 
 
     val uiState by viewModel.uiState.collectAsState()
     NewGameScreenSecundaria(
         onBackClick = onBackClick,
-        onAdvanceClick = onNextClick,
+        onNextClick = {
+            onNextClick(viewModel.getPlayerIds())
+        },
         onChoosePlayerClick = { playerIndexBeingSelected ->
             onChoosePlayerClick(
-                viewModel.getPlayerIds(playerIndexBeingSelected)
+                viewModel.saveIndexAndGetPlayerIds(playerIndexBeingSelected)
             )
         },
         onAddPlayerTextButtonClick = viewModel::newGameAddPlayer,
@@ -90,7 +92,7 @@ fun NewGameScreenPrimaria(
 @Composable
 fun NewGameScreenSecundaria(
     onBackClick: () -> Unit,
-    onAdvanceClick: (List<String>) -> Unit,
+    onNextClick: () -> Unit,
     onChoosePlayerClick: (Int) -> Unit,
     onAddPlayerTextButtonClick: () -> Unit,
     onRemovePlayerTextButtonClick: () -> Unit,
@@ -192,7 +194,7 @@ fun NewGameScreenSecundaria(
                     Row {
                         Spacer(Modifier.weight(1f))
                         TextButton(
-                            onClick = { onAdvanceClick(uiState.playerNames) },
+                            onClick = onNextClick,
                             enabled = uiState.isAdvanceAndAddPlayerButtonsEnable
                         ) {
                             Row (
@@ -313,7 +315,7 @@ fun NewGamePreview() {
     SevenWondersTheme {
         NewGameScreenSecundaria(
             onBackClick = {},
-            onAdvanceClick = {},
+            onNextClick = {},
             onChoosePlayerClick = {},
             onAddPlayerTextButtonClick = {},
             onRemovePlayerTextButtonClick = {},

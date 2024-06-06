@@ -86,6 +86,7 @@ fun SevenWondersNavHost() {
                     navController.navigateUp()
                 },
                 onNextClick = { playerNicknames ->
+                    navController.currentBackStackEntry?.savedStateHandle?.remove<Int>("selectedPlayerId")
                     navController.navigate("${ScreenNames.MatchDetailsScreen.name}/${playerNicknames.joinToString(",")}")
                 },
                 onChoosePlayerClick = { alreadySelectedPlayerIds ->
@@ -103,7 +104,7 @@ fun SevenWondersNavHost() {
         }
 
         composable(
-            route = "${ScreenNames.MatchDetailsScreen.name}/{playerNicknames}",
+            route = "${ScreenNames.MatchDetailsScreen.name}/{playerIds}",
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
@@ -118,7 +119,9 @@ fun SevenWondersNavHost() {
             },
         ) {
             MatchDetailsScreenPrimaria(
-                onBackClick = { navController.navigateUp() },
+                onBackClick = {
+                    navController.navigateUp()
+                },
                 onNextClick = { playerDetailsList ->
                     navController.navigate("${ScreenNames.CalculationScreen.name}/${playerDetailsList.joinToString(";")}")
                 }

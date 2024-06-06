@@ -44,12 +44,18 @@ class NewGameViewModel @Inject constructor(
         }
     }
 
-    fun getPlayerIds(playerIndexBeingSelected: Int): List<Int> {
+    fun saveIndexAndGetPlayerIds(playerIndexBeingSelected: Int): List<Int> {
         playerIndexThatGoesToPlayerListScreen = playerIndexBeingSelected
+        return getPlayerIds()
+    }
+
+    fun getPlayerIds(): List<Int> {
         return persons.mapNotNull{
             it?.id
         }
     }
+
+
 
     fun newGameAddPlayer() {
         _uiState.update { currentState ->
