@@ -3,7 +3,8 @@ package com.gmail.luizjmfilho.sevenwonders.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.luizjmfilho.sevenwonders.data.MatchDetailsRepository
-import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetails
+import com.gmail.luizjmfilho.sevenwonders.model.Person
+import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetail
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +25,14 @@ class MatchDetailsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MatchDetailsUiState())
     val uiState: StateFlow<MatchDetailsUiState> = _uiState.asStateFlow()
 
+    private var persons = mutableListOf<Person>()
+
+    init {
+        viewModelScope.launch {
+            persons = matchDetailsRepository.getPersonsFromIds(playerIdsInThePassedOrder).sortedBy { playerIdsInThePassedOrder.indexOf(it.id) }.toMutableList()
+        }
+    }
+
 
     fun onConfirmMethod(positionMethod: RaffleOrChoose, wonderMethod: RaffleOrChoose) {
         val creationMethod = when (positionMethod) {
@@ -40,31 +49,27 @@ class MatchDetailsViewModel @Inject constructor(
                 }
             }
         }
-        viewModelScope.launch {
-            val persons = matchDetailsRepository.getPersonsFromIds(playerIdsInThePassedOrder).sortedBy { playerIdsInThePassedOrder.indexOf(it.id) }
-            val playersNicknames = when (positionMethod) {
-                RaffleOrChoose.Choose -> persons.map{ it.name }
-                RaffleOrChoose.Raffle -> persons.map{ it.name }.shuffled()
+        if (positionMethod == RaffleOrChoose.Raffle) persons = persons.shuffled().toMutableList()
+        val playersNicknames = persons.map { it.name }
+
+        val playersWonders = when (wonderMethod) {
+            RaffleOrChoose.Choose -> List(playerIdsInThePassedOrder.size) { null }
+            RaffleOrChoose.Raffle -> Wonders.entries.toList().shuffled().take(playerIdsInThePassedOrder.size)
+        }
+        val matchPlayerDetails = List(playerIdsInThePassedOrder.size) { index ->
+            val wonderSide = when (wonderMethod) {
+                RaffleOrChoose.Choose -> null
+                RaffleOrChoose.Raffle -> WonderSide.Day
             }
-            val playersWonders = when (wonderMethod) {
-                RaffleOrChoose.Choose -> List(playerIdsInThePassedOrder.size) { null }
-                RaffleOrChoose.Raffle -> Wonders.entries.toList().shuffled().take(playerIdsInThePassedOrder.size)
-            }
-            val matchPlayerDetails = List(playerIdsInThePassedOrder.size) { index ->
-                val wonderSide = when (wonderMethod) {
-                    RaffleOrChoose.Choose -> null
-                    RaffleOrChoose.Raffle -> WonderSide.Day
-                }
-                PlayerDetails(playersNicknames[index], playersWonders[index], wonderSide)
-            }
-            val isAdvanceButtonEnabled = (wonderMethod == RaffleOrChoose.Raffle)
-            _uiState.update { currentState ->
-                currentState.copy(
-                    creationMethod = creationMethod,
-                    matchPlayersDetails = matchPlayerDetails,
-                    isAdvanceButtonEnabled = isAdvanceButtonEnabled
-                )
-            }
+            PlayerDetail(playersNicknames[index], playersWonders[index], wonderSide)
+        }
+        val isAdvanceButtonEnabled = (wonderMethod == RaffleOrChoose.Raffle)
+        _uiState.update { currentState ->
+            currentState.copy(
+                creationMethod = creationMethod,
+                matchPlayersDetails = matchPlayerDetails,
+                isAdvanceButtonEnabled = isAdvanceButtonEnabled
+            )
         }
     }
 
@@ -147,28 +152,35 @@ class MatchDetailsViewModel @Inject constructor(
     }
 
     fun onMoveCardDown(index: Int) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                val maxIndex = currentState.matchPlayersDetails.size - 1
-                val matchPlayersDetails = currentState.matchPlayersDetails.toMutableList()
-                val playerClicked = currentState.matchPlayersDetails[index]
-                val playerBelow = if(index != maxIndex) {
-                    currentState.matchPlayersDetails[index + 1]
-                } else {
-                    currentState.matchPlayersDetails[0]
-                }
+        _uiState.update { currentState ->
+            val maxIndex = currentState.matchPlayersDetails.size - 1
+            val matchPlayersDetails = currentState.matchPlayersDetails.toMutableList()
 
-                matchPlayersDetails[index] = playerBelow
-                if (index != maxIndex) {
-                    matchPlayersDetails[index + 1] = playerClicked
-                } else {
-                    matchPlayersDetails[0] = playerClicked
-                }
+            val playerClicked = currentState.matchPlayersDetails[index]
+            val personClicked = persons[index]
 
-                currentState.copy(
-                    matchPlayersDetails = matchPlayersDetails,
-                )
+            val indexBelow = if(index != maxIndex) {
+                index + 1
+            } else {
+                0
             }
+
+            val playerBelow = currentState.matchPlayersDetails[indexBelow]
+            val personBelow = persons[indexBelow]
+
+            persons[index] = personBelow
+            persons[indexBelow] = personClicked
+
+            matchPlayersDetails[index] = playerBelow
+            matchPlayersDetails[indexBelow] = playerClicked
+
+            currentState.copy(
+                matchPlayersDetails = matchPlayersDetails,
+            )
         }
+    }
+
+    fun getPlayerIds(): List<Int> {
+        return persons.map { it.id }
     }
 }

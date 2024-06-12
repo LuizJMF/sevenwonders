@@ -27,7 +27,7 @@ class MatchDetailsScreenIntegrationTest {
             MatchDetailsScreenPrimaria(
                 onBackClick = { /*TODO*/ },
                 onNextClick = { /*TODO*/ },
-                matchDetailsViewModel = viewModel(
+                viewModel = viewModel(
                     factory = viewModelFactory {
                         initializer {
                             MatchDetailsViewModel(SavedStateHandle(mapOf("playerNicknames" to "${luiz.name},${anna.name},${cristian.name},${gian.name}")))

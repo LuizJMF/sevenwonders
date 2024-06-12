@@ -5,7 +5,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.gmail.luizjmfilho.sevenwonders.TestData.anna
 import com.gmail.luizjmfilho.sevenwonders.TestData.cristian
 import com.gmail.luizjmfilho.sevenwonders.TestData.luiz
-import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetails
+import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetail
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -21,7 +21,7 @@ class MatchDetailsScreenTest {
 
     private fun launchScreen(
         onBackClick: () -> Unit = {},
-        onNextClick: (List<PlayerDetails>) -> Unit = {},
+        onNextClick: (List<PlayerDetail>) -> Unit = {},
         onConfirmClick: (RaffleOrChoose, RaffleOrChoose) -> Unit = {_, _ ->},
         onTrailingIconClick: (Int) -> Unit = {},
         onTextButtonClick: () -> Unit = {},
@@ -40,7 +40,7 @@ class MatchDetailsScreenTest {
                 onDialogConfirmClick = onDialogConfirmClick,
                 onDeselectWonderClick = onDeselectWonder,
                 onMoveCardDown = onMoveCardDown,
-                matchDetailsUiState = matchDetailsUiState
+                uiState = matchDetailsUiState
             )
         }
     }
@@ -101,9 +101,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.AllRaffle,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, Wonders.HALIKARNASSOS, WonderSide.Day),
-                    PlayerDetails(anna.name, Wonders.OLYMPIA, WonderSide.Day),
-                    PlayerDetails(cristian.name, Wonders.RHODOS, WonderSide.Day)
+                    PlayerDetail(luiz.name, Wonders.HALIKARNASSOS, WonderSide.Day),
+                    PlayerDetail(anna.name, Wonders.OLYMPIA, WonderSide.Day),
+                    PlayerDetail(cristian.name, Wonders.RHODOS, WonderSide.Day)
                 )
             ),
             onTrailingIconClick = { trailingIconClicked = true}
@@ -123,9 +123,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.AllChoose,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, null, null),
-                    PlayerDetails(anna.name, null, null),
-                    PlayerDetails(cristian.name, null, null)
+                    PlayerDetail(luiz.name, null, null),
+                    PlayerDetail(anna.name, null, null),
+                    PlayerDetail(cristian.name, null, null)
                 )
             ),
             onTextButtonClick = { chooseTextButtonClicked = true}
@@ -146,9 +146,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.AllChoose,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, null, null),
-                    PlayerDetails(anna.name, null, null),
-                    PlayerDetails(cristian.name, null, null)
+                    PlayerDetail(luiz.name, null, null),
+                    PlayerDetail(anna.name, null, null),
+                    PlayerDetail(cristian.name, null, null)
                 )
             ),
             onDialogConfirmClick = { maravilha, posicao ->
@@ -175,9 +175,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.AllChoose,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, null, null),
-                    PlayerDetails(anna.name, null, null),
-                    PlayerDetails(cristian.name, null, null)
+                    PlayerDetail(luiz.name, null, null),
+                    PlayerDetail(anna.name, null, null),
+                    PlayerDetail(cristian.name, null, null)
                 )
             ),
             onDeselectWonder = { deselectButtonClicked = true }
@@ -211,9 +211,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.AllRaffle,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, Wonders.RHODOS, WonderSide.Day),
-                    PlayerDetails(anna.name, Wonders.OLYMPIA, WonderSide.Day),
-                    PlayerDetails(cristian.name, Wonders.GIZAH, WonderSide.Day)
+                    PlayerDetail(luiz.name, Wonders.RHODOS, WonderSide.Day),
+                    PlayerDetail(anna.name, Wonders.OLYMPIA, WonderSide.Day),
+                    PlayerDetail(cristian.name, Wonders.GIZAH, WonderSide.Day)
                 )
             )
         )
@@ -230,9 +230,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.AllChoose,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, Wonders.RHODOS, WonderSide.Day),
-                    PlayerDetails(anna.name, null, WonderSide.Day),
-                    PlayerDetails(cristian.name, Wonders.GIZAH, WonderSide.Day)
+                    PlayerDetail(luiz.name, Wonders.RHODOS, WonderSide.Day),
+                    PlayerDetail(anna.name, null, WonderSide.Day),
+                    PlayerDetail(cristian.name, Wonders.GIZAH, WonderSide.Day)
                 )
             )
         )
@@ -250,9 +250,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.ChoosePositionRaffleWonder,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, Wonders.RHODOS, WonderSide.Day),
-                    PlayerDetails(anna.name, null, WonderSide.Day),
-                    PlayerDetails(cristian.name, Wonders.GIZAH, WonderSide.Day)
+                    PlayerDetail(luiz.name, Wonders.RHODOS, WonderSide.Day),
+                    PlayerDetail(anna.name, null, WonderSide.Day),
+                    PlayerDetail(cristian.name, Wonders.GIZAH, WonderSide.Day)
                 )
             )
         )
@@ -269,9 +269,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.RafflePositionChooseWonder,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, Wonders.RHODOS, WonderSide.Day),
-                    PlayerDetails(anna.name, null, WonderSide.Day),
-                    PlayerDetails(cristian.name, Wonders.GIZAH, WonderSide.Day)
+                    PlayerDetail(luiz.name, Wonders.RHODOS, WonderSide.Day),
+                    PlayerDetail(anna.name, null, WonderSide.Day),
+                    PlayerDetail(cristian.name, Wonders.GIZAH, WonderSide.Day)
                 )
             )
         )
@@ -289,9 +289,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.AllChoose,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, Wonders.RHODOS, WonderSide.Day),
-                    PlayerDetails(anna.name, null, null),
-                    PlayerDetails(cristian.name, Wonders.GIZAH, WonderSide.Day)
+                    PlayerDetail(luiz.name, Wonders.RHODOS, WonderSide.Day),
+                    PlayerDetail(anna.name, null, null),
+                    PlayerDetail(cristian.name, Wonders.GIZAH, WonderSide.Day)
                 )
             )
         )
@@ -310,9 +310,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.AllChoose,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, Wonders.RHODOS, null),
-                    PlayerDetails(anna.name, null, null),
-                    PlayerDetails(cristian.name, Wonders.GIZAH, null)
+                    PlayerDetail(luiz.name, Wonders.RHODOS, null),
+                    PlayerDetail(anna.name, null, null),
+                    PlayerDetail(cristian.name, Wonders.GIZAH, null)
                 )
             )
         )
@@ -326,9 +326,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.AllChoose,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, Wonders.RHODOS, WonderSide.Day),
-                    PlayerDetails(anna.name, null, WonderSide.Day),
-                    PlayerDetails(cristian.name, Wonders.GIZAH, WonderSide.Day)
+                    PlayerDetail(luiz.name, Wonders.RHODOS, WonderSide.Day),
+                    PlayerDetail(anna.name, null, WonderSide.Day),
+                    PlayerDetail(cristian.name, Wonders.GIZAH, WonderSide.Day)
                 )
             )
         )
@@ -342,9 +342,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.AllChoose,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, Wonders.RHODOS, WonderSide.Day),
-                    PlayerDetails(anna.name, Wonders.HALIKARNASSOS, WonderSide.Day),
-                    PlayerDetails(cristian.name, Wonders.GIZAH, WonderSide.Day)
+                    PlayerDetail(luiz.name, Wonders.RHODOS, WonderSide.Day),
+                    PlayerDetail(anna.name, Wonders.HALIKARNASSOS, WonderSide.Day),
+                    PlayerDetail(cristian.name, Wonders.GIZAH, WonderSide.Day)
                 )
             )
         )
@@ -373,9 +373,9 @@ class MatchDetailsScreenTest {
             matchDetailsUiState = MatchDetailsUiState(
                 creationMethod = CreationMethod.AllChoose,
                 matchPlayersDetails = listOf(
-                    PlayerDetails(luiz.name, null, null),
-                    PlayerDetails(anna.name, null, null),
-                    PlayerDetails(cristian.name, null, null)
+                    PlayerDetail(luiz.name, null, null),
+                    PlayerDetail(anna.name, null, null),
+                    PlayerDetail(cristian.name, null, null)
                 ),
                 availableWondersList = listOf(
                     Wonders.HALIKARNASSOS,

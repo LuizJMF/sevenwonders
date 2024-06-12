@@ -7,7 +7,7 @@ import com.gmail.luizjmfilho.sevenwonders.TestData.cristian
 import com.gmail.luizjmfilho.sevenwonders.TestData.gian
 import com.gmail.luizjmfilho.sevenwonders.TestData.ivana
 import com.gmail.luizjmfilho.sevenwonders.TestData.luiz
-import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetails
+import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetail
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -36,7 +36,7 @@ class MatchDetailsViewModelTest {
     fun initialState() {
         val state = viewModel.uiState.value
 
-        assertEquals(emptyList<PlayerDetails>(), state.matchPlayersDetails)
+        assertEquals(emptyList<PlayerDetail>(), state.matchPlayersDetails)
         assertEquals(Wonders.values().toList(), state.availableWondersList)
         assertNull(state.creationMethod)
         assertFalse(state.isAdvanceButtonEnabled)

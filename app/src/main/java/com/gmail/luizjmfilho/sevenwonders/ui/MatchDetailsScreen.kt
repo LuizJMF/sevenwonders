@@ -71,7 +71,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
-import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetails
+import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetail
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
 const val raffleRadioButtonTestTag: String = "sortear"
@@ -84,38 +84,41 @@ const val moveDownCardIconTestTag: String = "ícone de mover o card pra baixo"
 @Composable
 fun MatchDetailsScreenPrimaria(
     onBackClick: () -> Unit,
-    onNextClick: (List<PlayerDetails>) -> Unit,
+    onNextClick: (List<Int>, List<Wonders>, List<WonderSide>) -> Unit,
     modifier: Modifier = Modifier,
-    matchDetailsViewModel: MatchDetailsViewModel = hiltViewModel()
+    viewModel: MatchDetailsViewModel = hiltViewModel()
 ) {
-    WithLifecycleOwner(matchDetailsViewModel)
+    WithLifecycleOwner(viewModel)
 
-    val matchDetailsUiState by matchDetailsViewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     MatchDetailsScreenSecundaria(
         onBackClick = onBackClick,
-        onNextClick = onNextClick,
-        onConfirmClick = matchDetailsViewModel::onConfirmMethod,
+        onNextClick = {
+            val playerIds = viewModel.getPlayerIds()
+            onNextClick(playerIds, uiState.matchPlayersDetails.map { it.wonder!! } , uiState.matchPlayersDetails.map { it.wonderSide!! })
+        },
+        onConfirmClick = viewModel::onConfirmMethod,
         modifier = modifier,
-        onTrailingIconClick = matchDetailsViewModel::onWonderSideChange,
-        onTextButtonClick = matchDetailsViewModel::onChooseWonderClick,
-        matchDetailsUiState = matchDetailsUiState,
-        onDialogConfirmClick = matchDetailsViewModel::onSelectWonderInDialog,
-        onDeselectWonderClick = matchDetailsViewModel::onDeselectWonder,
-        onMoveCardDown = matchDetailsViewModel::onMoveCardDown,
+        onTrailingIconClick = viewModel::onWonderSideChange,
+        onTextButtonClick = viewModel::onChooseWonderClick,
+        uiState = uiState,
+        onDialogConfirmClick = viewModel::onSelectWonderInDialog,
+        onDeselectWonderClick = viewModel::onDeselectWonder,
+        onMoveCardDown = viewModel::onMoveCardDown,
     )
 }
 
 @Composable
 fun MatchDetailsScreenSecundaria(
     onBackClick: () -> Unit,
-    onNextClick: (List<PlayerDetails>) -> Unit,
+    onNextClick: () -> Unit,
     onConfirmClick: (RaffleOrChoose, RaffleOrChoose) -> Unit,
     onTrailingIconClick: (Int) -> Unit,
     onTextButtonClick: () -> Unit,
     onDialogConfirmClick: (Wonders, Int) -> Unit,
     onDeselectWonderClick: (Int) -> Unit,
     onMoveCardDown: (Int) -> Unit,
-    matchDetailsUiState: MatchDetailsUiState,
+    uiState: MatchDetailsUiState,
     modifier: Modifier = Modifier,
 ) {
     var positionMethod: RaffleOrChoose? by rememberSaveable { mutableStateOf(null) }
@@ -240,17 +243,17 @@ fun MatchDetailsScreenSecundaria(
                             }
                         }
                         AnimatedVisibility(
-                            visible = (matchDetailsUiState.creationMethod != null)
+                            visible = (uiState.creationMethod != null)
                         ) {
                             MatchSetupBox(
-                                matchPlayersDetails = matchDetailsUiState.matchPlayersDetails,
+                                matchPlayersDetails = uiState.matchPlayersDetails,
                                 modifier = Modifier
                                     .padding(top = 15.dp),
-                                creationMethod = matchDetailsUiState.creationMethod!!,
+                                creationMethod = uiState.creationMethod!!,
                                 onTrailingIconClick = onTrailingIconClick,
                                 onTextButtonClick = onTextButtonClick,
                                 onDialogConfirmClick = onDialogConfirmClick,
-                                availableWondersList = matchDetailsUiState.availableWondersList.map { wonder ->
+                                availableWondersList = uiState.availableWondersList.map { wonder ->
                                     convertWonderToString(wonder = wonder)
                                 },
                                 onDeselectWonder = onDeselectWonderClick,
@@ -261,8 +264,8 @@ fun MatchDetailsScreenSecundaria(
                     Row {
                         Spacer(Modifier.weight(1f))
                         TextButton(
-                            onClick = { onNextClick(matchDetailsUiState.matchPlayersDetails) },
-                            enabled = (matchDetailsUiState.isAdvanceButtonEnabled)
+                            onClick = onNextClick,
+                            enabled = (uiState.isAdvanceButtonEnabled)
                         ) {
                             Row(
                                 verticalAlignment = CenterVertically,
@@ -353,7 +356,7 @@ fun RaffleAndChooseBox(
 
 @Composable
 fun PersonAndWonderCard(
-    playerDetails: PlayerDetails,
+    playerDetail: PlayerDetail,
     creationMethod: CreationMethod,
     onTrailingIconClick: () -> Unit,
     onTextButtonClick: (String) -> Unit,
@@ -387,7 +390,7 @@ fun PersonAndWonderCard(
                 else -> {}
             }
             Text(
-                text = playerDetails.nickname,
+                text = playerDetail.nickname,
                 modifier = Modifier
                     .weight(0.4f),
                 textAlign = TextAlign.Center,
@@ -399,7 +402,7 @@ fun PersonAndWonderCard(
                 tint = Color.Red,
                 contentDescription = null
             )
-            if (playerDetails.wonder == null) {
+            if (playerDetail.wonder == null) {
                 TextButton(
                     onClick = { onTextButtonClick("escolher") },
                     modifier = Modifier
@@ -418,7 +421,7 @@ fun PersonAndWonderCard(
                             .weight(0.6f),
                     ) {
                         Text(
-                            text = convertWonderToString(playerDetails.wonder),
+                            text = convertWonderToString(playerDetail.wonder),
                             modifier = Modifier
                                 .weight(0.6f),
                             textAlign = TextAlign.Center,
@@ -428,7 +431,7 @@ fun PersonAndWonderCard(
                     }
                 } else {
                     Text(
-                        text = convertWonderToString(playerDetails.wonder),
+                        text = convertWonderToString(playerDetail.wonder),
                         modifier = Modifier
                             .weight(0.6f),
                         textAlign = TextAlign.Center,
@@ -437,7 +440,7 @@ fun PersonAndWonderCard(
                     )
                 }
             }
-            if (playerDetails.wonderSide != null) {
+            if (playerDetail.wonderSide != null) {
                 var isVisible by rememberSaveable { mutableStateOf(false) }
                 AnimatedContent(
                     targetState = isVisible,
@@ -464,11 +467,11 @@ fun PersonAndWonderCard(
                                 .testTag(dayNightIconTestTag)
                         ) {
                             Icon(
-                                imageVector = when (playerDetails.wonderSide) {
+                                imageVector = when (playerDetail.wonderSide) {
                                     WonderSide.Day -> Icons.Filled.WbSunny
                                     WonderSide.Night -> Icons.Filled.Bedtime
                                 },
-                                tint = when (playerDetails.wonderSide) {
+                                tint = when (playerDetail.wonderSide) {
                                     WonderSide.Day -> Color(0xFFFF8C00)
                                     WonderSide.Night -> if(isSystemInDarkTheme()) Color(0xFFFAE52D) else Color.Blue
                                 },
@@ -485,11 +488,11 @@ fun PersonAndWonderCard(
                                 .testTag(dayNightIconTestTag)
                         ) {
                             Icon(
-                                imageVector = when (playerDetails.wonderSide) {
+                                imageVector = when (playerDetail.wonderSide) {
                                     WonderSide.Day -> Icons.Filled.WbSunny
                                     WonderSide.Night -> Icons.Filled.Bedtime
                                 },
-                                tint = when (playerDetails.wonderSide) {
+                                tint = when (playerDetail.wonderSide) {
                                     WonderSide.Day -> Color(0xFFFF8C00)
                                     WonderSide.Night -> if(isSystemInDarkTheme()) Color(0xFFFAE52D) else Color.Blue
                                 },
@@ -557,7 +560,7 @@ fun convertStringToWonder(wonderName: String?, context: Context): Wonders {
 @Composable
 fun MatchSetupBox(
     availableWondersList: List<String>,
-    matchPlayersDetails: List<PlayerDetails>,
+    matchPlayersDetails: List<PlayerDetail>,
     creationMethod: CreationMethod,
     onTrailingIconClick: (Int) -> Unit,
     onTextButtonClick: () -> Unit,
@@ -576,7 +579,7 @@ fun MatchSetupBox(
     ) {
         for (player in matchPlayersDetails) {
             PersonAndWonderCard(
-                playerDetails = player,
+                playerDetail = player,
                 creationMethod = creationMethod,
                 onTrailingIconClick = { onTrailingIconClick(matchPlayersDetails.indexOf(player)) },
                 onTextButtonClick = {
@@ -685,11 +688,11 @@ fun MatchSetupBoxPreview() {
         MatchSetupBox(
             creationMethod = CreationMethod.ChoosePositionRaffleWonder,
             matchPlayersDetails = listOf(
-                PlayerDetails("Zinho", Wonders.BABYLON, wonderSide = WonderSide.Day),
-                PlayerDetails("Anninha", Wonders.ALEXANDRIA, wonderSide = WonderSide.Night),
-                PlayerDetails("Deivinho", Wonders.HALIKARNASSOS, wonderSide = WonderSide.Day),
-                PlayerDetails("Luighi", Wonders.EPHESOS, wonderSide = WonderSide.Day),
-                PlayerDetails("Iagê", Wonders.RHODOS, wonderSide = WonderSide.Night)
+                PlayerDetail("Zinho", Wonders.BABYLON, wonderSide = WonderSide.Day),
+                PlayerDetail("Anninha", Wonders.ALEXANDRIA, wonderSide = WonderSide.Night),
+                PlayerDetail("Deivinho", Wonders.HALIKARNASSOS, wonderSide = WonderSide.Day),
+                PlayerDetail("Luighi", Wonders.EPHESOS, wonderSide = WonderSide.Day),
+                PlayerDetail("Iagê", Wonders.RHODOS, wonderSide = WonderSide.Night)
             ),
             onTrailingIconClick = {},
             onTextButtonClick = {},
@@ -706,7 +709,7 @@ fun MatchSetupBoxPreview() {
 fun PersonAndWonderCardPreview() {
     SevenWondersTheme {
         PersonAndWonderCard(
-            playerDetails = PlayerDetails("Zinho", Wonders.EPHESOS, WonderSide.Day),
+            playerDetail = PlayerDetail("Zinho", Wonders.EPHESOS, WonderSide.Day),
             creationMethod = CreationMethod.AllChoose,
             onTrailingIconClick = {},
             onTextButtonClick = {},
@@ -723,7 +726,7 @@ fun MatchDetailsScreenSecundariaPreview() {
             onBackClick = { },
             onNextClick = { },
             onConfirmClick = {_ , _ -> },
-            matchDetailsUiState = MatchDetailsUiState(),
+            uiState = MatchDetailsUiState(),
             onTrailingIconClick = {},
             onTextButtonClick = {},
             onDialogConfirmClick = {_, _ ->},

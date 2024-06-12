@@ -4,7 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gmail.luizjmfilho.sevenwonders.data.CalculationRepository
 import com.gmail.luizjmfilho.sevenwonders.model.Match
-import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetails
+import com.gmail.luizjmfilho.sevenwonders.model.Person
+import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetail
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,31 +22,41 @@ class CalculationViewModel @Inject constructor(
     firebaseAnalytics: FirebaseAnalytics,
 ) : TrackedScreenViewModel(firebaseAnalytics, "Calculation") {
 
-    private val _playerDetailsOfPreviousScreen: List<PlayerDetails> = savedStateHandle.get<String>("playerDetailsList")!!.split(";").map {
-        val list = it.split(",")
-        PlayerDetails(
-            nickname = list[0].drop(23),
-            wonder = Wonders.valueOf(list[1].drop(8)),
-            wonderSide = WonderSide.valueOf(list[2].drop(12).dropLast(1)),
-        )
-    }
+    private val playerIds: List<Int> = savedStateHandle.get<String>("playerIds")!!
+        .split(",")
+        .map { it.toInt() }
+    private val wonders: List<Wonders> = savedStateHandle.get<String>("wonders")!!
+        .split(",")
+        .map { Wonders.valueOf(it) }
+    private val wonderSide: List<WonderSide> = savedStateHandle.get<String>("wonderSides")!!
+        .split(",")
+        .map { WonderSide.valueOf(it) }
+
+    private var persons: List<Person> = emptyList()
+    private var playerDetails: List<PlayerDetail> = emptyList()
+
     private val _uiState = MutableStateFlow(CalculationUiState())
     val uiState: StateFlow<CalculationUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
+            persons = calculationRepository.getPersonsFromIds(playerIds).sortedBy { playerIds.indexOf(it.id) }
+            playerDetails = persons.mapIndexed { index, person ->
+                PlayerDetail(person.name, wonders[index], wonderSide[index])
+            }
+            
             _uiState.update { currentState ->
                 currentState.copy(
-                    playersList = _playerDetailsOfPreviousScreen.map { it.nickname },
-                    totalScoreList = List(_playerDetailsOfPreviousScreen.size) { 0 },
-                    wonderBoardScoreList = List(_playerDetailsOfPreviousScreen.size) { 0 },
-                    coinScoreList = List(_playerDetailsOfPreviousScreen.size) { 0 },
-                    coinQuantityList = List(_playerDetailsOfPreviousScreen.size) { 0 },
-                    warScoreList = List(_playerDetailsOfPreviousScreen.size) { 0 },
-                    blueCardScoreList = List(_playerDetailsOfPreviousScreen.size) { 0 },
-                    yellowCardScoreList = List(_playerDetailsOfPreviousScreen.size) { 0 },
-                    greenCardScoreList = List(_playerDetailsOfPreviousScreen.size) { 0 },
-                    purpleCardScoreList = List(_playerDetailsOfPreviousScreen.size) { 0 },
+                    playersList = playerDetails.map { it.nickname },
+                    totalScoreList = List(playerDetails.size) { 0 },
+                    wonderBoardScoreList = List(playerDetails.size) { 0 },
+                    coinScoreList = List(playerDetails.size) { 0 },
+                    coinQuantityList = List(playerDetails.size) { 0 },
+                    warScoreList = List(playerDetails.size) { 0 },
+                    blueCardScoreList = List(playerDetails.size) { 0 },
+                    yellowCardScoreList = List(playerDetails.size) { 0 },
+                    greenCardScoreList = List(playerDetails.size) { 0 },
+                    purpleCardScoreList = List(playerDetails.size) { 0 },
                 )
             }
         }
@@ -323,9 +334,9 @@ class CalculationViewModel @Inject constructor(
                         matchId = matchId,
                         position = sortedNicknameList.indexOf(currentState.playersList[i]) + 1,
                         dataAndTime = dateAndTime,
-                        nickname = _playerDetailsOfPreviousScreen.map { it.nickname }[i],
-                        wonder = _playerDetailsOfPreviousScreen.map { it.wonder }[i]!!,
-                        wonderSide = _playerDetailsOfPreviousScreen.map { it.wonderSide }[i]!!,
+                        nickname = playerDetails.map { it.nickname }[i],
+                        wonder = playerDetails.map { it.wonder }[i]!!,
+                        wonderSide = playerDetails.map { it.wonderSide }[i]!!,
                         totalScore = currentState.totalScoreList[i],
                         wonderBoardScore = currentState.wonderBoardScoreList[i],
                         coinScore = currentState.coinScoreList[i],

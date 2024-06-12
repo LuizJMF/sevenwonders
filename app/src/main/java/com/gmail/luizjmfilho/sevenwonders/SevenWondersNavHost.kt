@@ -122,14 +122,15 @@ fun SevenWondersNavHost() {
                 onBackClick = {
                     navController.navigateUp()
                 },
-                onNextClick = { playerDetailsList ->
-                    navController.navigate("${ScreenNames.CalculationScreen.name}/${playerDetailsList.joinToString(";")}")
+                // "CalculationScreen/3,12,5,11/EPHESOS,GIZAH,RHODOS,HALIKARNASSOS/Day,Day,Night,Day"
+                onNextClick = { playerIds, wonders, wonderSides ->
+                    navController.navigate("${ScreenNames.CalculationScreen.name}/${playerIds.joinToString(",")}/${wonders.joinToString(",")}/${wonderSides.joinToString(",")}")
                 }
             )
         }
 
         composable(
-            route = "${ScreenNames.CalculationScreen.name}/{playerDetailsList}",
+            route = "${ScreenNames.CalculationScreen.name}/{playerIds}/{wonders}/{wonderSides}",
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,

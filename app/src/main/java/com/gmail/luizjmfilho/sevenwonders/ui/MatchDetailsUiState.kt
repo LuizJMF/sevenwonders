@@ -1,11 +1,11 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
-import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetails
+import com.gmail.luizjmfilho.sevenwonders.model.PlayerDetail
 
 data class MatchDetailsUiState(
     val creationMethod: CreationMethod? = null,
-    val matchPlayersDetails: List<PlayerDetails> = listOf(),
-    val availableWondersList: List<Wonders?> = Wonders.values().toList(),
+    val matchPlayersDetails: List<PlayerDetail> = listOf(),
+    val availableWondersList: List<Wonders?> = Wonders.entries,
     val isAdvanceButtonEnabled: Boolean = false,
 )
 
