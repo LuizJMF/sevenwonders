@@ -76,4 +76,7 @@ interface MatchDao {
         )"""
     )
     suspend fun getBestWonder(): List<ResultadoDaConsultaSQLBestWonder>?
+
+    @Query("SELECT COUNT(DISTINCT matchId) FROM `Match`")
+    suspend fun getNumberOfMatches(): Int
 }

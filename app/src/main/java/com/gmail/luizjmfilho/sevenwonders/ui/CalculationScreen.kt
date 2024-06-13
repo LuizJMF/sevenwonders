@@ -70,28 +70,28 @@ fun CalculationScreenPrimaria(
     onBackClick: () -> Unit,
     onConfirmNextScreen: () -> Unit,
     modifier: Modifier = Modifier,
-    calculationViewModel: CalculationViewModel = hiltViewModel(),
+    viewModel: CalculationViewModel = hiltViewModel(),
 ) {
-    WithLifecycleOwner(calculationViewModel)
+    WithLifecycleOwner(viewModel)
 
-    val calculationUiState by calculationViewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     CalculationScreenSecundaria(
         onBackClick = onBackClick,
-        onNextClick = calculationViewModel::addPlayerMatchInfo,
+        onNextClick = viewModel::addPlayerMatchInfo,
         onConfirmNextScreen = onConfirmNextScreen,
-        onDismissNextScreen = calculationViewModel::deleteMatch,
-        onPreviousCategory = calculationViewModel::onPreviousCategory,
-        onNextCategory = calculationViewModel::onNextCategory,
-        calculationUiState = calculationUiState,
-        onScoreChange = calculationViewModel::onScoreChange,
-        onShowTotalGrid = calculationViewModel::onShowTotalGrid,
-        onShowPartialGrid = calculationViewModel::onShowPartialGrid,
-        onShowScienceGrid = calculationViewModel::onShowSciendGrid,
-        onShowCoinGrid = calculationViewModel::onShowCoinGrid,
-        onScienceQuantityChange = calculationViewModel::onScienceQuantityChange,
-        onScienceGridConfirm = calculationViewModel::onScienceGridConfirm,
-        onCoinQuantityChange = calculationViewModel::onCoinQuantityChange,
-        onCoinGridConfirm = calculationViewModel::onCoinGridConfirm,
+        onDismissNextScreen = viewModel::deleteMatch,
+        onPreviousCategory = viewModel::onPreviousCategory,
+        onNextCategory = viewModel::onNextCategory,
+        uiState = uiState,
+        onScoreChange = viewModel::onScoreChange,
+        onShowTotalGrid = viewModel::onShowTotalGrid,
+        onShowPartialGrid = viewModel::onShowPartialGrid,
+        onShowScienceGrid = viewModel::onShowScienceGrid,
+        onShowCoinGrid = viewModel::onShowCoinGrid,
+        onScienceQuantityChange = viewModel::onScienceQuantityChange,
+        onScienceGridConfirm = viewModel::onScienceGridConfirm,
+        onCoinQuantityChange = viewModel::onCoinQuantityChange,
+        onCoinGridConfirm = viewModel::onCoinGridConfirm,
         modifier = modifier,
     )
 }
@@ -104,7 +104,7 @@ fun CalculationScreenSecundaria(
     onDismissNextScreen: () -> Unit,
     onPreviousCategory: () -> Unit,
     onNextCategory: () -> Unit,
-    calculationUiState: CalculationUiState,
+    uiState: CalculationUiState,
     onScoreChange: (Int, Int) -> Unit,
     onShowTotalGrid: () -> Unit,
     onShowPartialGrid: () -> Unit,
@@ -159,16 +159,16 @@ fun CalculationScreenSecundaria(
                         modifier = Modifier.weight(1f),
                         contentAlignment = Center
                     ) {
-                        when (calculationUiState.subScreen) {
+                        when (uiState.subScreen) {
                             CalculationSubScreen.ParcialGrid -> {
                                 ScoringGrid(
-                                    nicknameList = calculationUiState.playersList,
-                                    currentCategory = calculationUiState.currentCategory,
+                                    nicknameList = uiState.playersList,
+                                    currentCategory = uiState.currentCategory,
                                     modifier = Modifier
                                         .padding(10.dp),
                                     onPreviousCategory = onPreviousCategory,
                                     onNextCategory = onNextCategory,
-                                    calculationUiState = calculationUiState,
+                                    calculationUiState = uiState,
                                     onScoreChange = onScoreChange,
                                     onShowTotalGrid = onShowTotalGrid,
                                     onShowScienceGrid = { playerIndexBeingSelected ->
@@ -183,24 +183,24 @@ fun CalculationScreenSecundaria(
                             }
                             CalculationSubScreen.TotalGrid -> {
                                 TotalScoringGrid(
-                                    nicknameList = calculationUiState.playersList,
-                                    calculationUiState = calculationUiState,
+                                    nicknameList = uiState.playersList,
+                                    calculationUiState = uiState,
                                     onShowParcialGrid = onShowPartialGrid,
                                 )
                             }
                             CalculationSubScreen.ScienceGrid -> {
                                 ScienceGrid(
-                                    playerShown = calculationUiState.playersList[playerScienceOrCoinIndexBeingSelected],
-                                    calculationUiState = calculationUiState,
+                                    playerShown = uiState.playersList[playerScienceOrCoinIndexBeingSelected],
+                                    calculationUiState = uiState,
                                     onQuantityChange = onScienceQuantityChange,
                                     onShowPartialGrid = onShowPartialGrid,
-                                    onScienceGridConfirm = { onScienceGridConfirm(calculationUiState.playersList[playerScienceOrCoinIndexBeingSelected]) }
+                                    onScienceGridConfirm = { onScienceGridConfirm(uiState.playersList[playerScienceOrCoinIndexBeingSelected]) }
                                 )
                             }
                             CalculationSubScreen.CoinGrid -> {
                                 CoinGrid(
-                                    playerShown = calculationUiState.playersList[playerScienceOrCoinIndexBeingSelected],
-                                    calculationUiState = calculationUiState,
+                                    playerShown = uiState.playersList[playerScienceOrCoinIndexBeingSelected],
+                                    calculationUiState = uiState,
                                     onQuantityChange = onCoinQuantityChange,
                                     onShowPartialGrid = onShowPartialGrid,
                                     onCoinGridConfirm = { playerNickname ->
@@ -210,7 +210,7 @@ fun CalculationScreenSecundaria(
                             }
                         }
                     }
-                    if (calculationUiState.subScreen == CalculationSubScreen.ParcialGrid) {
+                    if (uiState.subScreen == CalculationSubScreen.ParcialGrid) {
                         Row {
                             Spacer(Modifier.weight(1f))
                             TextButton(
@@ -218,7 +218,7 @@ fun CalculationScreenSecundaria(
                                     onNextClick(getDateAndTime())
                                     alertDialogShown = true
                                 },
-                                enabled = (calculationUiState.currentCategory == PointCategory.PurpleCard)
+                                enabled = (uiState.currentCategory == PointCategory.PurpleCard)
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -1157,7 +1157,7 @@ fun CalculationScreenParcialGridSecundariaPreview() {
         CalculationScreenSecundaria(
             onBackClick = { /*TODO*/ },
             onNextClick = {},
-            calculationUiState = CalculationUiState(
+            uiState = CalculationUiState(
                 playersList = listOf(
                     "Zinho",
                     "Anninha",
@@ -1189,7 +1189,7 @@ fun CalculationScreenTotalGridSecundariaPreview() {
         CalculationScreenSecundaria(
             onBackClick = { /*TODO*/ },
             onNextClick = {},
-            calculationUiState = CalculationUiState(
+            uiState = CalculationUiState(
                 playersList = listOf(
                     "Zinho",
                     "Anninha",
@@ -1221,7 +1221,7 @@ fun CalculationScreenScienceGridSecundariaPreview() {
         CalculationScreenSecundaria(
             onBackClick = { /*TODO*/ },
             onNextClick = {},
-            calculationUiState = CalculationUiState(
+            uiState = CalculationUiState(
                 playersList = listOf(
                     "Zinho",
                     "Anninha",

@@ -166,7 +166,7 @@ class CalculationViewModel @Inject constructor(
         }
     }
 
-    fun onShowSciendGrid() {
+    fun onShowScienceGrid() {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
