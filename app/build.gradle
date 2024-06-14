@@ -6,6 +6,7 @@ plugins {
     id 'com.google.gms.google-services' // adicionei isso por conta do Firebase
     id 'com.google.firebase.crashlytics' // adicionei isso por conta do Firebase Crashlytics
     id 'com.google.firebase.firebase-perf' // adicionei isso por conta do Firebase Performance Monitoring
+    id 'androidx.room'
 }
 
 android {
@@ -49,6 +50,9 @@ android {
         kotlinCompilerExtensionVersion = "1.5.2"
     }
 
+    room {
+        schemaDirectory "$projectDir/schemas"
+    }
 }
 
 dependencies {
@@ -79,8 +83,9 @@ dependencies {
     implementation "androidx.compose.material3:material3-window-size-class:1.1.1" //essa aqui é para eu poder detectar os tamanhos da tela entre compact, medium e expended.
 
     // essas implementações abaixo é pra mexer com banco de dados
-    def room_version = "2.4.1"
+    def room_version = "2.6.1"
     implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-testing:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     ksp "androidx.room:room-compiler:$room_version"
 
