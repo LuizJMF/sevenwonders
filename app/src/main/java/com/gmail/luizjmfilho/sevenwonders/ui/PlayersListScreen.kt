@@ -173,7 +173,6 @@ fun PlayersListScreenSecundaria(
                                     itemHeight = with(density) { it.height.toDp() }
                                 }
                                 .wrapContentHeight(),
-                            color = Color(0xFF052497),
                         )
                         DropdownMenu(
                             expanded = isDropMenuExpanded,
@@ -341,7 +340,6 @@ fun AddPlayerDialog(
             ) {
                 Text(
                     text = stringResource(R.string.new_game_add_player_button),
-                    color = Color(0xFF021CC5)
                 )
             }
         },
@@ -356,7 +354,8 @@ fun PlayersListScreenPreview() {
         PlayersListScreenSecundaria(
             uiState = PlayersListUiState(
                 playerNames = listOf("Zinho", "Gian", "Luiz (pai)", "Minesa"),
-                newPlayerName = "Bonitão"
+                newPlayerName = "Bonitão",
+                isNewPlayerDialogShown = true
             ),
             onNewPlayerConfirmClick = {},
             onTypeNewPlayer = {},
