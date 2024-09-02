@@ -22,7 +22,6 @@ fun Modifier.onLongClickRepeat(
 
     LaunchedEffect(isPressed) {
         if (isPressed) {
-            action()
             delay(longPressTimeout)
 
             while (true) {
