@@ -22,7 +22,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.gmail.luizjmfilho.sevenwonders.TestActivity" />
+        <activity android:name="com.gmail.luizjmfilho.sevenwonders.TestActivity"
+            android:exported="false">
+        </activity>
 
         <!-- Disable automatic screen logging for Firebase Analytics.
          Screen logging is performed manually by "TrackedScreenViewModel". -->
