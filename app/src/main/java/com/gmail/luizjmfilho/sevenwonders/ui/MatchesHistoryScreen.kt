@@ -163,7 +163,7 @@ fun MatchesHistorySecundaria(
                                     )
                             ) {
                                 MatchCard(
-                                    playersMatchInfoList = playerInfoListOfMatchNumberi,
+                                    playersMatchInfoList = playerInfoListOfMatchNumberi.sortedBy { it.position },
                                     onDeleteMatch = {
                                         alertDialogShown = false
                                         onDeleteMatch(currentMatchIdBeingDelete)
@@ -208,6 +208,9 @@ fun MatchCard(
     val interactionSource = remember {
         MutableInteractionSource()
     }
+
+    val winnersQuantity = playersMatchInfoList.count { it.position == 1 }
+    val winnerNames = playersMatchInfoList.filter { it.position == 1 }.map { it.nickname }
 
     if (playersMatchInfoList.isNotEmpty()) {
         Card(
@@ -289,11 +292,15 @@ fun MatchCard(
                                     color = MaterialTheme.colorScheme.secondary,
                                 )
                                 Text(
-                                    text = playersMatchInfoList.minBy { it.position }.nickname,
+                                    text = if (winnersQuantity == 1) {
+                                        playersMatchInfoList[0].nickname
+                                    } else {
+                                        winnerNames.joinToString("; ")
+                                    },
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier
-                                        .widthIn(max = 100.dp)
+                                        .widthIn(max = 200.dp)
                                 )
                             }
                         }
@@ -345,9 +352,9 @@ fun MatchCard(
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
-                                    for (i in 1..playersMatchInfoList.size) {
+                                    for (element in playersMatchInfoList) {
                                         Text(
-                                            text = stringResource(R.string.position, i),
+                                            text = stringResource(R.string.position, element.position),
                                             modifier = Modifier
                                                 .fillMaxWidth(),
                                             color = MaterialTheme.colorScheme.secondary
@@ -366,9 +373,9 @@ fun MatchCard(
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
-                                    for (i in 1..playersMatchInfoList.size) {
+                                    for (element in playersMatchInfoList) {
                                         Text(
-                                            text = playersMatchInfoList.filter { it.position == i }[0].nickname,
+                                            text = element.nickname,
                                             modifier = Modifier
                                                 .fillMaxWidth(),
                                             maxLines = 1,
@@ -388,9 +395,9 @@ fun MatchCard(
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
-                                    for (i in 1..playersMatchInfoList.size) {
+                                    for (element in playersMatchInfoList) {
                                         Text(
-                                            text = playersMatchInfoList.filter { it.position == i }[0].totalScore.toString(),
+                                            text = element.totalScore.toString(),
                                             modifier = Modifier
                                                 .fillMaxWidth(),
                                             maxLines = 1,
@@ -410,9 +417,9 @@ fun MatchCard(
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
-                                    for (i in 1..playersMatchInfoList.size) {
+                                    for (element in playersMatchInfoList) {
                                         Text(
-                                            text = convertWonderToString(wonder = playersMatchInfoList.filter { it.position == i }[0].wonder),
+                                            text = convertWonderToString(wonder = element.wonder),
                                             modifier = Modifier
                                                 .fillMaxWidth(),
                                             maxLines = 1,
@@ -432,9 +439,9 @@ fun MatchCard(
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
-                                    for (i in 1..playersMatchInfoList.size) {
+                                    for (element in playersMatchInfoList) {
                                         Text(
-                                            text = convertWonderSideToString(wonderSide = playersMatchInfoList.filter { it.position == i }[0].wonderSide),
+                                            text = convertWonderSideToString(wonderSide = element.wonderSide),
                                             modifier = Modifier
                                                 .fillMaxWidth(),
                                             maxLines = 1,

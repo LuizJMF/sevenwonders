@@ -134,7 +134,7 @@ fun SummaryScreenSecundaria(
                                     wonderSide = summaryUiState.matchList[i].wonderSide,
                                     nickname = summaryUiState.matchList[i].nickname,
                                     score = summaryUiState.matchList[i].totalScore,
-                                    playerPosition = "${i + 1}º"
+                                    playerPosition = "${summaryUiState.matchList[i].position}º"
                                 )
                             }
                         }

@@ -319,20 +319,34 @@ class CalculationViewModel @Inject constructor(
                 val totalScoreList = currentState.totalScoreList
                 val coinQuantityList = currentState.coinQuantityList
 
-                val sortedNicknameList = nicknameList
+                var posicao = 1
+                var posicaoAnterior = 1
+                var scoreAnterior: Pair<Int, Int>? = null
+                val sortedNicknameListWithPositions = nicknameList
                     .zip(totalScoreList)
                     .zip(coinQuantityList)
-                    .sortedWith(compareByDescending<Pair<Pair<String, Int>, Int>> {
-                        it.first.second
-                    }.thenByDescending {
-                        it.second
-                    })
-                    .map { it.first.first }
+                    .sortedWith(
+                        compareByDescending<Pair<Pair<String, Int>, Int>> { it.first.second } // totalScore
+                            .thenByDescending { it.second } // coinQuantity
+                    )
+                    .mapIndexed { index, jogador ->
+                        val (nome, score, coins) = Triple(jogador.first.first, jogador.first.second, jogador.second)
+
+                        // Verifica se o score e coins são diferentes do anterior
+                        if (scoreAnterior != null && (score != scoreAnterior!!.first || coins != scoreAnterior!!.second)) {
+                            posicao = index + 1
+                        }
+
+                        scoreAnterior = Pair(score, coins)
+                        Pair(nome, posicao)
+                    }
+
+
 
                 for (i in 0..< currentState.playersList.size) {
                     val match = Match(
                         matchId = matchId,
-                        position = sortedNicknameList.indexOf(currentState.playersList[i]) + 1,
+                        position = sortedNicknameListWithPositions.find { it.first == currentState.playersList[i] }!!.second,
                         dataAndTime = dateAndTime,
                         nickname = playerDetails.map { it.nickname }[i],
                         wonder = playerDetails.map { it.wonder }[i]!!,
