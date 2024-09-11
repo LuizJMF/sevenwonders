@@ -58,6 +58,9 @@ class NewGameViewModel @Inject constructor(
 
 
     fun newGameAddPlayer() {
+        if (uiState.value.activePlayersNumber == ActivePlayersNumber.Seven) {
+            return
+        }
         _uiState.update { currentState ->
             val newPlayersQuantity = ActivePlayersNumber.entries[currentState.activePlayersNumber.ordinal + 1]
             currentState.copy(
@@ -68,6 +71,9 @@ class NewGameViewModel @Inject constructor(
     }
 
     fun newGameRemovePlayer() {
+        if (uiState.value.activePlayersNumber == ActivePlayersNumber.Three) {
+            return
+        }
         _uiState.update { currentState ->
             val newPlayersQuantity = ActivePlayersNumber.entries[currentState.activePlayersNumber.ordinal - 1]
             val newActivePlayersList = currentState.playerNames.toMutableList()
