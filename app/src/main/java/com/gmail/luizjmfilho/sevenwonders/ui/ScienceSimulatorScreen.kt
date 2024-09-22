@@ -1,7 +1,6 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -76,11 +74,7 @@ fun ScienceSimulatorScreenSecundaria(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = if (isSystemInDarkTheme()) {
-                    painterResource(id = R.drawable.fundo_desenho_dark)
-                }  else {
-                    painterResource(id = R.drawable.fundo_principal_claro_desenho)
-                },
+                painter = painterResource(id = R.drawable.background_image),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

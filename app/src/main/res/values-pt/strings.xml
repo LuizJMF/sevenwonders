@@ -107,11 +107,11 @@
     <string name="day">Dia</string>
     <string name="night">Noite</string>
     <string name="ir_para_a_tela_inicial">Ir para a tela inicial</string>
-    <string name="email_to_suggestions">E-mail para críticas/sugestões:</string>
-    <string name="email_para_contato">luizjmfilho@gmail.com</string>
-    <string name="desenvolvido_por">Desenvolvido por</string>
-    <string name="zinho_nome_completo">Luiz José de Medeiros Filho</string>
-    <string name="deivinho_nome_completo">Crístian Deives dos Santos Viana</string>
+    <string name="email_to_suggestions_text">E-mail para críticas/sugestões:</string>
+    <string name="email_address">luizjmfilho@gmail.com</string>
+    <string name="developed_by">Desenvolvido por</string>
+    <string name="zinho_full_name">Luiz José de Medeiros Filho</string>
+    <string name="deivinho_full_name">Crístian Deives dos Santos Viana</string>
     <string name="generic_delete">Deletar</string>
     <string name="side">Lado</string>
     <string name="show_details">Ver detalhes</string>

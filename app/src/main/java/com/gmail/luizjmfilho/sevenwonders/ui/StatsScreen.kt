@@ -1,7 +1,6 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -83,11 +82,7 @@ fun StatsScreenSecundaria(
             contentAlignment = Center
         ) {
             Image(
-                painter = if (isSystemInDarkTheme()) {
-                    painterResource(id = R.drawable.fundo_desenho_dark)
-                }  else {
-                    painterResource(id = R.drawable.fundo_principal_claro_desenho)
-                },
+                painter = painterResource(id = R.drawable.background_image),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

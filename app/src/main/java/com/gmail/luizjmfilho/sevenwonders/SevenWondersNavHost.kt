@@ -206,8 +206,8 @@ fun SevenWondersNavHost() {
             },
         ) {
             AboutScreen(
+                viewModel = hiltViewModel(),
                 onBackClick = {navController.navigateUp()},
-                aboutViewModel = hiltViewModel(),
             )
         }
 

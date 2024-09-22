@@ -40,7 +40,7 @@ fun getDarkThemeColor(): ColorScheme {
 fun SevenWondersTheme(darkTheme: Boolean = isSystemInDarkTheme(),content: @Composable () -> Unit) {
     val colors = if (darkTheme) getDarkThemeColor() else getLightThemeColor()
     MaterialTheme(
-        typography = Typography,
+        typography = sevenWondersTypography,
         content = content,
         colorScheme = colors
     )
