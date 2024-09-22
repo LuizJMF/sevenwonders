@@ -15,68 +15,69 @@ class ScienceSimulatorViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ScienceSimulatorUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun onQuantityChange(symbol: ScienceSymbol, quantity: Int) {
-        if (quantity < 0) {
+    fun onScienceCountChange(symbol: ScienceSymbol, count: Int) {
+        if (count < 0) {
             return
         }
 
         when (symbol) {
-            ScienceSymbol.Compass -> onCompassQuantityChange(quantity)
-            ScienceSymbol.Stone -> onStoneQuantityChange(quantity)
-            ScienceSymbol.Gear -> onGearQuantityChange(quantity)
+            ScienceSymbol.Compass -> onCompassCountChange(count)
+            ScienceSymbol.Stone -> onStoneCountChange(count)
+            ScienceSymbol.Gear -> onGearCountChange(count)
         }
     }
 
-    private fun onCompassQuantityChange(quantity: Int) {
+    private fun onCompassCountChange(count: Int) {
+        val newScore = calculateScore(compassCount = count)
+
         _uiState.update { currentState ->
             currentState.copy(
-                compassQuantity = quantity,
-                totalScore = calculateTotalScore(compassQuantity = quantity),
+                compassCount = count,
+                score = newScore,
             )
         }
     }
 
-    private fun onStoneQuantityChange(quantity: Int) {
+    private fun onStoneCountChange(count: Int) {
+        val newScore = calculateScore(stoneCount = count)
+
         _uiState.update { currentState ->
             currentState.copy(
-                stoneQuantity = quantity,
-                totalScore = calculateTotalScore(stoneQuantity = quantity),
+                stoneCount = count,
+                score = newScore,
             )
         }
     }
 
-    private fun onGearQuantityChange(quantity: Int) {
+    private fun onGearCountChange(count: Int) {
+        val newScore = calculateScore(gearCount = count)
+
         _uiState.update { currentState ->
             currentState.copy(
-                gearQuantity = quantity,
-                totalScore = calculateTotalScore(gearQuantity = quantity),
+                gearCount = count,
+                score = newScore,
             )
         }
     }
 
-    private fun calculateTotalScore(
-        compassQuantity: Int = _uiState.value.compassQuantity,
-        stoneQuantity: Int = _uiState.value.stoneQuantity,
-        gearQuantity: Int = _uiState.value.gearQuantity,
+    private fun calculateScore(
+        compassCount: Int = _uiState.value.compassCount,
+        stoneCount: Int = _uiState.value.stoneCount,
+        gearCount: Int = _uiState.value.gearCount,
     ): Int {
-        val compassQuantityPoints = compassQuantity * compassQuantity
-        val stoneQuantityPoints = stoneQuantity * stoneQuantity
-        val gearQuantityPoints = gearQuantity * gearQuantity
-        val combinationPoints =
-            if (compassQuantity == 0 || stoneQuantity == 0 || gearQuantity == 0) {
-                0
-            } else if (compassQuantity >= 5 && stoneQuantity >= 5 && gearQuantity >= 5) {
-                35
-            } else if (compassQuantity >= 4 && stoneQuantity >= 4 && gearQuantity >= 4) {
-                28
-            } else if (compassQuantity >= 3 && stoneQuantity >= 3 && gearQuantity >= 3) {
-                21
-            } else if (compassQuantity >= 2 && stoneQuantity >= 2 && gearQuantity >= 2) {
-                14
-            } else {
-                7
+        val compassScore = compassCount * compassCount
+        val stoneStore = stoneCount * stoneCount
+        val gearScore = gearCount * gearCount
+        val combinationScore =
+            when {
+                compassCount == 0 || stoneCount == 0 || gearCount == 0 -> 0
+                compassCount >= 5 && stoneCount >= 5 && gearCount >= 5 -> 35
+                compassCount >= 4 && stoneCount >= 4 && gearCount >= 4 -> 28
+                compassCount >= 3 && stoneCount >= 3 && gearCount >= 3 -> 21
+                compassCount >= 2 && stoneCount >= 2 && gearCount >= 2 -> 14
+                else -> 7
             }
 
-        return compassQuantityPoints + stoneQuantityPoints + gearQuantityPoints + combinationPoints
+        return compassScore + stoneStore + gearScore + combinationScore
     }
 }

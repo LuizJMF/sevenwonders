@@ -122,6 +122,7 @@
     <string name="simulator">Simulador</string>
     <string name="decrease_number_button_content_description">Diminuir número em 1</string>
     <string name="increase_number_button_content_description">Aumentar número em 1</string>
+    <string name="total_score">Total de pontos:</string>
 
     <plurals name="num_victories">
         <item quantity="one">(%d vitória)</item>

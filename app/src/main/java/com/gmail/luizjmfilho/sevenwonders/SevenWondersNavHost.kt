@@ -15,7 +15,7 @@ import com.gmail.luizjmfilho.sevenwonders.ui.MatchDetailsScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.MatchesHistoryPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.NewGameScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.PlayersListScreenPrimaria
-import com.gmail.luizjmfilho.sevenwonders.ui.ScienceSimulatorScreenPrimaria
+import com.gmail.luizjmfilho.sevenwonders.ui.ScienceSimulatorScreen
 import com.gmail.luizjmfilho.sevenwonders.ui.StatsScreenPrimaria
 import com.gmail.luizjmfilho.sevenwonders.ui.SummaryScreenPrimaria
 
@@ -221,7 +221,7 @@ fun SevenWondersNavHost() {
                     )
             },
         ) {
-            ScienceSimulatorScreenPrimaria(
+            ScienceSimulatorScreen(
                 onBackClick = {navController.navigateUp()},
             )
         }

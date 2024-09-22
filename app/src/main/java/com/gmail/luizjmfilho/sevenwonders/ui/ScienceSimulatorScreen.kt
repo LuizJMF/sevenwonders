@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +21,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,30 +32,32 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
+import com.gmail.luizjmfilho.sevenwonders.ui.theme.bodyLargeEmphasis
+import com.gmail.luizjmfilho.sevenwonders.ui.theme.science
 
 @Composable
-fun ScienceSimulatorScreenPrimaria(
+fun ScienceSimulatorScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    scienceSimulatorViewModel: ScienceSimulatorViewModel = hiltViewModel()
+    viewModel: ScienceSimulatorViewModel = hiltViewModel()
 ) {
-    WithLifecycleOwner(scienceSimulatorViewModel)
+    WithLifecycleOwner(viewModel)
 
-    val scienceSimulatorUiState by scienceSimulatorViewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
-    ScienceSimulatorScreenSecundaria(
+    ScienceSimulatorScreen(
+        uiState = uiState,
         onBackClick = onBackClick,
-        scienceSimulatorUiState = scienceSimulatorUiState,
-        onQuantityChange = scienceSimulatorViewModel::onQuantityChange,
+        onScienceCountChange = viewModel::onScienceCountChange,
         modifier = modifier,
     )
 }
 
 @Composable
-fun ScienceSimulatorScreenSecundaria(
+fun ScienceSimulatorScreen(
+    uiState: ScienceSimulatorUiState,
     onBackClick: () -> Unit,
-    onQuantityChange: (ScienceSymbol, Int) -> Unit,
-    scienceSimulatorUiState: ScienceSimulatorUiState,
+    onScienceCountChange: (ScienceSymbol, Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -66,11 +68,10 @@ fun ScienceSimulatorScreenSecundaria(
             )
         },
         modifier = modifier
-    ) { scaffoldPaddings ->
+    ) { scaffoldPadding ->
         Box(
             modifier = Modifier
-                .padding(scaffoldPaddings)
-                .fillMaxSize(),
+                .padding(scaffoldPadding),
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -80,90 +81,113 @@ fun ScienceSimulatorScreenSecundaria(
                 modifier = Modifier
                     .fillMaxSize()
             )
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = modifier
+                modifier = Modifier
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(
                     text = stringResource(R.string.calculation_science_grid_comand),
-                    fontStyle = FontStyle.Italic,
-                    color = Color(0xFF1E9923),
+                    style = MaterialTheme.typography.bodyLargeEmphasis,
+                    color = MaterialTheme.colorScheme.science,
                     modifier = Modifier
                         .padding(bottom = 8.dp)
                 )
-                Row(
+
+                ScienceSymbolsTable(
+                    compassCount = uiState.compassCount,
+                    stoneCount = uiState.stoneCount,
+                    gearCount = uiState.gearCount,
+                    onScienceCountChange = onScienceCountChange,
                     modifier = Modifier
                         .height(IntrinsicSize.Max),
-                    horizontalArrangement = Arrangement.spacedBy(3.dp)
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(3.dp),
-                        modifier = Modifier
-                            .width(IntrinsicSize.Max)
-                    ) {
-                        ScienceIconCard(
-                            scienceSymbol = ScienceSymbol.Compass,
-                            modifier = Modifier
-                                .weight(1f)
-                        )
-                        ScienceIconCard(
-                            scienceSymbol = ScienceSymbol.Stone,
-                            modifier = Modifier
-                                .weight(1f)
-                        )
-                        ScienceIconCard(
-                            scienceSymbol = ScienceSymbol.Gear,
-                            modifier = Modifier
-                                .weight(1f)
-                        )
-                    }
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(3.dp),
-                    ) {
-                        for (i in 0..2) {
-                            val symbol = when (i) {
-                                0 -> ScienceSymbol.Compass
-                                1 -> ScienceSymbol.Stone
-                                else -> ScienceSymbol.Gear
-                            }
+                )
 
-                            val currentScore = when (symbol) {
-                                ScienceSymbol.Compass -> scienceSimulatorUiState.compassQuantity
-                                ScienceSymbol.Stone -> scienceSimulatorUiState.stoneQuantity
-                                ScienceSymbol.Gear -> scienceSimulatorUiState.gearQuantity
-                            }
-
-                            NumberInputField(
-                                number = currentScore,
-                                textColor = Color(0xFF1E9923),
-                                onNumberChange = { number -> onQuantityChange(symbol, number) },
-                                modifier = Modifier
-                                    .width(150.dp)
-                                    .fillMaxHeight()
-                                    .weight(1f),
-                            )
-                        }
-                    }
-                }
-                Text(
-                    text = "total de pontos:",
-                    fontStyle = FontStyle.Italic,
-                    color = Color(0xFF1E9923),
+                TotalScoreSection(
+                    score = uiState.score.toString(),
                     modifier = Modifier
                         .padding(top = 32.dp),
-                    fontSize = 25.sp
-                )
-                Text(
-                    text = scienceSimulatorUiState.totalScore.toString(),
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1E9923),
-                    modifier = Modifier
-                        .padding(1.dp),
-                    fontSize = 90.sp
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ScienceSymbolsTable(
+    compassCount: Int,
+    stoneCount: Int,
+    gearCount: Int,
+    onScienceCountChange: (ScienceSymbol, Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(3.dp)
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(3.dp),
+            modifier = Modifier
+                .width(IntrinsicSize.Max)
+        ) {
+            for (symbol in ScienceSymbol.entries) {
+                ScienceIconCard(
+                    scienceSymbol = symbol,
+                    modifier = Modifier
+                        .weight(1f),
+                )
+            }
+        }
+
+        Column(
+            verticalArrangement = Arrangement.spacedBy(3.dp),
+        ) {
+            for (symbol in ScienceSymbol.entries) {
+                val currentScore = when (symbol) {
+                    ScienceSymbol.Compass -> compassCount
+                    ScienceSymbol.Stone -> stoneCount
+                    ScienceSymbol.Gear -> gearCount
+                }
+
+                NumberInputField(
+                    number = currentScore,
+                    textColor = MaterialTheme.colorScheme.science,
+                    onNumberChange = { number -> onScienceCountChange(symbol, number) },
+                    modifier = Modifier
+                        .width(150.dp)
+                        .fillMaxHeight()
+                        .weight(1f),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TotalScoreSection(
+    score: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = stringResource(R.string.total_score),
+            fontStyle = FontStyle.Italic,
+            color = MaterialTheme.colorScheme.science,
+            fontSize = 25.sp
+        )
+
+        Text(
+            text = score,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.science,
+            modifier = Modifier
+                .padding(1.dp),
+            fontSize = 90.sp
+        )
     }
 }
 
@@ -171,15 +195,15 @@ fun ScienceSimulatorScreenSecundaria(
 @Composable
 private fun ScienceSimulatorScreenPreview() {
     SevenWondersTheme {
-        ScienceSimulatorScreenSecundaria(
-            onBackClick = {},
-            scienceSimulatorUiState = ScienceSimulatorUiState(
-                compassQuantity = 1,
-                stoneQuantity = 2,
-                gearQuantity = 1,
-                totalScore = 13
+        ScienceSimulatorScreen(
+            uiState = ScienceSimulatorUiState(
+                compassCount = 1,
+                stoneCount = 2,
+                gearCount = 1,
+                score = 13
             ),
-            onQuantityChange = { _, _ -> },
+            onBackClick = {},
+            onScienceCountChange = { _, _ -> },
         )
     }
 }

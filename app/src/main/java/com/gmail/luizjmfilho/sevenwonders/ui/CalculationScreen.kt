@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
+import com.gmail.luizjmfilho.sevenwonders.ui.theme.science
 import java.text.DateFormat
 import java.util.Calendar
 
@@ -950,7 +951,7 @@ fun ScienceGrid(
         Text(
             text = stringResource(R.string.calculation_science_grid_comand),
             fontStyle = FontStyle.Italic,
-            color = Color(0xFF1E9923),
+            color = MaterialTheme.colorScheme.science,
             modifier = Modifier
                 .padding(3.dp)
         )
@@ -980,7 +981,7 @@ fun ScienceGrid(
                 for (i in 0..2) {
                     NumberInputField(
                         number = calculationUiState.scienceSymbolsCurrentQuantityList[i],
-                        textColor = Color(0xFF1E9923),
+                        textColor = MaterialTheme.colorScheme.science,
                         onNumberChange = { score -> onQuantityChange(i, score) },
                         modifier = Modifier
                             .width(150.dp)
@@ -996,7 +997,7 @@ fun ScienceGrid(
             ) {
                 Text(
                     text = stringResource(id = R.string.generic_back),
-                    color = Color(0xFF1E9923),
+                    color = MaterialTheme.colorScheme.science,
                     modifier = Modifier
                         .padding(end = 20.dp),
                 )
@@ -1006,7 +1007,7 @@ fun ScienceGrid(
             ) {
                 Text(
                     text = stringResource(id = R.string.generic_confirm_text),
-                    color = Color(0xFF1E9923),
+                    color = MaterialTheme.colorScheme.science,
                     modifier = Modifier
                         .padding(start = 20.dp)
 
