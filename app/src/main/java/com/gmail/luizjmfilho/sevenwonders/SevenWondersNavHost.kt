@@ -37,12 +37,12 @@ fun SevenWondersNavHost() {
             },
         ) {
             HomeScreen(
-                onCriarPartidaClick = { navController.navigate(ScreenNames.NewGameScreen.name) },
+                viewModel = hiltViewModel(),
+                onNewMatchClick = { navController.navigate(ScreenNames.NewGameScreen.name) },
                 onMatchesHistoryClick = { navController.navigate(ScreenNames.MatchesHistoryScreen.name) },
                 onStatsClick = { navController.navigate(ScreenNames.StatsScreen.name) },
                 onAboutClick = { navController.navigate(ScreenNames.AboutScreen.name) },
                 onScienceSimulatorClick = { navController.navigate(ScreenNames.ScienceSimulatorScreen.name) },
-                homeViewModel = hiltViewModel(),
             )
         }
 

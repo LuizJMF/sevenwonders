@@ -1,8 +1,8 @@
 <resources>
-    <string name="criar_partida_button">Criar partida</string>
+    <string name="new_match_button">Criar partida</string>
     <string name="players_list_button">Lista de jogadores</string>
-    <string name="estatisticas_button">Estatísticas</string>
-    <string name="historico_de_partidas_button">Histórico de Partidas</string>
+    <string name="stats_button">Estatísticas</string>
+    <string name="match_history_button">Histórico de Partidas</string>
     <string name="add_player_button">Add jogador</string>
     <string name="delete_player_button">Apagar jogador</string>
     <string name="empty_players_list">Ainda não há nenhum jogador adicionado. Clique em \'+ Add jogador\' para adicionar pessoas.</string>
@@ -75,7 +75,7 @@
     <string name="generic_relative">Relativo:</string>
     <string name="number_of_absolute_victories">Número de vitórias por jogador</string>
     <string name="relative_ratio_victories">Porcetagem relativa de vitórias</string>
-    <string name="About">Sobre</string>
+    <string name="about">Sobre</string>
     <string name="new_game_screen_subtitle">Escolha as pessoas pelo nome:</string>
     <string name="info_column_nickname">Jogador: %s</string>
     <string name="info_column_wonder">Maravilha: %s</string>

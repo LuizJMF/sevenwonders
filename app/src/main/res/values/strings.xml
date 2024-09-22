@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">7 Wonders - Score Tracker</string>
-    <string name="criar_partida_button">New match</string>
+    <string name="new_match_button">New match</string>
     <string name="players_list_button">Players list</string>
-    <string name="estatisticas_button">Statistics</string>
-    <string name="historico_de_partidas_button">Matches history</string>
+    <string name="stats_button">Statistics</string>
+    <string name="match_history_button">Matches history</string>
     <string name="add_player_button">Add player</string>
     <string name="delete_player_button">Delete player</string>
     <string name="empty_players_list">There are no players added yet. Click on \'+ Add player\' to add people.</string>
@@ -83,7 +83,7 @@
     <string name="generic_relative">Relative:</string>
     <string name="number_of_absolute_victories">Number of wins per player</string>
     <string name="relative_ratio_victories">Relative percentage of wins</string>
-    <string name="About">About</string>
+    <string name="about">About</string>
     <string name="new_game_screen_subtitle">Choose the person by name:</string>
     <string name="info_column_nickname">Player: %s</string>
     <string name="info_column_wonder">Wonder: %s</string>

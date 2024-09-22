@@ -20,7 +20,7 @@ class HomeScreenRobot(
     }
 
     fun clickNewGameButton() {
-        rule.onNodeWithText(rule.activity.getString(R.string.criar_partida_button)).performClick()
+        rule.onNodeWithText(rule.activity.getString(R.string.new_match_button)).performClick()
     }
 
 }

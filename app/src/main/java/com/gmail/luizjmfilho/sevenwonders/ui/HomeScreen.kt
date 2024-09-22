@@ -1,13 +1,11 @@
 package com.gmail.luizjmfilho.sevenwonders.ui
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,22 +32,23 @@ import androidx.compose.ui.unit.dp
 import com.gmail.luizjmfilho.sevenwonders.R
 import com.gmail.luizjmfilho.sevenwonders.ui.theme.SevenWondersTheme
 
+@VisibleForTesting
 const val homeScreenTestTag: String = "Home Screen"
 
 @Composable
 fun HomeScreen(
-    onCriarPartidaClick: () -> Unit,
+    viewModel: HomeViewModel,
+    onNewMatchClick: () -> Unit,
     onMatchesHistoryClick: () -> Unit,
     onStatsClick: () -> Unit,
     onAboutClick: () -> Unit,
     onScienceSimulatorClick: () -> Unit,
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel,
 ) {
-    WithLifecycleOwner(homeViewModel)
+    WithLifecycleOwner(viewModel)
 
     HomeScreen(
-        onCriarPartidaClick = onCriarPartidaClick,
+        onNewMatchClick = onNewMatchClick,
         onMatchesHistoryClick = onMatchesHistoryClick,
         onStatsClick = onStatsClick,
         onAboutClick = onAboutClick,
@@ -60,7 +59,7 @@ fun HomeScreen(
 
 @Composable
 fun HomeScreen(
-    onCriarPartidaClick: () -> Unit,
+    onNewMatchClick: () -> Unit,
     onMatchesHistoryClick: () -> Unit,
     onStatsClick: () -> Unit,
     onAboutClick: () -> Unit,
@@ -68,96 +67,105 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = Modifier
+        modifier = modifier
             .testTag(homeScreenTestTag)
     ) { scaffoldPadding ->
         Box(
-            modifier = modifier
-                .fillMaxSize()
+            modifier = Modifier
                 .padding(scaffoldPadding),
             contentAlignment = Alignment.Center,
         ) {
             Image(
-                painter = if (isSystemInDarkTheme()) {
-                    painterResource(id = R.drawable.fundohomescreendark)
-                }  else {
-                    painterResource(id = R.drawable.fundohomescreen)
-                },
+                painter = painterResource(id = R.drawable.home_screen_background),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
             )
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .fillMaxHeight()
+                    .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
                 Image(
-                    painter = if (isSystemInDarkTheme()) painterResource(id = R.drawable.logodarkk) else painterResource(id = R.drawable.logolight),
+                    painter = painterResource(id = R.drawable.logo),
                     contentDescription = null,
                     modifier = Modifier
                         .height(150.dp)
                 )
+
                 Spacer(Modifier.weight(0.40f))
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+
+                HomeScreenButtons(
+                    onNewMatchClick = onNewMatchClick,
+                    onStatsClick = onStatsClick,
+                    onMatchesHistoryClick = onMatchesHistoryClick,
+                    onScienceSimulatorClick = onScienceSimulatorClick,
                     modifier = Modifier
-                        .width(IntrinsicSize.Max)
-                        .fillMaxHeight()
-                ) {
-                    HomeScreenButton(
-                        onClick = onCriarPartidaClick,
-                        textinho = stringResource(R.string.criar_partida_button),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                    HomeScreenButton(
-                        onClick = onStatsClick,
-                        textinho = stringResource(R.string.estatisticas_button),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                    HomeScreenButton(
-                        onClick = onMatchesHistoryClick,
-                        textinho = stringResource(R.string.historico_de_partidas_button),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                    HomeScreenButton(
-                        onClick = onScienceSimulatorClick,
-                        textinho = stringResource(R.string.science_points_simulator),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                }
+                        .width(IntrinsicSize.Max),
+                )
+
                 Spacer(Modifier.weight(0.60f))
-                Row(
+
+                AboutButton(
+                    onClick = onAboutClick,
                     modifier = Modifier
-                        .padding(bottom = 15.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Spacer(Modifier.weight(1f))
-                    TextButton(
-                        onClick = onAboutClick
-                    ) {
-                        Text(text = stringResource(R.string.About))
-                        Icon(
-                            imageVector = Icons.Outlined.Info,
-                            contentDescription = null,
-                        )
-                    }
-                }
+                        .padding(bottom = 15.dp)
+                        .align(Alignment.End),
+                )
             }
         }
     }
 }
 
 @Composable
-fun HomeScreenButton(
+private fun HomeScreenButtons(
+    onNewMatchClick: () -> Unit,
+    onStatsClick: () -> Unit,
+    onMatchesHistoryClick: () -> Unit,
+    onScienceSimulatorClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier,
+    ) {
+        HomeScreenButton(
+            onClick = onNewMatchClick,
+            text = stringResource(R.string.new_match_button),
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+
+        HomeScreenButton(
+            onClick = onStatsClick,
+            text = stringResource(R.string.stats_button),
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+
+        HomeScreenButton(
+            onClick = onMatchesHistoryClick,
+            text = stringResource(R.string.match_history_button),
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+
+        HomeScreenButton(
+            onClick = onScienceSimulatorClick,
+            text = stringResource(R.string.science_points_simulator),
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+private fun HomeScreenButton(
+    text: String,
     onClick: () -> Unit,
-    textinho: String,
     modifier: Modifier = Modifier,
 ){
     Button(
@@ -165,17 +173,35 @@ fun HomeScreenButton(
         modifier = modifier,
     ) {
         Text(
-            text = textinho,
+            text = text,
+        )
+    }
+}
+
+@Composable
+private fun AboutButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    TextButton(
+        onClick = onClick,
+        modifier = modifier,
+    ) {
+        Text(text = stringResource(R.string.about))
+
+        Icon(
+            imageVector = Icons.Outlined.Info,
+            contentDescription = null,
         )
     }
 }
 
 @Preview
 @Composable
-fun HomeScreenPreview() {
+private fun HomeScreenPreview() {
     SevenWondersTheme {
         HomeScreen(
-            onCriarPartidaClick = {},
+            onNewMatchClick = {},
             onMatchesHistoryClick = {},
             onStatsClick = {},
             onAboutClick = {},
@@ -183,5 +209,3 @@ fun HomeScreenPreview() {
         )
     }
 }
-
-
