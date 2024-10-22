@@ -25,6 +25,7 @@ android {
 
     buildTypes {
         debug {
+            applicationIdSuffix ".debug"
             manifestPlaceholders.firebaseAnalyticsCollectionEnabled = false
         }
 
