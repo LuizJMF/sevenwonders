@@ -18,7 +18,7 @@ java {
 
 android {
     namespace 'com.gmail.luizjmfilho.sevenwonders'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.gmail.luizjmfilho.sevenwonders"
