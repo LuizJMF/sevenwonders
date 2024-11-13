@@ -45,7 +45,7 @@ class PlayersListViewModel @Inject constructor(
     fun onNewPlayerConfirmClick() {
         viewModelScope.launch {
             _uiState.update { currentState ->
-                val addPlayerResult = playersListRepository.addPlayer(currentState.newPlayerName.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                val addPlayerResult = playersListRepository.addPlayer(currentState.newPlayerName)
                 if (addPlayerResult == null) {
                     filterPersonsByAlreadySelectedPlayerIds()
                     currentState.copy(
